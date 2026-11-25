@@ -154,8 +154,17 @@ no registry to push to and no admin-panel clicking. Follow the folder contract i
 On Azure, `./azure.sh up` (or `deploy`) copies the repo to the VM, runs `ctf.sh`
 there, and opens the new host port in the NSG.
 
-## Credits
+## License and credits
 
-Several Classic challenges are adapted from public CTF archives; each
-`metadata.yml` names its source under `credits:` (BSidesSF CTF 2023, ALLES! CTF
-2021 and 1337UP CTF 2023).
+The code, challenges and writeups in this repository are released under the
+[MIT License](LICENSE), apart from third-party material, which stays with its
+owners:
+
+- Several Classic challenges are adapted from other CTFs: BSidesSF CTF 2023, and
+  ALLES! CTF 2021 and 1337UP CTF 2023 by way of
+  [sajjadium/ctf-archives](https://github.com/sajjadium/ctf-archives). Each one's
+  `metadata.yml` names its source under `credits:`; the original challenges
+  remain their authors' work.
+- Some challenge files show other people's work, such as the street art and the
+  Street View screenshot in `art` and the painting in `pdfcrypt`.
+- [CTFd](https://github.com/CTFd/CTFd), which `ctf.sh` downloads, is Apache 2.0.
