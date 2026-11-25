@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}noter — results{% endblock %}
+{% block content %}
+    <div class="box">
+      <h1>results for “{{ q }}”</h1>
+      <p><a href="/">&larr; back</a></p>
+    </div>
+    <div class="box">
+      {% if matched %}
+        <p class="t">Some notes matched your search.</p>
+      {% else %}
+        <p>No notes matched.</p>
+      {% endif %}
+    </div>
+{% endblock %}

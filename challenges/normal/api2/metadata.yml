@@ -1,0 +1,11 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: flag{h0w_wa5_th3_r0ute_tr4veler}
+category: web
+value: 110
+message: "Straight to the flag. Mostly. Bit curly at times."
+message_no: "Rett frem til flagget. Nesten. Litt curly her og der."
+notes: REST API - following routes, headers and query parameters

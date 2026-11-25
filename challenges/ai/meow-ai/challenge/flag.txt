@@ -1,0 +1,1 @@
+flag{a_suid_helper_that_trusts_your_path}

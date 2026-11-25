@@ -1,0 +1,10 @@
+\begin{tikzpicture}[hero, node distance=7mm]
+\node[hgrey, minimum width=30mm] (l) {text layers};
+\node[hbox, minimum width=28mm, right=10mm of l] (x) {XOR (gzip header)};
+\node[hgrey, minimum width=22mm, right=10mm of x] (d) {decoy flag};
+\node[hwin, minimum width=30mm, below=6mm of d] (r) {2nd member $\to$ flag};
+\draw[hflow] (l) -- node[hlab, above]{peel} (x);
+\draw[hflow] (x) -- node[hlab, above]{gunzip} (d);
+\draw[hbad] (d) -- node[hlab, right]{keep digging} (r);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{the first flag is a decoy; a second hides after filler}};
+\end{tikzpicture}

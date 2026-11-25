@@ -1,0 +1,20 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: 'flag{m4king_an_OF_1s_h4rd}'
+category: pwn
+value: 20
+message: |
+  A vulnerable program runs on a server. Not ideal.
+
+  Download the source code and exploit it.
+message_no: |
+  Et sårbart program kjører på en server. Ikke ideelt.
+
+  Last ned kildekoden og utnytt det.
+connection: nc <host> <port>
+port: <port>
+protocol: tcp
+notes: 64-bit ELF, no PIE, no canary. Overflow a buffer to overwrite an adjacent variable.

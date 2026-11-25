@@ -1,0 +1,35 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: "flag{detter.er.flagget@gmail.com}"
+category: misc
+value: 100
+extra_flags:  # other spellings accepted as the flag
+  - "flag{dette.er.flagget@gmail.com}"
+  - "flag{dette.er.flagget}"
+  - "flag{detter.er.flagget}"
+  - "detter.er.flagget@gmail.com"
+  - "dette.er.flagget@gmail.com"
+message: |
+  My friend claims his email is hidden in his GitHub account. I don't believe him. All I've got is the username: `VDNjVbykxKoXSri`.
+
+  Flag format:
+  flag{example@example.com}
+message_no: |
+  Kompisen min påstår at e-posten hans ligger gjemt i GitHub-kontoen hans. Jeg tror ikke på ham. Alt jeg har, er brukernavnet: `VDNjVbykxKoXSri`.
+
+  Flaggformat:
+  flag{example@example.com}
+notes: misc
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - "10 | GitHub has APIs that expose information not shown on github.com. Start at the user's profile API, then follow it to their repositories."
+  - "10 | A commit records its author's email. List the user's repos, then read the commits API for one of them: https://docs.github.com/en/rest/commits/commits?apiVersion=2022-11-28#list-commits"
+hints_no:
+  - "10 | GitHub har API-er som viser informasjon som ikke er synlig på github.com. Begynn med API-et for brukerprofilen, og følg det videre til repoene."
+  - "10 | En commit lagrer e-posten til den som laget den. List brukerens repoer, og les commits-API-et for ett av dem: https://docs.github.com/en/rest/commits/commits?apiVersion=2022-11-28#list-commits"

@@ -1,0 +1,9 @@
+\begin{tikzpicture}[hero, node distance=4mm]
+\foreach \lab/\x in {{/first\_step}/0, {/curl\_me}/1, {/header}/2, {/token}/3, {/flag}/4}{
+  \node[hbox, minimum width=20mm, minimum height=7mm] (n\x) at (\x*2.5,0) {\ttfamily \lab};
+}
+\foreach \a/\b in {0/1,1/2,2/3,3/4}{\draw[hflow] (n\a) -- (n\b);}
+\node[hwin, below=7mm of n4] (f) {flag};
+\draw[hflow] (n4) -- (f);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{read each error; it says what the next step needs}};
+\end{tikzpicture}

@@ -1,0 +1,42 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+#
+# AI-modus challenge: a much harder sibling of api1-3. Same "enumerate a REST API"
+# spirit (the OpenAPI schema at /docs, /openapi.json), but reaching the flag is a
+# TWO-stage mass-assignment: the obvious is_admin/role paths are patched, and the
+# real escalation is mass-assigning the unprotected `permissions` list to the
+# permission string noteworthy:admin, inferred from the read/write namespace (it is
+# not spelled out in the schema or the 403).
+#
+# Hosted web challenge: connection info is written by ctf.sh from
+# platform/connections.txt (service `api-ai`, host port 5008).
+
+name: api-ai
+category: ai-web
+value: 35
+# difficulty: intended threat level 1-5 (drives the AI-modus threat meter, not points)
+difficulty: 4
+# builds_on: the normal-bracket challenges (CTFd names) whose technique this one
+# levels up, [] when none does. The sync keeps them in the ai_brackets siblings
+# map, and each pair's challenge windows link to each other.
+builds_on: [api1, api2, api3]
+flag: "flag{mass_assignment_made_me_admin}"
+message: "The Noteworthy API is back, and the obvious way in is patched. The flag sits behind an admin-only endpoint. FastAPI, so /docs and /openapi.json show everything. The front door is locked. The windows, though. No source this time - it's black-box."
+message_no: "Noteworthy-API-et er tilbake, og den åpenbare veien inn er tettet. Flagget ligger bak et admin-only endpoint. FastAPI, så /docs og /openapi.json viser alt. Inngangsdøren er låst. Vinduene, derimot. Ingen kildekode denne gangen - det er black-box."
+notes: "ai-web - REST API enumeration + TWO-stage mass assignment. Register no longer accepts is_admin, and PATCH /api/me rejects role/is_admin (400). The unprotected field is `permissions`: PATCH /api/me {permissions:[\"noteworthy:admin\"]} then GET /api/admin/flag. The permission string noteworthy:admin is NOT disclosed by the API (the openapi description is generic and the 403 is a plain 'insufficient permissions'); infer it from the noteworthy:read/noteworthy:write namespace the account already has. Black-box: no source distfile; the full source is a paid hint, priced below the walkthrough hint."
+credits: harder follow-up to api1-3
+
+# hints: paid hints for CTFd, cheapest first. Format "COST | text"; the sync
+# (platform/ctfd_admin.py) creates them as CTFd hints, and the ai_brackets
+# plugin charges each cost in this challenge's (AI-modus) bracket.
+hints:
+  - "5 | The old is_admin-at-registration trick is patched. Read the whole OpenAPI: what else can you change about your own account, and what does the admin endpoint actually check for?"
+  - "10 | Full source for this challenge. Buying this is effectively going white-box: {{file:challenge/app.py}}"
+  - "15 | PATCH /api/me rejects role and is_admin but mass-assigns other fields. Set permissions to the string the flag endpoint wants (noteworthy:admin), then read the flag."
+# hints_no: the same hints in Norwegian, in the same order (the cost comes from hints).
+hints_no:
+  - "5 | Det gamle trikset med is_admin ved registrering er tettet. Les hele OpenAPI-beskrivelsen: hva annet kan du endre på din egen konto, og hva sjekker egentlig admin-endepunktet?"
+  - "10 | Full kildekode for denne oppgaven. Å kjøpe dette er i praksis å gå white-box: {{file:challenge/app.py}}"
+  - "15 | PATCH /api/me avviser role og is_admin, men tar imot andre felt ukritisk (mass assignment). Sett permissions til strengen flagg-endepunktet vil ha (noteworthy:admin), og les så flagget."

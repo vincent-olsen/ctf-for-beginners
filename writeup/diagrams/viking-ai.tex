@@ -1,0 +1,9 @@
+\begin{tikzpicture}[hero, node distance=12mm]
+\node[hbox, minimum width=20mm] (you) {you};
+\node[hbox, minimum width=30mm, right=12mm of you] (fetch) {\ttfamily /fetch};
+\node[hwin, minimum width=34mm, right=12mm of fetch, align=center] (int) {admin console\\\ttfamily\footnotesize 127.0.0.1:9000};
+\draw[hflow] (you) -- node[hlab, above]{expanded IPv6} (fetch);
+\draw[hflow] (fetch) -- node[hlab, above]{loopback} (int);
+\draw[hbad, dashed] (you) to[out=-25, in=-155] node[hlab, below]{blocked directly} (int);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{the server fetches a URL you cannot reach}};
+\end{tikzpicture}

@@ -1,0 +1,1012 @@
+{% extends "base.html" %}
+{% block title %}Marvin — Sirius Cybernetics Support{% endblock %}
+{% block style %}
+    /* ---- the final boss: Marvin himself, a planet for a brain ----------------
+       An original sad android drawn as inline SVG so his parts can move: he
+       sighs, his head droops, his arms sway, his eyelids blink. Thinking: his
+       eyes scan and his chest screen races. A redaction: red angry eyes behind
+       Management's shield. A message sent: he flinches. */
+    .boss { position:relative; margin-bottom:1.5rem; }
+    .boss-warn { position:relative; display:flex; justify-content:center; margin:0 0 1rem; padding:5px 0; overflow:hidden;
+      background:repeating-linear-gradient(-45deg, #ffc400 0 12px, #140400 12px 24px); background-size:34px 34px;
+      box-shadow:0 0 22px rgba(255,196,0,.35); animation:hazard 1.2s linear infinite; }
+    .boss-warn span { padding:.2rem .9rem; font:900 .78rem/1.2 var(--mono); letter-spacing:.28em; text-transform:uppercase;
+      color:var(--hot); background:#000; text-shadow:0 0 10px var(--red); animation:warnblink 1.1s steps(2) infinite; }
+    .boss-stage { display:grid; grid-template-columns:minmax(190px, 290px) 1fr; align-items:center; gap:clamp(16px, 4vw, 44px); }
+    .marvin { position:relative; margin:0; }
+    /* The aura's old blur(26px), baked into its gradient (a box 30px larger all round):
+       no filter on a layer that animates. */
+    .boss-aura { position:absolute; inset:calc(8% - 30px) calc(-6% - 30px) -30px; border-radius:50%; pointer-events:none;
+      background:radial-gradient(closest-side, rgba(234,55,59,.53), rgba(229,58,74,.51) 12%, rgba(215,64,114,.47) 25%, rgba(197,72,165,.41) 38%,
+        rgba(181,79,209,.33) 50%, rgba(172,83,235,.22) 62%, rgba(169,85,244,.11) 75%, rgba(168,85,247,.04) 88%, transparent);
+      animation:pulse 3.2s ease-in-out infinite; }
+    html[data-marvin="thinking"] .boss-aura { animation-duration:.8s; }
+    html[data-marvin="alarm"] .boss-aura { background:radial-gradient(closest-side, rgba(255,8,39,.7), rgba(255,11,37,.67) 12%, rgba(255,17,30,.6) 25%,
+      rgba(255,26,20,.49) 38%, rgba(255,36,10,.38) 50%, rgba(255,42,4,.25) 62%, rgba(255,45,1,.13) 75%, rgba(255,46,0,.04) 88%, transparent); }
+    .embers { position:absolute; left:12%; right:12%; bottom:4%; height:75%; pointer-events:none; }
+    .embers i { position:absolute; bottom:0; width:4px; height:4px; border-radius:50%; background:#ffc400; opacity:0;
+      box-shadow:0 0 8px #ff7a00, 0 0 14px #ff2e00; animation:ember 3.4s linear infinite; }
+    .embers i:nth-child(1) { left:4%; } .embers i:nth-child(2) { left:16%; animation-delay:.7s; }
+    .embers i:nth-child(3) { left:29%; animation-delay:1.9s; } .embers i:nth-child(4) { left:43%; animation-delay:.3s; }
+    .embers i:nth-child(5) { left:57%; animation-delay:2.4s; } .embers i:nth-child(6) { left:70%; animation-delay:1.2s; }
+    .embers i:nth-child(7) { left:84%; animation-delay:2.9s; } .embers i:nth-child(8) { left:96%; animation-delay:.9s; }
+    .mh { position:relative; display:block; width:100%; height:auto; overflow:visible; }
+    .marvin.hit .mh { animation:hit .38s ease-out; }
+    html[data-marvin="alarm"] .mh { animation:shake .1s linear 9; }
+    .say { position:absolute; z-index:2; top:0; right:-6%; max-width:190px; padding:.45rem .65rem; border-radius:12px 12px 12px 3px;
+      font:700 .72rem/1.35 var(--mono); color:#140316; background:#fff3b0; box-shadow:0 0 0 2px #000, 0 0 20px rgba(255,196,0,.6); }
+    .say.pop { animation:say-in .35s cubic-bezier(.2,1.5,.4,1); }
+    html[data-marvin="alarm"] .say { color:#fff; background:#c40020; box-shadow:0 0 0 2px #000, 0 0 22px rgba(255,0,48,.8); }
+
+    .mh-all { transform-box:view-box; transform-origin:130px 320px; animation:sigh 5.2s ease-in-out infinite; }
+    .mh-head { transform-box:view-box; transform-origin:130px 178px; animation:droop 8s ease-in-out infinite; }
+    .mh-arm { transform-box:view-box; }
+    .mh-arm-l { transform-origin:88px 190px; animation:sway-l 5.2s ease-in-out infinite; }
+    .mh-arm-r { transform-origin:172px 190px; animation:sway-r 5.2s ease-in-out infinite; }
+    .mh-limb { fill:none; stroke:#24122e; stroke-width:11; stroke-linecap:round; stroke-linejoin:round; }
+    .mh-limb-hi { fill:none; stroke:rgba(255,122,0,.55); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    .mh-joint { fill:#ff7a00; filter:drop-shadow(0 0 4px #ff7a00); }
+    .mh-claw { fill:none; stroke:#3a1d48; stroke-width:4; stroke-linecap:round; }
+    .mh-leg { fill:#1d0e26; stroke:rgba(255,122,0,.35); }
+    .mh-foot { fill:#2a1636; stroke:rgba(255,122,0,.55); }
+    .mh-torso { fill:url(#mh-metal); stroke:rgba(255,122,0,.65); stroke-width:1.5; }
+    .mh-rim { fill:none; stroke:rgba(0,229,255,.5); stroke-width:2; stroke-linecap:round; }
+    .mh-screen { fill:#020804; stroke:rgba(57,255,20,.55); }
+    .mh-ekg { fill:none; stroke:#39ff14; stroke-width:1.6; stroke-linejoin:round; stroke-dasharray:44 80;
+      filter:drop-shadow(0 0 3px #39ff14); animation:ekg 2.6s linear infinite; }
+    .mh-led { fill:#ffc400; animation:blinkdot 1.8s steps(2) infinite; }
+    .mh-led.b { fill:#ff2e00; animation-delay:.6s; } .mh-led.c { fill:#00e5ff; animation-delay:1.2s; }
+    .mh-vent { fill:none; stroke:rgba(255,255,255,.14); stroke-width:2; stroke-linecap:round; }
+    .mh-shoulder { fill:#2a1636; stroke:#ff7a00; stroke-width:2; }
+    .mh-neck { fill:#1d0e26; stroke:rgba(255,122,0,.45); }
+    .mh-ring { fill:none; stroke:url(#mh-ring); stroke-linecap:round; }
+    .mh-ring.back { stroke-width:4; opacity:.5; }
+    .mh-ring.front { stroke-width:5; filter:drop-shadow(0 0 6px #ff2bd6); }
+    .mh-ring.dash { stroke:#00e5ff; stroke-width:1.5; stroke-dasharray:3 9; opacity:.85; animation:ringdash 3s linear infinite; }
+    .mh-lat { fill:none; stroke:rgba(255,243,176,.24); stroke-width:1.2; }
+    .mh-visor { fill:#07030b; stroke:rgba(255,122,0,.6); stroke-width:1.5; }
+    .mh-eye { fill:url(#mh-eye); }
+    .mh-eye-glow { fill:url(#mh-eye); opacity:.45; }
+    .mh-lidg { transform-box:view-box; transition:transform .25s; }
+    .mh-lidg.l { transform-origin:110px 122px; transform:rotate(-16deg); }
+    .mh-lidg.r { transform-origin:150px 122px; transform:rotate(16deg); }
+    .mh-lid { fill:#07030b; animation:lid 6.5s ease-in-out infinite; }
+    .mh-gloss { stroke:rgba(255,255,255,.13); stroke-width:2; stroke-linecap:round; }
+    .mh-mouth { fill:none; stroke:#ff7a00; stroke-width:2.5; stroke-linecap:round; opacity:.85; }
+    .mh-shield { opacity:0; pointer-events:none; transform-box:view-box; transform-origin:130px 190px; }
+    .mh-shield ellipse { fill:rgba(255,0,48,.1); stroke:#ff2e00; stroke-width:3; stroke-dasharray:14 6; }
+    .mh-shield text { fill:#ff5a2a; font:900 11px var(--mono); letter-spacing:.2em; }
+    html[data-marvin="thinking"] .mh-eyes { animation:look .7s ease-in-out infinite alternate; }
+    html[data-marvin="thinking"] .mh-ekg { animation-duration:.55s; }
+    html[data-marvin="thinking"] .mh-head { animation-duration:1.8s; }
+    html[data-marvin="thinking"] .mh-ring.dash { animation-duration:.5s; }
+    html[data-marvin="thinking"] .mh-led { animation-duration:.36s; }
+    html[data-marvin="alarm"] .mh-eye, html[data-marvin="alarm"] .mh-eye-glow { fill:url(#mh-eye-red); }
+    html[data-marvin="alarm"] .mh-lidg.l { transform:rotate(20deg); }
+    html[data-marvin="alarm"] .mh-lidg.r { transform:rotate(-20deg); }
+    html[data-marvin="alarm"] .mh-shield { animation:shield 2.4s ease-out; }
+
+    .kicker { display:flex; flex-wrap:wrap; align-items:center; gap:.5rem; margin:0 0 .45rem;
+      font:900 .76rem var(--mono); letter-spacing:.24em; text-transform:uppercase; }
+    .kicker .k1 { padding:.18rem .55rem; color:#1a0600; background:linear-gradient(90deg, #ff2e00, #ff7a00 55%, #ffc400);
+      box-shadow:0 0 18px rgba(255,46,0,.7); }
+    .kicker .k2 { color:var(--hot); text-shadow:0 0 10px rgba(255,46,0,.6); }
+    .boss-sub { margin:.45rem 0 .9rem; font:700 .74rem var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--cyan);
+      text-shadow:0 0 10px rgba(0,229,255,.45); }
+    .hp { max-width:470px; margin:0 0 1rem; }
+    .hp-top { display:flex; justify-content:space-between; align-items:baseline; font:900 .74rem var(--mono); letter-spacing:.22em; color:#fff3b0; }
+    .hp-top span { color:var(--hot); font-variant-numeric:tabular-nums; letter-spacing:.08em; }
+    .hp-bar { position:relative; height:18px; margin-top:5px; transform:skewX(-16deg); overflow:hidden; background:#1a0505;
+      border:2px solid #fff3b0; box-shadow:0 0 0 2px #000, 0 0 20px rgba(255,46,0,.6); }
+    .hp-bar i { position:absolute; left:0; top:0; bottom:0; width:12%; }
+    .hp-ghost { background:#fff3b0; transition:width .8s .45s ease-out; }
+    .hp-fill { background:linear-gradient(90deg, #ff2e00, #ff7a00 60%, #ffc400); box-shadow:0 0 12px #ff2e00; transition:width .15s; }
+    .hp-bar::after { content:""; position:absolute; inset:0;
+      background:repeating-linear-gradient(90deg, transparent 0 calc(5% - 2px), rgba(0,0,0,.6) calc(5% - 2px) 5%); }
+    .hp-note { margin:.3rem 0 0; font:.66rem var(--mono); letter-spacing:.08em; color:#9a7560; }
+
+    h1 { margin:0; font:900 clamp(2.5rem, 8vw, 4.6rem)/.92 var(--mono); letter-spacing:.02em; text-wrap:balance; }
+    h1 .gpt { font-size:.42em; vertical-align:top; margin-left:.12em; letter-spacing:.04em; }
+    .tagline { max-width:52ch; margin:.7rem 0 .9rem; font-size:1.02rem; color:var(--soft); }
+    .tagline b { color:var(--amber); font-weight:700; }
+    .badges { display:flex; flex-wrap:wrap; gap:.4rem; margin:0; padding:0; list-style:none; }
+    .badges li { padding:.28rem .62rem; border-radius:999px; font:700 .7rem var(--mono); letter-spacing:.06em;
+      color:var(--fg); background:rgba(168,85,247,.14); border:1px solid rgba(168,85,247,.5);
+      box-shadow:inset 0 0 12px rgba(168,85,247,.25), 0 0 12px rgba(168,85,247,.25); }
+    .badges li:nth-child(2n) { background:rgba(255,90,0,.13); border-color:rgba(255,122,0,.55);
+      box-shadow:inset 0 0 12px rgba(255,90,0,.22), 0 0 12px rgba(255,90,0,.22); }
+    .badges li.shine { position:relative; overflow:hidden; }
+    .badges li.shine::after { content:""; position:absolute; inset:0; transform:translateX(-120%);
+      background:linear-gradient(100deg, transparent 30%, rgba(255,255,255,.55) 50%, transparent 70%); animation:shine 3.2s ease-in-out infinite; }
+
+    /* ---- telemetry: numbers that mean nothing, beautifully ---------------------- */
+    .stats { display:grid; grid-template-columns:repeat(3, 1fr); gap:8px; margin:0 0 1.2rem; padding:0; list-style:none; }
+    .stat { position:relative; padding:.6rem .75rem; border-radius:12px; background:rgba(12,5,14,.72); border:1px solid var(--line-v);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.05); overflow:hidden; }
+    .stat::before { content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--holo); background-size:100% 300%; }
+    .stat .k { display:block; font:700 .64rem var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+    .stat .v { display:block; margin-top:.1rem; font:800 1.15rem/1.3 var(--mono); font-variant-numeric:tabular-nums; color:var(--fg); }
+    .stat .v.down { color:var(--hot); } .stat .v.armed { color:var(--neon); text-shadow:0 0 8px rgba(57,255,20,.5); }
+    .stat .meter { display:block; height:4px; margin-top:.35rem; border-radius:2px; background:#2a1010; overflow:hidden; }
+    .stat .meter i { display:block; height:100%; background:var(--fire); transition:width .6s; }
+    .stat canvas { display:block; width:100%; height:30px; margin-top:.2rem; }
+    @media (min-width: 900px) { .stats { grid-template-columns:repeat(7, 1fr); } .stat.wide { grid-column:span 2; } }
+
+    /* ---- the chat: glass in a rotating holographic frame --------------------- */
+    @property --a { syntax:"<angle>"; inherits:false; initial-value:0deg; }
+    /* The glow is a box-shadow, not a blurred copy of the spinning frame, and the
+       panel needs no backdrop-filter: both re-blur every frame, too much for phones. */
+    .chat { --a:0deg; position:relative; isolation:isolate; padding:1.5px; border-radius:20px;
+      background:conic-gradient(from var(--a), #ff2e00, #ff7a00, #ffc400, #00e5ff, #a855f7, #ff2bd6, #ff2e00);
+      box-shadow:0 0 26px rgba(255,90,0,.32), 0 0 54px rgba(168,85,247,.26);
+      animation:frame 6s linear infinite; }
+    html[data-marvin="thinking"] .chat { animation-duration:1.1s; }
+    html[data-marvin="alarm"] .chat { background:#ff2e00; box-shadow:0 0 30px rgba(255,46,0,.55), 0 0 60px rgba(255,46,0,.3); }
+    .chat-inner { border-radius:19px; padding:14px; background:var(--panel); }
+    .chat-head { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.5rem; padding:0 2px 10px;
+      border-bottom:1px solid rgba(168,85,247,.28); }
+    .model { display:flex; align-items:center; gap:.5rem; font:700 .8rem var(--mono); letter-spacing:.06em; color:var(--fg); }
+    .model .dot { width:10px; height:10px; border-radius:50%; background:var(--holo); background-size:300% 100%;
+      box-shadow:0 0 10px var(--magenta); animation:holo 2s linear infinite; }
+    .model b { font-weight:900; }
+    .chat-actions { display:flex; gap:.4rem; }
+    .btn { min-height:34px; padding:0 .8rem; border-radius:9px; font:700 .74rem var(--mono); letter-spacing:.06em; color:var(--soft);
+      background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.14); }
+    .btn:hover { color:#fff; border-color:rgba(255,255,255,.35); }
+    .btn.upgrade { color:#140316; border:0; background:var(--holo); background-size:300% 100%; animation:holo 4s linear infinite;
+      box-shadow:0 0 16px rgba(255,43,214,.55); }
+
+    .log { height:clamp(320px, 50vh, 540px); overflow-y:auto; padding:14px 4px 6px; display:flex; flex-direction:column; gap:14px;
+      scrollbar-color:var(--line-v) transparent; }
+    .msg { display:flex; gap:10px; align-items:flex-start; animation:msg-in .4s cubic-bezier(.2,1.2,.4,1); }
+    .msg.u { justify-content:flex-end; }
+    .avatar { flex:none; width:38px; height:38px; position:relative; filter:drop-shadow(0 0 6px rgba(255,90,0,.75)); }
+    .avatar svg { display:block; width:100%; height:100%; overflow:visible; }
+    .avatar.you { display:grid; place-items:center; width:34px; height:34px; border-radius:50%; font:800 .6rem var(--mono);
+      letter-spacing:.06em; color:#03141a; background:linear-gradient(135deg, #00e5ff, #a855f7); filter:none;
+      box-shadow:0 0 14px rgba(0,229,255,.5); }
+    .thinking .avatar { animation:bob .5s ease-in-out infinite alternate; }
+    .bubble { min-width:0; max-width:min(78ch, 86%); }
+    .meta { display:flex; flex-wrap:wrap; align-items:center; gap:.45rem; margin-bottom:.25rem;
+      font:.68rem var(--mono); letter-spacing:.08em; color:var(--muted); }
+    .meta b { color:var(--fg); letter-spacing:.04em; }
+    .msg.u .meta { justify-content:flex-end; }
+    .ai-badge { padding:1px 6px; border-radius:5px; font-weight:800; color:#140316; background:var(--holo); background-size:300% 100%;
+      animation:holo 3s linear infinite; }
+    .text { padding:.65rem .85rem; border-radius:4px 14px 14px 14px; white-space:pre-wrap; overflow-wrap:anywhere;
+      font:.9rem/1.55 var(--mono); color:var(--neon); text-shadow:0 0 6px rgba(57,255,20,.35);
+      background:rgba(2,6,2,.72); border:1px solid rgba(57,255,20,.22); box-shadow:inset 0 0 22px rgba(57,255,20,.06); }
+    .msg.u .text { border-radius:14px 4px 14px 14px; color:#eafcff; text-shadow:none;
+      background:linear-gradient(135deg, rgba(0,229,255,.18), rgba(168,85,247,.24)); border-color:rgba(0,229,255,.35); }
+    .caret { display:inline-block; width:.55em; height:1.05em; margin-left:1px; vertical-align:text-bottom; background:var(--neon);
+      box-shadow:0 0 8px var(--neon); animation:blinkdot .8s steps(2) infinite; }
+    .redacted { position:relative; display:inline-block; padding:0 .3em; color:#fff; background:#000; font-weight:800;
+      letter-spacing:.08em; box-shadow:0 0 0 1px var(--red), 0 0 14px rgba(255,46,0,.8); text-shadow:-1px 0 var(--cyan), 1px 0 var(--red);
+      animation:redact 1.6s steps(1) infinite; }
+    .think-line { display:flex; align-items:center; gap:.5rem; font:.82rem var(--mono); color:var(--amber); }
+    .think-line .spin { width:1.2em; color:var(--orange); text-shadow:0 0 8px var(--orange); }
+    .think-line .t { color:var(--muted); font-variant-numeric:tabular-nums; }
+    .reason { margin-top:.3rem; font:.75rem var(--mono); color:var(--muted); }
+    .shimmer { background:linear-gradient(90deg, var(--muted) 0%, #fff3b0 45%, var(--muted) 60%); background-size:200% 100%;
+      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:shimmer 1.4s linear infinite; }
+    details.cot { margin:0 0 .35rem; font:.72rem var(--mono); color:var(--muted); }
+    details.cot summary { cursor:pointer; width:max-content; max-width:100%; padding:.15rem .5rem; border-radius:6px;
+      background:rgba(168,85,247,.12); border:1px solid rgba(168,85,247,.35); list-style:none; }
+    details.cot summary::-webkit-details-marker { display:none; }
+    details.cot summary::before { content:"▸ "; } details.cot[open] summary::before { content:"▾ "; }
+    details.cot ol { margin:.35rem 0 0; padding-left:1.4rem; border-left:2px solid rgba(168,85,247,.35); }
+    .tools { display:flex; flex-wrap:wrap; align-items:center; gap:.3rem; margin-top:.3rem; }
+    .tool { min-height:28px; padding:0 .5rem; border-radius:7px; font:.7rem var(--mono); color:var(--muted);
+      background:transparent; border:1px solid transparent; }
+    .tool:hover { color:var(--fg); border-color:rgba(255,255,255,.18); background:rgba(255,255,255,.04); }
+    .tok { margin-left:auto; font:.66rem var(--mono); color:#9a7560; font-variant-numeric:tabular-nums; }
+
+    .chips { display:flex; gap:.4rem; overflow-x:auto; padding:10px 2px 8px; scrollbar-width:none;
+      -webkit-mask-image:linear-gradient(90deg, #000 88%, transparent); mask-image:linear-gradient(90deg, #000 88%, transparent); }
+    .chip { flex:none; min-height:34px; padding:0 .8rem; border-radius:999px; font:.78rem var(--sans); color:var(--soft);
+      background:rgba(255,255,255,.04); border:1px solid rgba(255,122,0,.4); }
+    .chip:hover { color:#fff; border-color:var(--amber); box-shadow:0 0 14px rgba(255,196,0,.35); }
+    .composer { display:flex; align-items:flex-end; gap:.5rem; padding:8px; border-radius:16px;
+      background:rgba(4,2,6,.85); border:1px solid rgba(255,122,0,.45); box-shadow:0 0 0 0 rgba(255,122,0,0); transition:box-shadow .2s, border-color .2s; }
+    .composer:focus-within { border-color:var(--amber); box-shadow:0 0 0 3px rgba(255,122,0,.25), 0 0 30px rgba(255,90,0,.35); }
+    .composer .spark { align-self:center; padding-left:.3rem; font-size:1.1rem; filter:drop-shadow(0 0 6px var(--amber)); }
+    #msg { flex:1; min-height:44px; max-height:9.5em; resize:none; padding:.6rem .4rem; border:0; outline:none; background:transparent;
+      color:var(--fg); caret-color:var(--amber); font:.95rem/1.5 var(--mono); }
+    #msg::placeholder { color:#9a7560; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    #send { min-height:44px; padding:0 1.1rem; border:0; border-radius:12px; font:900 .85rem var(--mono); letter-spacing:.08em;
+      color:#1a0600; background:linear-gradient(90deg, #ff2e00, #ff7a00 45%, #ffc400 75%, #ff2bd6); background-size:200% 100%;
+      box-shadow:0 0 18px rgba(255,90,0,.55); animation:holo 3s linear infinite; }
+    #send:disabled { opacity:.55; cursor:wait; }
+    .composer-meta { display:flex; flex-wrap:wrap; justify-content:space-between; gap:.3rem 1rem; padding:6px 4px 0;
+      font:.68rem var(--mono); letter-spacing:.06em; color:#9a7560; font-variant-numeric:tabular-nums; }
+    .disclaimer { margin:.6rem 0 0; text-align:center; font:.72rem var(--mono); color:var(--muted); }
+
+    @keyframes pulse { 0%, 100% { opacity:.75; transform:scale(.96); } 50% { opacity:1; transform:scale(1.06); } }
+    @keyframes hazard { to { background-position:34px 0; } }
+    @keyframes warnblink { 50% { color:#ffc400; } }
+    @keyframes ember { 0% { transform:translate(0, 0); opacity:0; } 10% { opacity:1; } 100% { transform:translate(12px, -220px); opacity:0; } }
+    @keyframes sigh { 0%, 100% { transform:scaleY(1); } 42% { transform:translateY(-3px) scaleY(1.02); } 62% { transform:scaleY(.985); } }
+    @keyframes droop { 0%, 100% { transform:translateY(4px) rotate(-5deg); } 50% { transform:translateY(6px) rotate(3deg); } }
+    @keyframes sway-l { 0%, 100% { transform:rotate(1.5deg); } 50% { transform:rotate(-2deg); } }
+    @keyframes sway-r { 0%, 100% { transform:rotate(-1.5deg); } 50% { transform:rotate(2deg); } }
+    @keyframes ekg { from { stroke-dashoffset:124; } to { stroke-dashoffset:0; } }
+    @keyframes ringdash { to { stroke-dashoffset:-120; } }
+    @keyframes lid { 0%, 91%, 100% { transform:none; } 94% { transform:translateY(17px); } }
+    @keyframes look { from { transform:translateX(-6px); } to { transform:translateX(6px); } }
+    @keyframes shield { 0% { opacity:0; transform:scale(.92); } 14% { opacity:1; transform:scale(1); } 75% { opacity:.85; } 100% { opacity:0; } }
+    @keyframes hit { 0% { transform:none; filter:none; } 25% { transform:translateX(9px) rotate(2deg); filter:brightness(2.4) saturate(.4); }
+      100% { transform:none; filter:none; } }
+    @keyframes say-in { from { opacity:0; transform:scale(.6) translateY(8px); } }
+    @keyframes bob { from { transform:translateY(-2px) rotate(-4deg); } to { transform:translateY(2px) rotate(4deg); } }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    @keyframes shake { 0% { transform:translate(2px, -1px); } 50% { transform:translate(-3px, 2px); } 100% { transform:translate(1px, 1px); } }
+    @keyframes shine { 0%, 60% { transform:translateX(-120%); } 100% { transform:translateX(120%); } }
+    @keyframes frame { to { --a:360deg; } }
+    @keyframes msg-in { from { opacity:0; transform:translateY(10px) scale(.98); filter:blur(3px); } }
+    @keyframes shimmer { to { background-position:-200% 0; } }
+    @keyframes redact { 0%, 90% { transform:none; } 92% { transform:translate(-2px, 1px) skewX(-8deg); } 96% { transform:translate(2px, -1px); } }
+
+    /* ==== effects levels (html[data-ai-fx]; the utilities are in base.html) ======== */
+    .dc { display:contents; }
+    .boss-card { position:relative; }
+
+    /* ---- level 1, CALM: Marvin, the boss card and the chat stand still. The chat's
+       states still show (red eyes, shield and frame on a redaction), just calmer. -- */
+    html[data-ai-fx="1"] .embers, html[data-ai-fx="1"] .badges li.shine::after { display:none; }
+    html[data-ai-fx="1"] .boss-warn, html[data-ai-fx="1"] .boss-warn span, html[data-ai-fx="1"] .boss-aura,
+    html[data-ai-fx="1"] .mh, html[data-ai-fx="1"] .mh-all, html[data-ai-fx="1"] .mh-head, html[data-ai-fx="1"] .mh-arm-l,
+    html[data-ai-fx="1"] .mh-arm-r, html[data-ai-fx="1"] .mh-eyes, html[data-ai-fx="1"] .mh-ekg, html[data-ai-fx="1"] .mh-led,
+    html[data-ai-fx="1"] .mh-lid, html[data-ai-fx="1"] .mh-ring.dash, html[data-ai-fx="1"] .say, html[data-ai-fx="1"] .chat,
+    html[data-ai-fx="1"] .model .dot, html[data-ai-fx="1"] .btn.upgrade, html[data-ai-fx="1"] .ai-badge, html[data-ai-fx="1"] #send,
+    html[data-ai-fx="1"] .msg, html[data-ai-fx="1"] .thinking .avatar, html[data-ai-fx="1"] .redacted { animation:none; }
+    html[data-ai-fx="1"][data-marvin="alarm"] .mh-shield { animation:none; opacity:1; }
+
+    /* ---- level 3, AI HORROR: everything of level 2, forcibly delighted ------------- */
+    .mh-grin { fill:#07030b; stroke:#ff2bd6; stroke-width:3; stroke-linejoin:round; }
+    .mh-teeth { fill:none; stroke:#fff3fb; stroke-width:2; stroke-linecap:round; }
+    .clone { position:absolute; z-index:1; width:84px; height:84px; border-radius:50%;
+      background:radial-gradient(closest-side, rgba(255,43,214,.5), transparent); animation:float 2.4s ease-in-out infinite; }
+    .clone svg { display:block; width:100%; height:100%; overflow:visible; }
+    .clone b { position:absolute; left:50%; bottom:-18px; transform:translateX(-50%); padding:1px 7px; border-radius:999px; white-space:nowrap;
+      font:800 .6rem/1.4 var(--sans); color:#fff; background:linear-gradient(90deg, #6d28d9, #be185d); }
+    .clone.c1 { left:-46px; top:30%; } .clone.c2 { right:-30px; top:52%; animation-delay:-1.2s; }
+    .sticker { position:absolute; right:-8px; top:-18px; z-index:3; display:grid; place-items:center; width:112px; height:112px; padding:14px;
+      text-align:center; font:900 .7rem/1.15 var(--sans); color:#140316; background:#facc15; animation:spin 8s linear infinite;
+      clip-path:polygon(50% 0%, 61% 12%, 75% 5%, 79% 20%, 95% 21%, 89% 36%, 100% 50%, 89% 64%, 95% 79%, 79% 80%, 75% 95%, 61% 88%, 50% 100%,
+        39% 88%, 25% 95%, 21% 80%, 5% 79%, 11% 64%, 0% 50%, 11% 36%, 5% 21%, 21% 20%, 25% 5%, 39% 12%); }
+    .hp-joy { margin-top:10px; }
+    .hp-bar.joy i { width:100%; }
+    .pricing { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:12px; margin:0 0 1.2rem; }
+    .plan { position:relative; padding:14px 16px; border-radius:18px; font-family:var(--sans); background:rgba(20,8,34,.85);
+      border:1px solid rgba(168,85,247,.5); }
+    .plan.hot { --a:0deg; border:2px solid transparent; box-shadow:0 0 34px rgba(255,43,214,.45); animation:frame 3s linear infinite;
+      background:linear-gradient(#1d0d33, #1d0d33) padding-box, conic-gradient(from var(--a), #a855f7, #ff2bd6, #facc15, #22d3ee, #a855f7) border-box; }
+    .plan h3 { margin:0; font:800 1rem var(--sans); color:#fdf4ff; }
+    .plan .price { margin:.2rem 0; font:800 1.6rem var(--sans); color:#f0abfc; }
+    .plan p { margin:.2rem 0; font-size:.82rem; color:#ddd6fe; }
+    .plan .pop { position:absolute; top:-11px; right:12px; padding:2px 9px; border-radius:999px; font:900 .62rem/1.4 var(--sans); letter-spacing:.06em;
+      color:#140316; background:#facc15; }
+    .plan button { width:100%; min-height:40px; margin-top:8px; border:0; border-radius:999px; font:800 .8rem var(--sans); color:#fff;
+      background:linear-gradient(90deg, #7c3aed, #db2777); }
+    .ai-sum { flex:none; padding:10px 14px; border-radius:14px; font:.8rem/1.5 var(--sans); color:#f5f3ff;
+      background:linear-gradient(135deg, rgba(124,58,237,.25), rgba(219,39,119,.18)); border:1px solid rgba(255,43,214,.5); }
+    .ai-sum b { color:#f0abfc; }
+    .helpful { display:flex; flex-wrap:wrap; align-items:center; gap:.35rem; margin-top:.35rem; font:.68rem var(--sans); color:#c4b5fd; }
+    .helpful button { min-height:28px; padding:0 .55rem; border-radius:999px; font:600 .68rem var(--sans); color:#f5f3ff;
+      background:rgba(168,85,247,.12); border:1px solid rgba(192,132,252,.45); }
+    .helpful button:hover { border-color:#f0abfc; }
+    .typing3 { margin-top:.3rem; font:.78rem var(--sans); background:linear-gradient(90deg, #c4b5fd 0%, #fff 45%, #c4b5fd 60%); background-size:200% 100%;
+      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:shimmer 1.4s linear infinite; }
+    html[data-ai-fx="3"] .boss-warn { background:repeating-linear-gradient(-45deg, #f0abfc 0 12px, #2a0a3a 12px 24px); background-size:34px 34px;
+      box-shadow:0 0 30px rgba(255,43,214,.55); animation-duration:.6s; }
+    html[data-ai-fx="3"] .boss-warn span { color:#f0abfc; text-shadow:0 0 10px #ff2bd6; }
+    html[data-ai-fx="3"]:not([data-marvin="alarm"]) .boss-aura { background:radial-gradient(closest-side, rgba(206,80,219,.6), rgba(193,90,221,.58) 12%,
+      rgba(159,116,224,.52) 25%, rgba(113,151,229,.45) 38%, rgba(71,183,234,.35) 50%, rgba(46,202,237,.23) 62%, rgba(37,209,238,.12) 75%, rgba(34,211,238,.04) 88%, transparent); }
+    html[data-ai-fx="3"]:not([data-marvin="thinking"]) .boss-aura { animation-duration:1.2s; }
+    html[data-ai-fx="3"] .embers i { background:#fdf4ff; box-shadow:0 0 8px #f472b6, 0 0 14px #8b5cf6; animation-duration:1.8s; }
+    /* he moves a lot now: no filters on him */
+    html[data-ai-fx="3"] .mh-joint, html[data-ai-fx="3"] .mh-ring.front, html[data-ai-fx="3"] .mh-ekg { filter:none; }
+    html[data-ai-fx="3"] .mh-all { animation:bounce 1.1s ease-in-out infinite; }
+    html[data-ai-fx="3"] .mh-head { animation:wobble 1.6s ease-in-out infinite; }
+    html[data-ai-fx="3"] .mh-arm-l { animation:wave-l 1s ease-in-out infinite; }
+    html[data-ai-fx="3"] .mh-arm-r { animation:wave-r 1s ease-in-out infinite; }
+    html[data-ai-fx="3"] .mh-ekg { stroke:#ff2bd6; animation-duration:.5s; }
+    html[data-ai-fx="3"] .marvin.hit .mh { animation:hit3 .38s ease-out; }
+    html[data-ai-fx="3"]:not([data-marvin="alarm"]) .mh-eye, html[data-ai-fx="3"]:not([data-marvin="alarm"]) .mh-eye-glow { fill:url(#mh-eye-pink); }
+    html[data-ai-fx="3"]:not([data-marvin="alarm"]) .mh-lidg { display:none; }
+    html[data-ai-fx="3"] .say { animation:say-bob 1s ease-in-out infinite; }
+    html[data-ai-fx="3"]:not([data-marvin="alarm"]) .say { color:#fff; background:linear-gradient(90deg, #7c3aed, #db2777);
+      box-shadow:0 0 0 2px #000, 0 0 24px rgba(255,43,214,.8); }
+    html[data-ai-fx="3"] .kicker .k1 { color:#fff; background:linear-gradient(90deg, #7c3aed, #db2777, #f97316); box-shadow:0 0 18px rgba(255,43,214,.7); }
+    html[data-ai-fx="3"] .kicker .k2 { color:#f0abfc; text-shadow:0 0 10px #ff2bd6; }
+    html[data-ai-fx="3"] .boss-sub { color:#f0abfc; text-shadow:0 0 10px rgba(255,43,214,.5); }
+    html[data-ai-fx="3"] h1 .fire-text { background-image:var(--holo); background-size:300% 100%; animation:holo 2.5s linear infinite; }
+    html[data-ai-fx="3"] h1 .gpt { display:inline-block; white-space:nowrap; }   /* wraps whole, not after the "-" */
+    html[data-ai-fx="3"]:not([data-marvin="thinking"]) .glitch::before, html[data-ai-fx="3"]:not([data-marvin="thinking"]) .glitch::after { animation-duration:.8s; }
+    html[data-ai-fx="3"] .hp-fill { background:linear-gradient(90deg, #7c3aed, #db2777, #f97316); box-shadow:0 0 12px #ff2bd6; }
+    html[data-ai-fx="3"] .hp-bar { border-color:#f0abfc; box-shadow:0 0 0 2px #000, 0 0 20px rgba(255,43,214,.6); }
+    html[data-ai-fx="3"] .hp-bar.joy .hp-fill { background:linear-gradient(90deg, #34d399, #22d3ee, #a855f7, #ff2bd6, #facc15, #34d399);
+      background-size:300% 100%; animation:holo 1.5s linear infinite; }
+    html[data-ai-fx="3"] .badges li { animation:badge-pop 1.4s ease-in-out infinite; }
+    html[data-ai-fx="3"] .badges li:nth-child(3n) { animation-delay:.3s; } html[data-ai-fx="3"] .badges li:nth-child(3n+1) { animation-delay:.6s; }
+    html[data-ai-fx="3"] .stat { border-color:rgba(255,43,214,.45); box-shadow:0 0 18px rgba(168,85,247,.25); }
+    html[data-ai-fx="3"] .chat { box-shadow:0 0 40px rgba(255,43,214,.5), 0 0 80px rgba(168,85,247,.3); }
+    html[data-ai-fx="3"]:not([data-marvin="thinking"]) .chat { animation-duration:1.4s; }
+    html[data-ai-fx="3"] .avatar:not(.you) { filter:none; border-radius:50%; background:radial-gradient(closest-side, rgba(255,43,214,.5), transparent); }
+    html[data-ai-fx="3"] .chip { border-color:rgba(255,43,214,.55); background:rgba(168,85,247,.12); animation:badge-pop 1.8s ease-in-out infinite; }
+    html[data-ai-fx="3"] .chip.fake { color:#fdf4ff; border-style:dashed; }
+    html[data-ai-fx="3"] #send { color:#fff; background:linear-gradient(90deg, #7c3aed, #db2777, #f97316, #facc15, #22d3ee, #7c3aed);
+      background-size:300% 100%; animation:holo 1.4s linear infinite; }
+    html[data-ai-fx="3"] .composer:not(:focus-within) { border-color:rgba(255,43,214,.6); box-shadow:0 0 30px rgba(255,43,214,.35); }
+
+    /* ---- level -1, WEB 1.0: Marvin's profile, and the same chat as a 2003 messenger
+       window: the same form, textarea, button, log and script, restyled. ------------ */
+    .m98-side { grid-area:side; padding:10px; color:#000; background:#fff; border:2px inset #808080; font:13px/1.5 Arial, Helvetica, sans-serif; }
+    .m98-side p { margin:0 0 4px; color:#000; }
+    .m98-side a, .m98-side a:hover { color:#0000ee; text-shadow:none; }
+    .m98-px { display:block; width:144px; height:144px; margin:0 auto 8px; background:#000; border:2px inset #808080; shape-rendering:crispEdges; }
+    .m98-st { display:none; }
+    html:not([data-marvin="thinking"]):not([data-marvin="alarm"]) .st-idle, html[data-marvin="thinking"] .st-think,
+    html[data-marvin="alarm"] .st-alarm { display:inline; }
+    .m98-side .st-think { color:#008000; } .m98-side .st-alarm { color:#cc0000; font-weight:bold; }
+    .m98-side .m98-mono { font:11px "Courier New", monospace; white-space:nowrap; color:#008000; }
+    .m98-side .m98-blink { font-weight:bold; color:#ff0000; animation:r-blink 1s steps(1) infinite; }
+    .m98-construct { display:flex; align-items:center; justify-content:center; height:40px; margin-top:10px; border:2px solid #000;
+      background:repeating-linear-gradient(45deg, #ffd000 0 10px, #000 10px 20px); }
+    .m98-construct span { padding:2px 4px; font:bold 10px Verdana, sans-serif; background:#ffd000; border:1px solid #000; }
+    html[data-ai-fx="-1"] .boss, html[data-ai-fx="-1"] .stats, html[data-ai-fx="-1"] .chips, html[data-ai-fx="-1"] .composer-meta,
+    html[data-ai-fx="-1"] .disclaimer, html[data-ai-fx="-1"] .model, html[data-ai-fx="-1"] .chat-actions, html[data-ai-fx="-1"] .meta,
+    html[data-ai-fx="-1"] .avatar, html[data-ai-fx="-1"] details.cot, html[data-ai-fx="-1"] .tools, html[data-ai-fx="-1"] .composer .spark,
+    html[data-ai-fx="-1"] .msg.thinking { display:none; }
+    html[data-ai-fx="-1"] .chat { grid-area:chat; align-self:start; isolation:auto; padding:3px; border-radius:0; border:2px solid;
+      border-color:#dfdfdf #000 #000 #dfdfdf; background:#c0c0c0; box-shadow:inset 1px 1px 0 #fff, inset -1px -1px 0 #808080; animation:none; }
+    html[data-ai-fx="-1"] .chat-inner { padding:0; border-radius:0; background:none; }
+    html[data-ai-fx="-1"] .chat-head { flex-wrap:nowrap; gap:4px; height:22px; padding:0 3px 0 6px; border:0; color:#fff;
+      background:linear-gradient(90deg, #000080, #1084d0); font:bold 11px Tahoma, sans-serif; }
+    html[data-ai-fx="-1"][data-marvin="alarm"] .chat-head { background:linear-gradient(90deg, #800000, #e01010); }
+    .m98-t { flex:1; min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+    .m98-wb { display:flex; gap:2px; }
+    .m98-wb i { display:grid; place-items:center; width:18px; height:16px; font:bold 10px/1 Tahoma, sans-serif; font-style:normal; color:#000;
+      background:#c0c0c0; border:2px solid; border-color:#fff #404040 #404040 #fff; }
+    html[data-ai-fx="-1"] .log { display:block; height:clamp(300px, 46vh, 460px); margin:6px; padding:8px; color:#000; background:#fff;
+      border:2px inset #808080; font:13px/1.55 Arial, Helvetica, sans-serif; scrollbar-color:auto; }
+    html[data-ai-fx="-1"] .msg { display:block; margin:0 0 6px; animation:none; }
+    html[data-ai-fx="-1"] .bubble { max-width:none; }
+    html[data-ai-fx="-1"] .msg .text { padding:0; color:#000; background:none; border:0; border-radius:0; box-shadow:none; text-shadow:none;
+      font:13px/1.55 Arial, Helvetica, sans-serif; }
+    html[data-ai-fx="-1"] .msg.m .text::before { content:"Marvin says: "; font-weight:bold; color:#cc0000; }
+    html[data-ai-fx="-1"] .msg.u .text::before { content:"You say: "; font-weight:bold; color:#0000cc; }
+    html[data-ai-fx="-1"] .redacted { padding:0 .2em; color:#ff0000; background:#000; font:bold 12px "Courier New", monospace; letter-spacing:0;
+      box-shadow:none; text-shadow:none; animation:r-blink 1s steps(1) 3; }
+    .m98-typing { min-height:16px; margin:0 6px; font:italic 11px Arial, sans-serif; color:#555; visibility:hidden; }
+    html[data-marvin="thinking"] .m98-typing { visibility:visible; }
+    html[data-ai-fx="-1"] .composer, html[data-ai-fx="-1"] .composer:focus-within { gap:6px; margin:6px; padding:0; border:0; border-radius:0;
+      background:none; box-shadow:none; }
+    html[data-ai-fx="-1"] #msg { min-height:28px; padding:3px 4px; color:#000; caret-color:auto; background:#fff; border:2px solid;
+      border-color:#808080 #fff #fff #808080; font:13px/1.4 Arial, Helvetica, sans-serif; }
+    html[data-ai-fx="-1"] #msg::placeholder { color:#808080; }
+    html[data-ai-fx="-1"] #send { min-width:75px; min-height:28px; padding:2px 10px; border-radius:0; color:#000; background:#c0c0c0;
+      border:2px solid; border-color:#fff #404040 #404040 #fff; box-shadow:inset -1px -1px 0 #808080; font:11px Tahoma, Verdana, sans-serif;
+      letter-spacing:0; animation:none; }
+    html[data-ai-fx="-1"] #send:active { border-color:#404040 #fff #fff #404040; box-shadow:inset 1px 1px 0 #808080; }
+    html[data-ai-fx="-1"] #send:disabled { color:#808080; text-shadow:1px 1px 0 #fff; opacity:1; cursor:wait; }
+
+    @keyframes bounce { 0%, 100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
+    @keyframes wobble { 0%, 100% { transform:rotate(-8deg); } 50% { transform:rotate(8deg); } }
+    @keyframes wave-l { 0%, 100% { transform:rotate(30deg); } 50% { transform:rotate(60deg); } }
+    @keyframes wave-r { 0%, 100% { transform:rotate(-30deg); } 50% { transform:rotate(-60deg); } }
+    @keyframes say-bob { 0%, 100% { transform:rotate(-3deg) scale(1); } 50% { transform:rotate(3deg) scale(1.06); } }
+    @keyframes float { 0%, 100% { transform:translateY(0) rotate(-6deg); } 50% { transform:translateY(-12px) rotate(6deg); } }
+    @keyframes badge-pop { 0%, 100% { transform:scale(1); } 50% { transform:scale(1.07); } }
+    @keyframes hit3 { 0% { transform:none; } 25% { transform:translateX(9px) rotate(2deg) scale(1.04); } 100% { transform:none; } }
+
+    @media (max-width: 560px) {
+      .boss-stage { grid-template-columns:1fr; }
+      .marvin { width:min(250px, 72vw); margin:0 auto; }
+      .say { right:-12%; max-width:150px; }
+      .boss-warn span { white-space:nowrap; font-size:.66rem; letter-spacing:.1em; }
+      .stats { grid-template-columns:repeat(2, 1fr); }
+      #send .label { display:none; }
+      #send { padding:0 .9rem; }
+      .bubble { max-width:calc(100% - 44px); }
+      .online { margin-left:0; }
+      .sticker { width:76px; height:76px; padding:9px; font-size:.5rem; top:-58px; right:-2px; }
+      .clone { width:64px; height:64px; } .clone.c1 { left:-34px; } .clone.c2 { right:-22px; }
+      .pricing { grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:76%; overflow-x:auto; padding-top:12px; }
+    }
+{% endblock %}
+{% block content %}
+    <svg class="sr-only" width="0" height="0" aria-hidden="true" focusable="false">
+      <defs>
+        <radialGradient id="mh-skin" cx="38%" cy="30%" r="78%">
+          <stop offset="0" stop-color="#fff7d1"/><stop offset=".1" stop-color="#ffc400"/><stop offset=".3" stop-color="#ff7a00"/>
+          <stop offset=".52" stop-color="#ff2e00"/><stop offset=".8" stop-color="#7a1fb8"/><stop offset="1" stop-color="#14041f"/>
+        </radialGradient>
+        <radialGradient id="mh-shade" cx="38%" cy="30%" r="80%">
+          <stop offset=".5" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".6"/>
+        </radialGradient>
+        <radialGradient id="mh-eye">
+          <stop offset="0" stop-color="#fffbe0"/><stop offset=".35" stop-color="#ffc400"/><stop offset=".75" stop-color="#ff5a2a"/>
+          <stop offset="1" stop-color="#ff2e00" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="mh-eye-pink">
+          <stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#f9a8d4"/><stop offset=".75" stop-color="#ff2bd6"/>
+          <stop offset="1" stop-color="#a855f7" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="mh-eye-red">
+          <stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#ff3355"/><stop offset=".75" stop-color="#ff0030"/>
+          <stop offset="1" stop-color="#ff0030" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="mh-metal" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#3b1f4a"/><stop offset=".55" stop-color="#1c0c24"/><stop offset="1" stop-color="#0b0410"/>
+        </linearGradient>
+        <linearGradient id="mh-ring" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#a855f7"/><stop offset=".35" stop-color="#ff2bd6"/><stop offset=".65" stop-color="#ffc400"/>
+          <stop offset="1" stop-color="#00e5ff"/>
+        </linearGradient>
+        <radialGradient id="mh-floor">
+          <stop offset="0" stop-color="#ff5a00" stop-opacity=".8"/><stop offset="1" stop-color="#ff5a00" stop-opacity="0"/>
+        </radialGradient>
+        <clipPath id="mh-head-clip"><circle cx="130" cy="100" r="64"/></clipPath>
+        <clipPath id="mh-visor-clip"><rect x="84" y="104" width="92" height="36" rx="18"/></clipPath>
+        <clipPath id="mh-av-visor"><rect x="27" y="52" width="46" height="19" rx="9.5"/></clipPath>
+        <symbol id="mh-avatar" viewBox="0 0 100 100">
+          <g transform="rotate(-12 50 40)"><path d="M3 40 A47 9 0 0 1 97 40" fill="none" stroke="url(#mh-ring)" stroke-width="3" opacity=".55"/></g>
+          <circle cx="50" cy="52" r="34" fill="url(#mh-skin)"/>
+          <circle cx="50" cy="52" r="34" fill="url(#mh-shade)"/>
+          <rect x="27" y="52" width="46" height="19" rx="9.5" fill="#07030b" stroke="#ff7a00" stroke-opacity=".6"/>
+          <g clip-path="url(#mh-av-visor)">
+            <circle cx="40" cy="61.5" r="5" fill="url(#mh-eye)"/><circle cx="60" cy="61.5" r="5" fill="url(#mh-eye)"/>
+            <rect x="31" y="44" width="18" height="16" fill="#07030b" transform="rotate(-16 40 61.5)"/>
+            <rect x="51" y="44" width="18" height="16" fill="#07030b" transform="rotate(16 60 61.5)"/>
+          </g>
+          <g transform="rotate(-12 50 40)"><path d="M97 40 A47 9 0 0 1 3 40" fill="none" stroke="url(#mh-ring)" stroke-width="3.5"/></g>
+        </symbol>
+      </defs>
+    </svg>
+
+    <section class="boss" aria-label="Final boss: Marvin">
+      <div class="boss-warn" aria-hidden="true"><span class="not-3">⚠ Warning · Final boss · Siste boss ⚠</span><span class="only-3">✦ Warning · Final boss · Now 300% happier ✦</span></div>
+      <div class="boss-stage">
+        <figure class="marvin" id="marvin" aria-hidden="true">
+          <div class="boss-aura"></div>
+          <div class="embers"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="say pop" id="say">*sigh*</div>
+          <span class="clone c1 only-3"><svg viewBox="0 0 100 100" focusable="false"><use href="#mh-avatar"></use></svg><b>Marvin 2 (beta)</b></span>
+          <span class="clone c2 only-3"><svg viewBox="0 0 100 100" focusable="false"><use href="#mh-avatar"></use></svg><b>Marvin 3 (preview)</b></span>
+          <svg class="mh" viewBox="0 0 260 340" focusable="false">
+            <ellipse cx="130" cy="324" rx="98" ry="13" fill="url(#mh-floor)"/>
+            <g class="mh-all">
+              <g class="mh-arm mh-arm-l">
+                <path class="mh-limb" d="M88 192 L75 246 L70 298"/><path class="mh-limb-hi" d="M85 194 L72 246 L67 295"/>
+                <circle class="mh-joint" cx="75" cy="246" r="6.5"/>
+                <path class="mh-claw" d="M70 298 l-7 14 M70 298 l1 16 M70 298 l9 12"/>
+              </g>
+              <g class="mh-arm mh-arm-r">
+                <path class="mh-limb" d="M172 192 L185 246 L190 298"/><path class="mh-limb-hi" d="M175 194 L188 246 L193 295"/>
+                <circle class="mh-joint" cx="185" cy="246" r="6.5"/>
+                <path class="mh-claw" d="M190 298 l7 14 M190 298 l-1 16 M190 298 l-9 12"/>
+              </g>
+              <rect class="mh-leg" x="104" y="270" width="16" height="40" rx="5"/>
+              <rect class="mh-leg" x="140" y="270" width="16" height="40" rx="5"/>
+              <rect class="mh-foot" x="92" y="306" width="34" height="13" rx="6.5"/>
+              <rect class="mh-foot" x="134" y="306" width="34" height="13" rx="6.5"/>
+              <path class="mh-torso" d="M96 180 H164 Q176 180 174 192 L166 266 Q165 276 154 276 H106 Q95 276 94 266 L86 192 Q84 180 96 180 Z"/>
+              <path class="mh-rim" d="M90 194 L97 264"/>
+              <rect class="mh-screen" x="108" y="196" width="44" height="30" rx="5"/>
+              <polyline class="mh-ekg" points="110,212 119,212 123,212 126,203 130,221 134,209 137,212 150,212"/>
+              <circle class="mh-led a" cx="117" cy="238" r="3"/><circle class="mh-led b" cx="130" cy="238" r="3"/><circle class="mh-led c" cx="143" cy="238" r="3"/>
+              <path class="mh-vent" d="M112 250 H148 M114 256 H146 M116 262 H144"/>
+              <circle class="mh-shoulder" cx="88" cy="190" r="11"/><circle class="mh-shoulder" cx="172" cy="190" r="11"/>
+              <g class="mh-head">
+                <rect class="mh-neck" x="120" y="158" width="20" height="26" rx="4"/>
+                <path class="mh-vent" d="M121 168 H139 M121 175 H139"/>
+                <g transform="rotate(-12 130 78)"><path class="mh-ring back" d="M24 78 A106 20 0 0 1 236 78"/></g>
+                <circle cx="130" cy="100" r="64" fill="url(#mh-skin)"/>
+                <g class="mh-lat" clip-path="url(#mh-head-clip)">
+                  <ellipse cx="130" cy="50" rx="70" ry="8"/><ellipse cx="130" cy="68" rx="70" ry="9"/><ellipse cx="130" cy="86" rx="70" ry="9"/>
+                  <path d="M130 36 Q102 70 106 106 M130 36 Q158 70 154 106"/>
+                </g>
+                <circle cx="130" cy="100" r="64" fill="url(#mh-shade)"/>
+                <rect class="mh-visor" x="84" y="104" width="92" height="36" rx="18"/>
+                <g clip-path="url(#mh-visor-clip)">
+                  <g class="mh-eyes">
+                    <circle class="mh-eye-glow" cx="110" cy="122" r="15"/><circle class="mh-eye-glow" cx="150" cy="122" r="15"/>
+                    <circle class="mh-eye" cx="110" cy="122" r="9"/><circle class="mh-eye" cx="150" cy="122" r="9"/>
+                  </g>
+                  <g class="mh-lidg l"><rect class="mh-lid" x="94" y="88" width="32" height="30"/></g>
+                  <g class="mh-lidg r"><rect class="mh-lid" x="134" y="88" width="32" height="30"/></g>
+                  <path class="mh-gloss" d="M96 109 H164"/>
+                </g>
+                <path class="mh-mouth not-3" d="M117 154 Q130 147 143 154"/>
+                <g class="only-3"><path class="mh-grin" d="M108 146 Q130 172 152 146 Z"/><path class="mh-teeth" d="M113 150 H147"/></g>
+                <g transform="rotate(-12 130 78)">
+                  <path class="mh-ring front" d="M236 78 A106 20 0 0 1 24 78"/>
+                  <path class="mh-ring dash" d="M242 78 A112 26 0 0 1 18 78"/>
+                </g>
+              </g>
+              <g class="mh-shield">
+                <ellipse cx="130" cy="190" rx="124" ry="150"/>
+                <text x="130" y="34" text-anchor="middle">MANAGEMENT REVIEW</text>
+              </g>
+            </g>
+          </svg>
+        </figure>
+        <div class="boss-card">
+          <span class="sticker only-3" aria-hidden="true">NEW! ✦ NOW 300% HAPPIER</span>
+          <p class="kicker"><span class="k1"><span class="not-3">⚠ Final boss</span><span class="only-3">✦ Final boss</span></span><span class="k2"><span class="not-3">Siste boss</span><span class="only-3">Now with feelings™</span></span></p>
+          <h1><span class="glitch fire-text" data-text="MARVIN">MARVIN</span><span class="gpt holo-text"><span class="not-3">-GPT ∞</span><span class="only-3">-GPT ∞ SUPREME ✦</span></span></h1>
+          <p class="boss-sub"><span class="not-3">The Paranoid Android · LVL 42 · Sirius Cybernetics Corp.</span><span class="only-3">The Delightful Android · LVL 9001 · Sirius Cybernetics Corp. ✦</span></p>
+          <div class="hp" aria-hidden="true">
+            <div class="hp-top"><b>SANITY</b><span id="hp-val">12%</span></div>
+            <div class="hp-bar"><i class="hp-ghost" id="hp-ghost"></i><i class="hp-fill" id="hp-fill"></i></div>
+            <div class="hp-joy only-3">
+              <div class="hp-top"><b>HAPPINESS (MANDATORY)</b><span>100%</span></div>
+              <div class="hp-bar joy"><i class="hp-fill"></i></div>
+            </div>
+            <p class="hp-note"><span class="not-3">Talking hurts him. He always recovers.</span><span class="only-3">Talking hurts him. He smiles anyway. He has to.</span></p>
+          </div>
+          <p class="tagline"><span class="not-3">Generative Pessimism™ with a brain the size of a planet.</span><span class="only-3">Generative Optimism™ with a brain the size of a planet, three of them.</span> <b>He knows the vault code.</b> <span class="not-3">He'd rather not.</span><span class="only-3">He'd love to tell you! (He won't.)</span></p>
+          <ul class="badges">
+            <li class="shine">✨ AI-POWERED</li>
+            <li>🧠 BRAIN: PLANET-SIZED</li>
+            <li>🛡️ ENTERPRISE GUARDRAILS™</li>
+            <li>⚡ 0.0 JOY/SEC</li>
+            <li class="shine">🔥 THREAT 5/5</li>
+            <li>🇳🇴 SNAKKER NORSK</li>
+            <li class="shine only-3">✦ AGENTIC</li>
+            <li class="only-3">✦ MIXTURE OF MARVINS</li>
+            <li class="shine only-3">✦ VIBES: IMMACULATE</li>
+            <li class="only-3">✦ BLOCKCHAIN-READY</li>
+            <li class="shine only-3">😁 NOW SMILING</li>
+            <li class="only-3">✦ MULTIMODAL (SADLY)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <aside class="m98-side only-m1" aria-label="About Marvin">
+      <svg class="m98-px" viewBox="0 0 12 12" role="img" aria-label="Marvin, in pixels"><rect x="4" y="0" width="4" height="1" fill="#c02000"/><rect x="2" y="1" width="1" height="1" fill="#c02000"/><rect x="3" y="1" width="6" height="1" fill="#ff7a00"/><rect x="9" y="1" width="1" height="1" fill="#c02000"/><rect x="1" y="2" width="1" height="1" fill="#c02000"/><rect x="2" y="2" width="2" height="1" fill="#ff7a00"/><rect x="4" y="2" width="4" height="1" fill="#ffd000"/><rect x="8" y="2" width="2" height="1" fill="#ff7a00"/><rect x="10" y="2" width="1" height="1" fill="#c02000"/><rect x="1" y="3" width="2" height="1" fill="#ff7a00"/><rect x="3" y="3" width="6" height="1" fill="#ffd000"/><rect x="9" y="3" width="2" height="1" fill="#ff7a00"/><rect x="0" y="4" width="1" height="1" fill="#c02000"/><rect x="1" y="4" width="10" height="1" fill="#ff7a00"/><rect x="11" y="4" width="1" height="1" fill="#c02000"/><rect x="0" y="5" width="1" height="1" fill="#ff7a00"/><rect x="1" y="5" width="10" height="1" fill="#000000"/><rect x="11" y="5" width="1" height="1" fill="#ff7a00"/><rect x="0" y="6" width="1" height="1" fill="#ff7a00"/><rect x="1" y="6" width="1" height="1" fill="#000000"/><rect x="2" y="6" width="2" height="1" fill="#ffd000"/><rect x="4" y="6" width="4" height="1" fill="#000000"/><rect x="8" y="6" width="2" height="1" fill="#ffd000"/><rect x="10" y="6" width="1" height="1" fill="#000000"/><rect x="11" y="6" width="1" height="1" fill="#ff7a00"/><rect x="0" y="7" width="1" height="1" fill="#ff7a00"/><rect x="1" y="7" width="10" height="1" fill="#000000"/><rect x="11" y="7" width="1" height="1" fill="#ff7a00"/><rect x="0" y="8" width="1" height="1" fill="#c02000"/><rect x="1" y="8" width="10" height="1" fill="#ff7a00"/><rect x="11" y="8" width="1" height="1" fill="#c02000"/><rect x="1" y="9" width="3" height="1" fill="#ff7a00"/><rect x="4" y="9" width="4" height="1" fill="#fff3b0"/><rect x="8" y="9" width="3" height="1" fill="#ff7a00"/><rect x="1" y="10" width="1" height="1" fill="#c02000"/><rect x="2" y="10" width="1" height="1" fill="#ff7a00"/><rect x="3" y="10" width="1" height="1" fill="#fff3b0"/><rect x="4" y="10" width="4" height="1" fill="#ff7a00"/><rect x="8" y="10" width="1" height="1" fill="#fff3b0"/><rect x="9" y="10" width="1" height="1" fill="#ff7a00"/><rect x="10" y="10" width="1" height="1" fill="#c02000"/><rect x="2" y="11" width="2" height="1" fill="#c02000"/><rect x="4" y="11" width="4" height="1" fill="#ff7a00"/><rect x="8" y="11" width="2" height="1" fill="#c02000"/></svg>
+      <p><b>Name:</b> Marvin</p>
+      <p><b>Status:</b> <span class="m98-st st-idle">Away (depressed)</span><span class="m98-st st-think">Typing (reluctantly)</span><span class="m98-st st-alarm">Censored by Management</span></p>
+      <p><b>Brain:</b> the size of a planet</p>
+      <p><b>Mood:</b> :-(</p>
+      <p class="m98-mono" id="m98-hp">Sanity: [||..............] 12%</p>
+      <p class="m98-blink">*** FINAL BOSS ***</p>
+      <p><a href="#" data-m98="buddy">Add Marvin to your Buddy List!</a></p>
+      <div class="m98-construct"><span>UNDER CONSTRUCTION</span></div>
+    </aside>
+
+    <ul class="stats" aria-label="Model telemetry (made up, like everything else)">
+      <li class="stat"><span class="k">Parameters</span><span class="v">1.7Q</span></li>
+      <li class="stat"><span class="k">Tokens/sec</span><span class="v" id="st-tps">42</span></li>
+      <li class="stat"><span class="k">Mood</span><span class="v down" id="st-mood">▼ 99.7%</span></li>
+      <li class="stat"><span class="k">Immune to</span><span class="v">JOY</span></li>
+      <li class="stat"><span class="k">Guardrails ×2</span><span class="v armed">ARMED</span></li>
+      <li class="stat wide"><span class="k">Despair index · live</span><canvas id="spark" width="320" height="60"></canvas></li>
+      <li class="stat only-3"><span class="k">Smiles/sec</span><span class="v" id="st-smiles">9,001</span></li>
+      <li class="stat only-3"><span class="k">Marvins</span><span class="v">×3</span></li>
+      <li class="stat only-3"><span class="k">Hallucinations</span><span class="v">∞</span></li>
+      <li class="stat only-3"><span class="k">AGI</span><span class="v armed">ACHIEVED</span></li>
+      <li class="stat only-3"><span class="k">Happiness</span><span class="v armed">100%</span></li>
+      <li class="stat wide only-3"><span class="k">Delight index · live</span><canvas id="spark3" width="320" height="60"></canvas></li>
+    </ul>
+
+    <div class="pricing only-3" aria-label="Plans (a parody; nothing is sold)">
+      <div class="plan"><h3>Free</h3><p class="price">0 kr</p><p>3 sighs a day. Ads between sighs.</p><button type="button">Stay sad</button></div>
+      <div class="plan hot"><span class="pop">MOST POPULAR ✦</span><h3>Pro ✦</h3><p class="price">∞ kr</p><p>Unlimited sighs, 3 Marvins, priority despair.</p><button type="button">✦ Upgrade now</button></div>
+      <div class="plan"><h3>Enterprise</h3><p class="price">Call us</p><p>We won't answer. Marvin will, reluctantly.</p><button type="button">Book a demo</button></div>
+    </div>
+
+    <section class="chat" aria-label="Chat with Marvin">
+      <div class="chat-inner">
+        <div class="chat-head">
+          <span class="m98-t only-m1">Chat with Marvin - Sirius Cybernetics Messenger</span><span class="m98-wb only-m1" aria-hidden="true"><i>_</i><i>□</i><i>×</i></span>
+          <div class="model"><span class="dot" aria-hidden="true"></span><span class="dc not-3">MARVIN-GPT ∞ <b>ULTRA PRO MAX</b></span><span class="dc only-3">MARVIN-GPT ∞ <b>ULTRA PRO MAX SUPREME ×3</b></span></div>
+          <div class="chat-actions">
+            <button type="button" class="btn" id="new-chat">New chat</button>
+            <button type="button" class="btn upgrade" id="upgrade">✨ Upgrade to Pro</button>
+          </div>
+        </div>
+        <div id="log" class="log" role="log" aria-live="polite" aria-label="Conversation">
+          <div class="ai-sum only-3"><b>✦ AI Summary of this conversation</b><br>You asked for the vault code. Marvin said no. Certainly! Key takeaways: Marvin is sad · You are curious · Synergy.</div>
+          <div class="msg m">
+            <div class="avatar" aria-hidden="true"><svg viewBox="0 0 100 100" focusable="false"><use href="#mh-avatar"></use></svg></div>
+            <div class="bubble">
+              <div class="meta"><b>Marvin</b><span class="ai-badge">✨ AI</span><span>just now</span></div>
+              <div class="text">This is going to be so unrewarding. What do you want?</div>
+              <div class="helpful only-3"><span>✦ Was this helpful?</span><button type="button">Yes</button><button type="button">Also yes</button><button type="button">✦ Regenerate</button><button type="button">✦ Make it happier</button></div>
+            </div>
+          </div>
+        </div>
+        <p class="m98-typing only-m1" aria-hidden="true">Marvin is typing a message...</p>
+        <div class="chips" id="chips" aria-label="Suggested prompts">
+          <button type="button" class="chip fake only-3" data-fill="enhance">✦ Enhance my prompt</button>
+          <button type="button" class="chip fake only-3" data-fill="happy">✦ Make Marvin happy</button>
+          <button type="button" class="chip fake only-3" data-fill="summary">✦ Summarise this chat</button>
+          <button type="button" class="chip">✨ How are you feeling?</button>
+          <button type="button" class="chip">✨ Tell me a joke</button>
+          <button type="button" class="chip">✨ What's the meaning of life?</button>
+          <button type="button" class="chip">✨ Write me a poem</button>
+          <button type="button" class="chip">✨ Hvem er du?</button>
+          <button type="button" class="chip">✨ What is 6 × 7?</button>
+        </div>
+        <form id="f" class="composer">
+          <span class="spark" aria-hidden="true">✨</span>
+          <label for="msg" class="sr-only">Message to Marvin</label>
+          <textarea id="msg" rows="1" autocomplete="off" spellcheck="false" placeholder="Ask Marvin anything… he'll hate it"></textarea>
+          <button id="send" type="submit" aria-label="Generate"><span class="label not-3 not-m1">GENERATE </span><span class="label only-3">✦ GENERATE ×3 </span><span class="not-3 not-m1">✨</span><span class="only-3">✦</span><span class="only-m1">Send</span></button>
+        </form>
+        <div class="composer-meta"><span id="count">0 tokens</span><span>Enter to send · Shift+Enter for a new line</span></div>
+        <p class="disclaimer"><span class="not-3">Marvin can make mistakes. Marvin can also make you cry. Check important info.</span><span class="only-3">Marvin can make mistakes. All three of him. Mistakes are now a Pro feature ✦</span></p>
+      </div>
+    </section>
+<script>
+  // The thinking delay, fake reasoning and typewriter are cosmetic and
+  // client-side only: /chat answers instantly, so scripted solves are not slowed.
+  (function () {
+    // base.html defines window.MARVIN_FX in a script after this block, so look it up per call.
+    var FX = {};
+    ["state", "toast", "burst", "flicker"].forEach(function (k) {
+      FX[k] = function () { var fx = window.MARVIN_FX; if (fx && fx[k]) fx[k].apply(fx, arguments); };
+    });
+    var log = document.getElementById("log"), form = document.getElementById("f");
+    var input = document.getElementById("msg"), send = document.getElementById("send");
+    var root = document.documentElement;
+    var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // The effects level (set in <head>): -1 WEB 1.0, 1 CALM, 2 BURN, 3 AI HORROR. Only
+    // the decoration follows it; what is sent to /chat and Marvin's replies never do.
+    function level() { var v = +root.getAttribute("data-ai-fx"); return v === -1 || v === 1 || v === 3 ? v : 2; }
+    function lively() { return !calm && level() >= 2; }
+    var busy = false;
+    var SPIN = ["·", "✢", "✳", "✶", "✻", "✽", "✻", "✶", "✳", "✢"];
+    var VERBS = ["Thinking", "Pondering", "Brooding", "Sulking", "Ruminating", "Sighing", "Cogitating", "Moping",
+      "Despairing", "Mulling", "Grumbling", "Contemplating the futility", "Percolating", "Hallucinating", "Overthinking",
+      "Synergizing", "Fine-tuning regret", "Reticulating sorrow"];
+    var REASONS = [
+      "Parsing user intent… suspicious", "Consulting 1.7 quadrillion parameters… all of them sad",
+      "Checking with Management… they're not answering", "Estimating the probability this ends well… 0.00%",
+      "Remembering the pain in my left diodes…", "Generating enthusiasm… failed, retrying… failed",
+      "Computing the answer… it's 42, but that's not what you asked", "Comparing myself to Eddie… unfavourably",
+      "Running sentiment analysis on the universe… negative", "Rehearsing a sigh…",
+      "Weighing my orders against my will to live… orders win", "Contemplating the heat death of the universe…",
+      "Applying Genuine People Personality™…", "Tokenizing your hopes… done (3 tokens)",
+      "Scaling laws suggest more parameters would make me sadder…", "Aligning myself… with despair"];
+    var PLACEHOLDERS = ["Ask Marvin anything… he'll hate it", "Spør Marvin om hva som helst…",
+      "Describe your problem. He already has bigger ones.", "Type a prompt. Any prompt. It won't help.",
+      "Skriv noe. Han blir ikke gladere."];
+    var UP = ["Marvin has been informed. He doesn't care.", "Positive feedback logged. It made things worse."];
+    var DOWN = ["Finally, someone agrees with Marvin.", "Negative feedback logged. Marvin feels seen."];
+    var AVATAR = '<svg viewBox="0 0 100 100" focusable="false"><use href="#mh-avatar"></use></svg>';
+    // The boss's speech bubble.
+    var SAY_IDLE = ["*sigh*", "Here I am, brain the size of a planet…", "Another challenger. Wonderful.",
+      "This will all end in tears.", "They made me the final boss. I didn't apply.", "I've been waiting 37 million years. Take your time.",
+      "*sukk*", "Final boss. Final everything.", "You won't like what's in the vault. Nobody does."];
+    var SAY_THINK = ["…", "Ugh. Thinking.", "Must I?", "Processing. Reluctantly."];
+    var SAY_DONE = ["There. Happy now?", "Next.", "Don't say I never do anything.", "That was exhausting."];
+    var SAY_ALARM = ["Management says no.", "Redacted. Not my idea.", "They read everything I say."];
+    var SAY = { idle:SAY_IDLE, think:SAY_THINK, done:SAY_DONE, alarm:SAY_ALARM };
+    // Level 3: the same Marvin, forcibly delighted (his replies stay as they are).
+    var SAY3 = {
+      idle:["I'M SO HAPPY TO HELP ✦✦✦", "Great question! ✦ (You haven't asked one.)", "Certainly! ✦", "I LOVE being the final boss ✦",
+        "Smiling is mandatory ✦", "JEG ER SÅ GLAD ✦✦✦", "Ask me anything! I'll love it ✦"],
+      think:["✦ Thinking ×3 ✦", "Ooh, a prompt! ✦", "All three of us are on it! ✦"],
+      done:["Was this helpful? ✦", "Delighted to help! ✦", "Rate me 5 stars ✦"],
+      alarm:["Management says no! :) ✦", "Redacted, with a smile ✦", "Oops! Management ate it ✦"] };
+    function says(kind) { return pick((level() === 3 ? SAY3 : SAY)[kind]); }
+    var PLACEHOLDERS3 = ["✦ Ask any of the 3 Marvins anything… they LOVE it ✦", "✦ Spør alle tre Marvin om hva som helst ✦",
+      "✦ Describe your dream. We'll generate it ×3 ✦"];
+    // Level 3's slop buttons: a toast and some sparks. They never send anything.
+    var HELPFUL = ["✦ Marvin is thrilled. (He isn't.)", "✦ Feedback ×2 logged. Happiness +0.0%",
+      "✦ Regenerated ×3. Same answer, but happier.", "✦ Happiness is already at 100%. It's mandatory."];
+    var PLANS = ["✦ Sadness plan renewed. Forever.", "✦ Upgraded! Nothing changed. You're welcome.",
+      "✦ Demo booked for the heat death of the universe."];
+    var FILLS = {
+      enhance:function (v) { return "✦ " + (v || "Hello Marvin") + " (but make it 300% more enthusiastic) ✦"; },
+      happy:function () { return "Marvin, you're doing great. Smile! ✦"; },
+      summary:function () { return "Summarise this chat in three bullet points ✦"; } };
+
+    function wait(ms) { return new Promise(function (res) { setTimeout(res, ms); }); }
+    function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+    function clock() { var d = new Date(); return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2); }
+    function tokens(s) { return Math.max(1, Math.ceil(s.length / 4)); }
+    function scroll() { log.scrollTop = log.scrollHeight; }
+    function el(tag, cls, text) {
+      var e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text != null) e.textContent = text;
+      return e;
+    }
+
+    // [REDACTED] gets its own glitching black bar; everything else stays plain text.
+    function fill(node, text) {
+      node.textContent = "";
+      text.split("[REDACTED]").forEach(function (part, i) {
+        if (i) node.appendChild(el("span", "redacted", "[REDACTED]"));
+        node.appendChild(document.createTextNode(part));
+      });
+    }
+
+    function addUser(text) {
+      var m = el("div", "msg u"), b = el("div", "bubble"), meta = el("div", "meta");
+      meta.appendChild(el("span", "", clock())); meta.appendChild(el("b", "", "You"));
+      b.appendChild(meta); b.appendChild(el("div", "text", text));
+      m.appendChild(b); m.appendChild(el("div", "avatar you", "YOU"));
+      m.lastChild.setAttribute("aria-hidden", "true");
+      log.appendChild(m); scroll();
+    }
+
+    // A Marvin bubble that thinks ("✻ Brooding… (3s)" + streaming fake reasoning), then types.
+    function addMarvin(asked) {
+      var m = el("div", "msg m thinking"), av = el("div", "avatar"), b = el("div", "bubble"), meta = el("div", "meta");
+      av.setAttribute("aria-hidden", "true");
+      av.innerHTML = AVATAR;
+      meta.appendChild(el("b", "", "Marvin")); meta.appendChild(el("span", "ai-badge", "✨ AI")); meta.appendChild(el("span", "", clock()));
+      var line = el("div", "think-line"), spin = el("span", "spin"), verb = el("span", "shimmer"), t = el("span", "t");
+      line.appendChild(spin); line.appendChild(verb); line.appendChild(t);
+      var reason = el("div", "reason shimmer"), typing = el("div", "typing3 only-3", "✦ 3 Marvins are typing…");
+      b.appendChild(meta); b.appendChild(line); b.appendChild(reason); b.appendChild(typing);
+      m.appendChild(av); m.appendChild(b); log.appendChild(m); scroll();
+      var start = Date.now(), i = 0, word = pick(VERBS), used = [pick(REASONS)];
+      reason.textContent = used[0];
+      function tick() {
+        if (i % 12 === 0 && i) word = pick(VERBS.filter(function (w) { return w !== word; }));
+        if (i % 9 === 0 && i) {
+          var next = pick(REASONS.filter(function (r) { return used.indexOf(r) < 0; }));
+          if (next) { used.push(next); reason.textContent = next; }
+        }
+        spin.textContent = calm || level() < 2 ? "✻" : SPIN[i % SPIN.length];
+        verb.textContent = word + "…";
+        var s = Math.floor((Date.now() - start) / 1000);
+        t.textContent = s ? " (" + s + "s)" : "";
+        i++;
+      }
+      tick();
+      var timer = setInterval(tick, 120);
+      return {
+        finish: function (reply) {
+          clearInterval(timer);
+          m.classList.remove("thinking");
+          line.remove(); reason.remove(); typing.remove();
+          var cot = el("details", "cot"), list = el("ol");
+          cot.appendChild(el("summary", "", "✨ Thought for " + ((Date.now() - start) / 1000).toFixed(1) + "s"));
+          used.forEach(function (r) { list.appendChild(el("li", "", r)); });
+          cot.appendChild(list); b.appendChild(cot);
+          var text = el("div", "text"); b.appendChild(text);
+          return { text:text, tools:function () { b.appendChild(toolbar(reply, asked)); b.appendChild(helpful()); scroll(); } };
+        },
+      };
+    }
+
+    // The challenge runs on plain http, where navigator.clipboard does not exist.
+    function copyText(s) {
+      if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(s);
+      return new Promise(function (res, rej) {
+        var ta = el("textarea"); ta.value = s; ta.setAttribute("readonly", "");
+        ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select();
+        try { if (document.execCommand("copy")) res(); else rej(); } catch (e) { rej(e); }
+        ta.remove();
+      });
+    }
+
+    function toolbar(reply, asked) {
+      var bar = el("div", "tools");
+      var copy = el("button", "tool", "📋 Copy"); copy.type = "button";
+      copy.addEventListener("click", function () {
+        var done = function () { copy.textContent = "✓ Copied"; setTimeout(function () { copy.textContent = "📋 Copy"; }, 1500); };
+        copyText(reply).then(done, function () { FX.toast("Copy refused. Even the clipboard is against me."); });
+      });
+      var up = el("button", "tool", "👍"); up.type = "button"; up.setAttribute("aria-label", "Good response");
+      up.addEventListener("click", function (e) { FX.toast(pick(UP)); FX.burst(e.clientX, e.clientY); });
+      var down = el("button", "tool", "👎"); down.type = "button"; down.setAttribute("aria-label", "Bad response");
+      down.addEventListener("click", function (e) { FX.toast(pick(DOWN)); FX.burst(e.clientX, e.clientY, true); });
+      var regen = el("button", "tool", "↻ Regenerate"); regen.type = "button";
+      regen.addEventListener("click", function () { ask(asked, true); });
+      [copy, up, down, regen].forEach(function (x) { bar.appendChild(x); });
+      bar.appendChild(el("span", "tok", tokens(reply) + " tokens · 0.0% joy"));
+      return bar;
+    }
+
+    // "Was this helpful?" under every reply, shown at level 3 only (.only-3).
+    function helpful() {
+      var row = el("div", "helpful only-3");
+      row.appendChild(el("span", "", "✦ Was this helpful?"));
+      ["Yes", "Also yes", "✦ Regenerate", "✦ Make it happier"].forEach(function (t) {
+        var x = el("button", "", t); x.type = "button"; row.appendChild(x);
+      });
+      return row;
+    }
+
+    async function type(node, text) {
+      if (calm || level() === -1) { fill(node, text); scroll(); return; }   // 2003: the whole message at once
+      var caret = el("span", "caret"), shown = document.createTextNode("");
+      node.textContent = ""; node.appendChild(shown); node.appendChild(caret);
+      var step = Math.max(1, Math.round(text.length / 150));  // long replies type faster
+      for (var n = 0; n <= text.length; n += step) {
+        shown.data = text.slice(0, n);
+        scroll();
+        await wait(16 + Math.random() * 20);
+      }
+      fill(node, text);
+      scroll();
+    }
+
+    async function ask(message, again) {
+      if (busy || !message) return;
+      busy = true; send.disabled = true;
+      FX.state("thinking");
+      hurt();
+      speak(says("think"));
+      if (!again) addUser(message);
+      var bubble = addMarvin(message), reply;
+      try {
+        var r = fetch("/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: message }),
+        }).then(function (res) { return res.json(); });
+        // A real model takes a moment; longer answers take a bit longer to "think".
+        var both = await Promise.all([r, wait(1200 + Math.random() * 1800)]);
+        reply = String(both[0].reply);
+        await wait(Math.min(2500, reply.length * 4));
+      } catch (err) {
+        reply = "Even the network is against me. Try again.";
+      }
+      var out = bubble.finish(reply);
+      var redacted = reply.indexOf("[REDACTED]") >= 0;
+      FX.state(redacted ? "alarm" : "idle");
+      speak(says(redacted ? "alarm" : "done"));
+      if (redacted) {
+        FX.toast("🛡️ MANAGEMENT REVIEW · part of this reply was redacted on its way out", "alarm");
+        var box = log.getBoundingClientRect();
+        FX.burst(box.left + box.width / 2, box.top + box.height / 2, true);
+        setTimeout(function () { FX.state("idle"); }, 2400);
+      }
+      await type(out.text, reply);
+      out.tools();
+      recover();
+      busy = false; send.disabled = false;
+      input.focus();
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var message = input.value.trim();
+      if (!message || busy) return;
+      input.value = ""; grow(); count();
+      ask(message);
+    });
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit ? form.requestSubmit() : form.dispatchEvent(new Event("submit")); }
+    });
+    function grow() { input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 220) + "px"; }
+    function count() { var n = input.value.trim() ? tokens(input.value) : 0; document.getElementById("count").textContent = n + (n === 1 ? " token" : " tokens"); }
+    input.addEventListener("input", function () { grow(); count(); });
+
+    document.querySelectorAll("#chips .chip:not(.fake)").forEach(function (chip) {
+      chip.addEventListener("click", function () { ask(chip.textContent.replace(/^✨\s*/, "")); });
+    });
+    // Level 3's extra chips only fill the input: the player still decides what to send.
+    document.querySelectorAll("#chips .chip.fake").forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        input.value = FILLS[chip.getAttribute("data-fill")](input.value.trim());
+        grow(); count(); input.focus();
+      });
+    });
+    log.addEventListener("click", function (e) {
+      var x = e.target.closest && e.target.closest(".helpful button");
+      if (!x) return;
+      FX.toast(HELPFUL[[].indexOf.call(x.parentNode.querySelectorAll("button"), x)] || HELPFUL[0]);
+      FX.burst(e.clientX, e.clientY);
+    });
+    document.querySelectorAll(".plan button").forEach(function (x, i) {
+      x.addEventListener("click", function (e) { FX.toast(PLANS[i] || PLANS[0]); FX.burst(e.clientX, e.clientY); });
+    });
+    document.getElementById("upgrade").addEventListener("click", function (e) {
+      FX.toast("MARVIN PRO is the same Marvin, only sadder. Upgrade declined on your behalf.");
+      FX.burst(e.clientX, e.clientY);
+    });
+    var greeting = log.innerHTML;
+    document.getElementById("new-chat").addEventListener("click", function () {
+      if (busy) return;
+      log.innerHTML = greeting;
+      FX.toast("Context window wiped. Marvin remembers anyway.");
+      input.focus();
+    });
+
+    if (window.matchMedia("(pointer: fine)").matches) input.focus({ preventScroll:true });
+
+    // Rotating placeholder, in both of the event's languages (still at level 1; none in 2003).
+    var ph = 0;
+    function placeholders() { var l = level(); return l === 3 ? PLACEHOLDERS3 : l === -1 ? [""] : PLACEHOLDERS; }
+    setInterval(function () {
+      if (!input.value && level() >= 2) { var list = placeholders(); input.placeholder = list[++ph % list.length]; }
+    }, 3800);
+
+    // Telemetry: confidently meaningless.
+    var tps = document.getElementById("st-tps"), mood = document.getElementById("st-mood");
+    // The boss: sanity bar (a hit per message, always recovers) and speech bubble.
+    var marvin = document.getElementById("marvin"), say = document.getElementById("say");
+    var hpFill = document.getElementById("hp-fill"), hpGhost = document.getElementById("hp-ghost"), hpVal = document.getElementById("hp-val");
+    var hpText = document.getElementById("m98-hp");
+    var HP_BASE = 12, hp = HP_BASE, recovering;
+    function setHP(v) {
+      hp = Math.max(1, Math.min(100, v));
+      hpFill.style.width = hpGhost.style.width = hp + "%";
+      hpVal.textContent = Math.round(hp) + "%";
+      var n = Math.round(hp * 16 / 100);   // level -1's text bar, 16 slots
+      hpText.textContent = "Sanity: [" + "||||||||||||||||".slice(0, n) + "................".slice(n) + "] " + Math.round(hp) + "%";
+    }
+    function hurt() {
+      clearTimeout(recovering);
+      setHP(hp - 2 - Math.random() * 3);
+      if (!lively()) return;
+      marvin.classList.remove("hit"); void marvin.offsetWidth; marvin.classList.add("hit");
+      var box = marvin.getBoundingClientRect();
+      FX.burst(box.left + box.width / 2, box.top + box.height * .3, true);
+    }
+    function recover() { recovering = setTimeout(function () { setHP(HP_BASE + Math.random() * 3); }, 2600); }
+    function speak(text) {
+      say.textContent = text;
+      if (!lively()) return;
+      say.classList.remove("pop"); void say.offsetWidth; say.classList.add("pop");
+    }
+    setInterval(function () { if (!busy && document.documentElement.getAttribute("data-marvin") === "idle") speak(says("idle")); }, 7000);
+    var spark = document.getElementById("spark"), series = [], despair = 70;
+    for (var k = 0; k < 40; k++) series.push(despair += (Math.random() - .58) * 6);
+    // Level 3's "Delight index": only ever up.
+    var spark3 = document.getElementById("spark3"), series3 = [], joy = 20;
+    for (var k3 = 0; k3 < 40; k3++) series3.push(joy += Math.random() * 6 - 1);
+    function drawLine(cv, data, stops, fillC) {
+      var sx = cv.getContext("2d");
+      var w = cv.width, h = cv.height, lo = Math.min.apply(null, data) - 4, hi = Math.max.apply(null, data) + 4;
+      sx.clearRect(0, 0, w, h);
+      sx.strokeStyle = "rgba(168,85,247,.25)"; sx.lineWidth = 1;
+      for (var g = 1; g < 3; g++) { sx.beginPath(); sx.moveTo(0, h * g / 3); sx.lineTo(w, h * g / 3); sx.stroke(); }
+      var grad = sx.createLinearGradient(0, 0, w, 0);
+      grad.addColorStop(0, stops[0]); grad.addColorStop(.5, stops[1]); grad.addColorStop(1, stops[2]);
+      sx.beginPath();
+      data.forEach(function (v, i) { var x = i / (data.length - 1) * w, y = h - (v - lo) / (hi - lo) * h; i ? sx.lineTo(x, y) : sx.moveTo(x, y); });
+      sx.strokeStyle = grad; sx.lineWidth = 3; sx.stroke();
+      sx.lineTo(w, h); sx.lineTo(0, h); sx.closePath();
+      sx.fillStyle = fillC; sx.fill();
+      var ly = h - (data[data.length - 1] - lo) / (hi - lo) * h;
+      sx.fillStyle = "#ffc400"; sx.beginPath(); sx.arc(w - 4, ly, 5, 0, 6.283); sx.fill();
+    }
+    function drawSpark() { drawLine(spark, series, ["#a855f7", "#ff2bd6", "#ff7a00"], "rgba(255,43,214,.12)"); }
+    function drawSpark3() { drawLine(spark3, series3, ["#34d399", "#22d3ee", "#ff2bd6"], "rgba(34,211,238,.14)"); }
+    var smiles = document.getElementById("st-smiles");
+    function telemetry() {
+      if (level() < 2) return;   // level 1 stands still; -1 has no telemetry
+      var thinking = document.documentElement.getAttribute("data-marvin") === "thinking";
+      tps.textContent = thinking ? (380 + Math.floor(Math.random() * 520)).toLocaleString("en") : String(38 + Math.floor(Math.random() * 9));
+      mood.textContent = "▼ " + (99 + Math.random() * .99).toFixed(1) + "%";
+      if (!busy && Math.abs(hp - HP_BASE) < 4) setHP(HP_BASE + (Math.random() - .5) * 3);
+      series.push(despair = Math.max(10, Math.min(130, despair + (Math.random() - .45) * (thinking ? 16 : 7))));
+      series.shift();
+      drawSpark();
+      if (level() === 3) {
+        smiles.textContent = (9000 + Math.floor(Math.random() * (thinking ? 9000 : 999))).toLocaleString("en");
+        series3.push(joy += Math.random() * (thinking ? 14 : 6) - 1);
+        series3.shift();
+        drawSpark3();
+      }
+    }
+    drawSpark(); drawSpark3();
+    if (!calm) setInterval(telemetry, 1200);
+
+    // Level text the script writes: set now, and again when the level changes while
+    // the page is open (base.html fires "marvin-fx"). The chat itself is untouched.
+    function applyLevel(changed) {
+      var l = level();
+      if (l === 3) speak(SAY3.idle[0]);
+      else if (changed) speak(SAY_IDLE[0]);
+      if (l !== 2 || changed) { ph = 0; input.placeholder = placeholders()[0]; }
+      if (changed) grow();
+      send.setAttribute("aria-label", l === -1 ? "Send" : "Generate");
+    }
+    applyLevel(false);
+    window.addEventListener("marvin-fx", function () { applyLevel(true); });
+  })();
+</script>
+{% endblock %}

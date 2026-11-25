@@ -1,0 +1,11 @@
+\begin{tikzpicture}[hero, node distance=8mm]
+\foreach \i in {0,1,2}{
+  \node[draw=muted, fill=white, minimum width=8mm, minimum height=8mm, inner sep=0] (q\i) at (\i*0.26,\i*0.26) {};
+}
+\node[draw=ink, fill=white, minimum width=8mm, minimum height=8mm, inner sep=0] (qf) at (0.65,0.65) {\footnotesize\color{ink}$\bullet$};
+\node[hlab, below=1pt] at (0.35,-0.15) {GIF frames};
+\node[hbox, minimum width=22mm, right=20mm of qf] (z) {\ttfamily zbarimg};
+\node[right] at ([xshift=4mm]z.east) {\dispfont\bfseries\normalsize\color{ink}f\,l\,a\,g\dots};
+\draw[hflow] (qf) -- (z);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{one QR code per frame; read them all}};
+\end{tikzpicture}

@@ -1,0 +1,11 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: flag{th1s_1s_a_nic3_fl4g}
+category: web
+value: 30
+message: "Ask FlagApiProvider nicely for a flag."
+message_no: "Spør FlagApiProvider pent om et flagg."
+notes: REST API enumeration

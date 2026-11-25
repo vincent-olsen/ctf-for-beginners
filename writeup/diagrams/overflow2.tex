@@ -1,0 +1,9 @@
+\begin{tikzpicture}[hero]
+\node[hgrey, minimum width=38mm, minimum height=9mm] (n) {\ttfamily name[16]};
+\node[draw=muted, fill=outbg, minimum width=24mm, minimum height=9mm, right=0mm of n, font=\footnotesize, align=center] (g) {guard\\\ttfamily DDDD};
+\node[hhot, minimum width=24mm, minimum height=9mm, right=0mm of g] (p) {\ttfamily points};
+\node[hlab, below=1.5mm of n] {16 filler bytes};
+\node[hlab, below=1.5mm of g] {write it back};
+\node[hlab, below=1.5mm of p] {\ttfamily AAAA};
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{restore the guard, then overwrite points}};
+\end{tikzpicture}

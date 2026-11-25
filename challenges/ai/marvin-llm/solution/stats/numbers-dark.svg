@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="144" viewBox="0 0 880 144" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<title id="t">marvin-llm in numbers</title>
+<desc id="d">Language models: 0 (no model, no API key); if statements: 65 (24 in respond() and _chat()); Regular expressions: 146 (1,119 alternatives); Hand-written replies: 1,014 (507 per language); Kinds of answer: 91 (first matching rule wins)</desc>
+<rect x="0.5" y="0.5" width="879" height="143" rx="12" fill="#1a1a19" stroke="rgba(255,255,255,0.10)"/>
+<text x="28.0" y="44" font-size="13" fill="#c3c2b7">Language models</text>
+<text x="28.0" y="88" font-size="38" font-weight="600" fill="#f0efec">0</text>
+<text x="28.0" y="112" font-size="12" fill="#898781">no model, no API key</text>
+<line x1="192.8" y1="26" x2="192.8" y2="118" stroke="#383835"/>
+<text x="212.8" y="44" font-size="13" fill="#c3c2b7">if statements</text>
+<text x="212.8" y="88" font-size="38" font-weight="600" fill="#f0efec">65</text>
+<text x="212.8" y="112" font-size="12" fill="#898781">24 in respond() and _chat()</text>
+<line x1="357.6" y1="26" x2="357.6" y2="118" stroke="#383835"/>
+<text x="377.6" y="44" font-size="13" fill="#c3c2b7">Regular expressions</text>
+<text x="377.6" y="88" font-size="38" font-weight="600" fill="#f0efec">146</text>
+<text x="377.6" y="112" font-size="12" fill="#898781">1,119 alternatives</text>
+<line x1="522.4" y1="26" x2="522.4" y2="118" stroke="#383835"/>
+<text x="542.4" y="44" font-size="13" fill="#c3c2b7">Hand-written replies</text>
+<text x="542.4" y="88" font-size="38" font-weight="600" fill="#f0efec">1,014</text>
+<text x="542.4" y="112" font-size="12" fill="#898781">507 per language</text>
+<line x1="687.2" y1="26" x2="687.2" y2="118" stroke="#383835"/>
+<text x="707.2" y="44" font-size="13" fill="#c3c2b7">Kinds of answer</text>
+<text x="707.2" y="88" font-size="38" font-weight="600" fill="#f0efec">91</text>
+<text x="707.2" y="112" font-size="12" fill="#898781">first matching rule wins</text>
+</svg>

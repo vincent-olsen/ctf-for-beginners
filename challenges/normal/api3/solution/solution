@@ -1,0 +1,16 @@
+#!/bin/bash
+# api3 solver: the API key expires 3 seconds after /key, and /flag must be called
+# three times before then. A shell loop is fast enough; a browser clicking by hand
+# is not ("the script goes brrr").
+#
+# Usage: ./solution <base-url>   e.g. ./solution http://localhost:5013
+set -euo pipefail
+
+URL="${1:-http://localhost:5013}"
+
+API_KEY=$(curl -s "$URL/key" | jq -r .api_key)
+
+# Three calls within the 3s window; the third returns the flag.
+curl -sS "$URL/flag" -H "Authorization: Bearer ${API_KEY}" | jq
+curl -sS "$URL/flag" -H "Authorization: Bearer ${API_KEY}" | jq
+curl -sS "$URL/flag" -H "Authorization: Bearer ${API_KEY}" | jq

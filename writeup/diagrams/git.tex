@@ -1,0 +1,14 @@
+\begin{tikzpicture}[hero, node distance=12mm]
+\draw[line width=0.8pt, muted] (0,0) -- (6.2,0);
+\foreach \x/\lab in {0.4/c1, 3.1/c2, 5.8/HEAD}{
+  \fill[teal] (\x,0) circle (2.2pt);
+}
+\node[hlab, below=2pt] at (0.4,0) {first};
+\node[hhot, above=5mm] (m) at (3.1,0) {\ttfamily git show c2:flag.txt};
+\draw[hbad] (3.1,0.15) -- (m);
+\node[hgrey, below=5mm] (h) at (5.8,0) {redacted};
+\draw[harr] (5.8,-0.15) -- (h);
+\node[hwin, right=6mm of m] (f) {flag\{\dots\}};
+\draw[hflow] (m) -- (f);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{git keeps every old version in its history}};
+\end{tikzpicture}

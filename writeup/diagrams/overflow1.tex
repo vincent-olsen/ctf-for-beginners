@@ -1,0 +1,6 @@
+\begin{tikzpicture}[hero]
+\node[hgrey, minimum width=42mm, minimum height=9mm] (n) {\ttfamily char name[16]};
+\node[hhot, minimum width=26mm, minimum height=9mm, right=0mm of n] (p) {\ttfamily int points};
+\draw[hbad, line width=1pt] ([yshift=6mm]n.north west) -- ([yshift=6mm]p.north east);
+\node[hnote] at ([yshift=9mm]$(n.north east)!0.5!(p.north west)$) {\hcap{20 input bytes run past name into points}};
+\end{tikzpicture}

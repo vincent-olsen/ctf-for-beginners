@@ -1,0 +1,26 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: 'flag{Lift_Magic_Machine}'
+category: pwn
+value: 30
+message: |
+  Reach the guard byte
+
+  Last time it was just maths. This time you actually send bytes.
+
+  Type exactly the right number of characters so your input overflows the buffer and lands on the guard sitting right after it. Remember: one character is one byte.
+message_no: |
+  Nå frem til vakten
+
+  Forrige gang var det bare matte. Denne gangen sender du faktisk bytes.
+
+  Skriv nøyaktig riktig antall tegn, slik at inputen din renner over bufferen og lander på vakten som ligger rett bak. Husk: ett tegn er én byte.
+connection: nc <host> <port>
+port: <port>
+protocol: tcp
+notes: Simple buffer overflow.
+# state: ctf.sh applies it to the CTFd challenge when it imports a backup.
+state: hidden

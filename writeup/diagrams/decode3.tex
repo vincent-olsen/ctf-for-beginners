@@ -1,0 +1,10 @@
+\begin{tikzpicture}[hero, node distance=7mm]
+\node[hgrey, minimum width=17mm] (a) {Base32};
+\node[hgrey, right=6mm of a, minimum width=17mm] (b) {URL};
+\node[hgrey, right=6mm of b, minimum width=17mm] (c) {Morse};
+\node[hgrey, right=6mm of c, minimum width=15mm] (d) {hex};
+\node[hgrey, right=6mm of d, minimum width=17mm] (e) {Base64};
+\node[hwin, right=6mm of e, minimum width=18mm] (f) {flag};
+\foreach \u/\v in {a/b,b/c,c/d,d/e,e/f}{\draw[hflow] (\u) -- (\v);}
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{five layers --- peel from the outside in}};
+\end{tikzpicture}

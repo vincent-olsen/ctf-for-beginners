@@ -1,0 +1,12 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: "flag{secur1ty_n0t_impl3mented}"
+category: web
+value: 20
+message: "New note app! Almost done."
+message_no: "Ny notat-app! Nesten ferdig."
+notes: check the source
+credits: https://github.com/sajjadium/ctf-archives/tree/main/ctfs/ALLES/2021/web/amazing-crypto-waf

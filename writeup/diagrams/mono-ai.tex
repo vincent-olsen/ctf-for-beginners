@@ -1,0 +1,8 @@
+\begin{tikzpicture}[hero, node distance=10mm]
+\node[hhot, minimum width=30mm] (t) {scrambled tokens};
+\node[hbox, minimum width=34mm, right=14mm of t] (u) {rows of 17, read columns};
+\node[hwin, minimum width=30mm, right=14mm of u] (s) {substitute $\to$ text};
+\draw[hflow] (t) -- node[hlab, above]{un-transpose} (u);
+\draw[hflow] (u) -- node[hlab, above]{frequency} (s);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{two classical tricks stacked --- both still fall}};
+\end{tikzpicture}

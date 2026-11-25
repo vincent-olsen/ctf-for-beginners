@@ -1,0 +1,8 @@
+\begin{tikzpicture}[hero, node distance=12mm]
+\node[hbox, minimum width=34mm] (r) {\ttfamily robots.txt};
+\node[hhot, minimum width=34mm, right=16mm of r] (d) {\ttfamily Disallow: /notes};
+\node[hwin, minimum width=30mm, right=16mm of d] (f) {\ttfamily /notes $\to$ flag};
+\draw[hflow] (r) -- (d);
+\draw[hflow] (d) -- node[hlab, above]{go there} (f);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{robots.txt lists the paths they want hidden}};
+\end{tikzpicture}

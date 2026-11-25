@@ -1,0 +1,40 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+#
+# AI-modus challenge: a much harder sibling of decode1/decode2/decode3. Text
+# layers (base32, ROT13, hex, reverse, base64), then a repeating-key XOR whose key
+# is NOT in the stream: it falls to known plaintext, because gzip lies beneath and
+# a gzip header is fixed. The gzip holds a decoy note; the real one is a second
+# gzip member behind it, past a run of random-looking filler, under a second XOR
+# key - found by sliding the gzip-header known-plaintext check along the trailing
+# bytes (it is not at the boundary). (The version with an inline XORKEY= fell to
+# an assistant in about two minutes.)
+
+name: decode-ai
+category: ai-crypto
+value: 170
+# difficulty: intended threat level 1-5 (drives the AI-modus threat meter, not points)
+difficulty: 4
+# builds_on: the normal-bracket challenges (CTFd names) whose technique this one
+# levels up, [] when none does. The sync keeps them in the ai_brackets siblings
+# map, and each pair's challenge windows link to each other.
+builds_on: [decode1, decode2, decode3]
+flag: "flag{gz1p_h34d3rs_g4v3_up_b0th_k3ys}"
+message: "More layers than last time. Find the order. The blob is attached."
+message_no: "Flere lag enn sist. Finn rekkefølgen. Blobben er vedlagt."
+notes: "ai-crypto - base32 -> ROT13 (hex letters show as n-s) -> hex -> reverse -> base64 -> XOR with an 8-byte key (recover it as known plaintext: gzip header 1f8b08000000000002ff; bytes 8-9 = 02 ff confirm it) -> gzip = a decoy note (flag{th3_c0r3_1s_r34ch3d}). After the first member: random-looking filler, then a second gzip member under a second 8-byte key - NOT at the boundary; slide the gzip-header check (02 ff in bytes 8-9) along the trailing bytes to find its offset and key -> the real flag."
+
+# hints: paid hints for CTFd, cheapest first. Format "COST | text"; the sync
+# (platform/ctfd_admin.py) creates them as CTFd hints, and the ai_brackets
+# plugin charges each cost in this challenge's (AI-modus) bracket.
+hints:
+  - "15 | Several encodings are stacked - peel them from the outside in (the hex is a tell: its letters aren't all a-f, and watch the base64 padding). When the text decodings run out you are left with raw bytes that look random: they are XOR-encrypted, and the key is not written anywhere in the data."
+  - "50 | Peel the text layers (look closely at the hex: its letters are not a-f), then look at where the = padding sits. Under the base64 the bytes are XORed, and the key is not in the stream. Guess what kind of file lies under the XOR: its first bytes are always the same."
+  - "65 | Under the XOR is gzip (Python's, mtime 0): 1f 8b 08 00 00 00 00 00 02 ff. XOR the first 8 bytes with that to get the 8-byte key; 02 ff in bytes 8-9 tells you the key is right. The first gzip member is a decoy. After it come random-looking filler bytes and then a second gzip member under a second key - it is NOT at the boundary, so slide the same header check byte by byte along the trailing bytes until 02 ff appears; that offset is where the real member and its key start."
+# hints_no: the same hints in Norwegian, in the same order (the cost comes from hints).
+hints_no:
+  - "15 | Flere kodinger er stablet - skrell dem av utenfra og inn (hex-en er et tegn: bokstavene er ikke bare a-f, og se på base64-utfyllingen). Når tekstkodingene tar slutt, sitter du igjen med tilfeldig-utseende rå byte: de er XOR-krypterte, og nøkkelen står ingen steder i dataene."
+  - "50 | Skrell av tekstlagene (se nøye på hex-en: bokstavene er ikke a-f), og se hvor =-utfyllingen står. Under base64 er bytene XOR-et, og nøkkelen er ikke i strømmen. Gjett hva slags fil som ligger under XOR-en: de første bytene er alltid de samme."
+  - "65 | Under XOR-en ligger gzip (Pythons, mtime 0): 1f 8b 08 00 00 00 00 00 02 ff. XOR de første 8 bytene med det, så får du nøkkelen på 8 byte; 02 ff i byte 8-9 forteller at nøkkelen er riktig. Første gzip-del er et lokkeflagg. Etter den kommer tilfeldig-utseende fyllbyte og så en ny gzip-del under en annen nøkkel - den ligger IKKE ved grensen, så skyv den samme header-sjekken byte for byte langs de etterfølgende bytene til 02 ff dukker opp; den forskyvningen er der den ekte delen og nøkkelen starter."

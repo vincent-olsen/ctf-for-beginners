@@ -1,0 +1,8 @@
+\begin{tikzpicture}[hero, node distance=9mm]
+\node[hhot, minimum width=46mm] (q) {\ttfamily\footnotesize is char 1 = 'f' ?};
+\node[hbox, minimum width=22mm, right=14mm of q, align=center] (o) {matched /\\not matched};
+\draw[hflow] (q) -- node[hlab, above]{one bit} (o);
+\node[hwin, below=6mm of o] (f) {read one char at a time};
+\draw[hflow] (o) -- (f);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{the page shows only whether a row matched}};
+\end{tikzpicture}

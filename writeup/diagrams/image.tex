@@ -1,0 +1,7 @@
+\begin{tikzpicture}[hero]
+\node[hgrey, minimum width=42mm, minimum height=9mm] (d) {JPEG image data};
+\node[hhot, minimum width=30mm, minimum height=9mm, right=0mm of d] (t) {\ttfamily flag\{\dots\}};
+\draw[decorate, decoration={brace, amplitude=4pt, mirror}, draw=muted] ([yshift=-3mm]d.south west) -- node[hlab, below=3pt]{the viewer stops here} ([yshift=-3mm]d.south east);
+\node[hlab, above=1mm of t] {text after the end};
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{strings reads the bytes the picture hides}};
+\end{tikzpicture}

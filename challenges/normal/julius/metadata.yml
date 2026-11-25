@@ -1,0 +1,17 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: "flag{the_empire_fell_for_a_reason}"
+category: crypto
+value: 10
+message: |
+  Cutting-edge crypto, 50 BC. The Romans swore it was unbreakable.
+
+  `iodj{wkh_hpsluh_ihoo_iru_d_uhdvrq}`
+message_no: |
+  Toppmoderne kryptering, anno 50 f.Kr. Romerne mente den var umulig å knekke.
+
+  `iodj{wkh_hpsluh_ihoo_iru_d_uhdvrq}`
+notes: crypto - Caesar cipher

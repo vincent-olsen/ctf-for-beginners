@@ -1,0 +1,8 @@
+\begin{tikzpicture}[hero, node distance=10mm]
+\node[hbox, minimum width=44mm] (a) {\ttfamily find / -name flag.txt};
+\node[hgrey, minimum width=46mm, right=12mm of a] (b) {\ttfamily /var/lib/dpkg/info/flag.txt};
+\draw[hflow] (a) -- node[hlab, above]{2>/dev/null} (b);
+\node[hwin, below=7mm of b] (f) {\ttfamily cat \dots{} $\to$ flag\{\dots\}};
+\draw[hflow] (b) -- (f);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{an unusual location is not protection}};
+\end{tikzpicture}

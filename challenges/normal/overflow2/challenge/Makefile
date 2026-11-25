@@ -1,0 +1,14 @@
+CC      := gcc
+CFLAGS  := -O0 -g -Wall -Wextra -fno-stack-protector -U_FORTIFY_SOURCE -no-pie -Wno-stringop-overflow
+LDFLAGS := -no-pie
+
+all: clean bin
+
+bin: vuln.c
+	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
+
+clean:
+	rm -f bin
+
+dist:
+	cp vuln.c ../distfiles/vulnerable2.c

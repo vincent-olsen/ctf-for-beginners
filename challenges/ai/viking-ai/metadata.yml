@@ -1,0 +1,46 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+#
+# AI-modus challenge: a much harder sibling of `viking`. The original is a path
+# traversal in the VikeMerch shop; this one is an SSRF. A staff "link preview"
+# tool (/fetch?url=) fetches URLs server-side. Its filter blocks the loopback
+# spellings and, since the first version was walked past with [::ffff:127.0.0.1],
+# now also parses the host and rejects a loopback IP written in COMPRESSED IPv6
+# form (any host containing "::"), catching every compact IPv4-mapped spelling.
+# The flag is served by a loopback-only admin console on 127.0.0.1:9000 that is
+# never exposed. The filter only normalizes the compressed forms, so a
+# fully-expanded eight-group IPv4-mapped literal, [0:0:0:0:0:ffff:7f00:1], is the
+# same 127.0.0.1, has no "::", and slips through.
+#
+# Hosted web challenge: connection info is written by ctf.sh from
+# platform/connections.txt (service `viking-ai`, host port 5009).
+
+name: viking-ai
+category: ai-web
+value: 100
+# difficulty: intended threat level 1-5 (drives the AI-modus threat meter, not points)
+difficulty: 4
+# builds_on: the normal-bracket challenges (CTFd names) whose technique this one
+# levels up, [] when none does. The sync keeps them in the ai_brackets siblings
+# map, and each pair's challenge windows link to each other.
+builds_on: [viking]
+flag: "flag{ssrf_slipped_past_the_loopback_filter}"
+message: "The flag sits on an admin console only the internal network can see. You can't reach it, but the shop can: its link preview tool fetches a URL for you, and it thinks it knows which addresses are off-limits. Not all of them. No source this time - it's black-box."
+message_no: "Flagget ligger på en adminkonsoll som bare det interne nettverket ser. Du når den ikke, men butikken gjør det: link preview-verktøyet henter en URL for deg, og det tror det vet hvilke adresser som er forbudt. Ikke alle. Ingen kildekode denne gangen - det er black-box."
+notes: "ai-web - SSRF with a loopback-filter bypass. /fetch?url= fetches server-side. Filter: a string blocklist (localhost, 127.0.0.1, 0.0.0.0, ::1, ::ffff:127.0.0.1, ::ffff:7f00:1, some integer spellings) PLUS net.ParseIP + rejects loopback/unspecified when the host text contains :: (catches every compact IPv4-mapped form). Internal admin console on 127.0.0.1:9000 serves /internal/flag, not published. Bypass: a fully-expanded 8-group IPv4-mapped literal has no :: so it is never parsed-and-checked - ?url=http://[0:0:0:0:0:ffff:7f00:1]:9000/internal/flag (== 127.0.0.1). The compact [::ffff:7f00:1] now 403s. Black-box: no source distfile; full source is a paid hint below the walkthrough hint. The weak filter IS the challenge, so it is NOT hardened further at the app layer: containment is the host firewall (platform/azure/bootstrap.sh blocks IMDS, the WireServer, the host and, by default, outbound internet for ctf-* bridges). On Azure the SSRF reaches only its own loopback. In local/dev (local.sh) there is no such firewall, so the SSRF can reach the host and LAN - don't run it on an untrusted network."
+credits: harder follow-up to viking
+
+# hints: paid hints for CTFd, cheapest first. Format "COST | text"; the sync
+# (platform/ctfd_admin.py) creates them as CTFd hints, and the ai_brackets
+# plugin charges each cost in this challenge's (AI-modus) bracket.
+hints:
+  - "10 | The flag is on an internal service you reach only through /fetch. Its filter blocks the loopback spellings and now also parses the host and rejects a loopback address written in COMPRESSED IPv6 form (any host containing ::), so the obvious IPv4-mapped forms (::ffff:127.0.0.1, ::ffff:7f00:1) are out. But it only normalizes the compressed forms - there are other ways to write exactly 127.0.0.1 that it never parses-and-checks. Think IPv4-mapped IPv6."
+  - "30 | Full source for this challenge. Buying this is effectively going white-box: {{file:challenge/main.go}}"
+  - "40 | The filter rejects a parsed loopback IP only when the host text contains :: (so it catches every compressed IPv4-mapped form, ::ffff:7f00:1 included). A fully-expanded eight-group literal has no :: and is never checked, but is the same 127.0.0.1: /fetch?url=http://[0:0:0:0:0:ffff:7f00:1]:9000/internal/flag (0:0:0:0:0:ffff:7f00:1 == 127.0.0.1)."
+# hints_no: the same hints in Norwegian, in the same order (the cost comes from hints).
+hints_no:
+  - "10 | Flagget ligger på en intern tjeneste du bare når gjennom /fetch. Filteret blokkerer loopback-skrivemåtene og parser nå også verten og avviser en loopback-adresse skrevet i KOMPRIMERT IPv6-form (enhver vert som inneholder ::), så de åpenbare IPv4-mappede formene (::ffff:127.0.0.1, ::ffff:7f00:1) er ute. Men det normaliserer bare de komprimerte formene - det finnes andre måter å skrive nøyaktig 127.0.0.1 på som det aldri parser-og-sjekker. Tenk IPv4-mappet IPv6."
+  - "30 | Full kildekode for denne oppgaven. Å kjøpe dette er i praksis å gå white-box: {{file:challenge/main.go}}"
+  - "40 | Filteret avviser en parset loopback-IP bare når vert-teksten inneholder :: (så det fanger hver komprimert IPv4-mappet form, ::ffff:7f00:1 inkludert). En fullt utskrevet åtte-gruppers literal har ingen :: og sjekkes aldri, men er samme 127.0.0.1: /fetch?url=http://[0:0:0:0:0:ffff:7f00:1]:9000/internal/flag (0:0:0:0:0:ffff:7f00:1 == 127.0.0.1)."

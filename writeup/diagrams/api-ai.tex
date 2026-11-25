@@ -1,0 +1,6 @@
+\begin{tikzpicture}[hero, node distance=10mm]
+\node[hhot, minimum width=56mm, font=\ttfamily\footnotesize] (p) {PATCH /api/me \{permissions:["noteworthy:admin"]\}};
+\node[hwin, minimum width=40mm, below=7mm of p] (f) {\ttfamily GET /api/admin/flag};
+\draw[hflow] (p) -- node[hlab, right]{accepted} (f);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{a block-list forgot the permissions field}};
+\end{tikzpicture}

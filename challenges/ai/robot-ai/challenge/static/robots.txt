@@ -1,0 +1,3 @@
+User-agent: *
+# Marvin keeps trying to read our internal tools. Please don't index these.
+Disallow: /diagnostics

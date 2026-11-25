@@ -1,0 +1,9 @@
+\begin{tikzpicture}[hero, node distance=4mm]
+\node[draw=catweb, fill=catweb!12, minimum width=30mm, minimum height=8mm, rounded corners=3pt, font=\footnotesize] (b) {blue LSB $\to$ decoy};
+\node[draw=catforensics, fill=catforensics!12, minimum width=30mm, minimum height=8mm, rounded corners=3pt, font=\footnotesize, below=4mm of b] (g) {green LSB $\to$ zip};
+\node[draw=catpwn, fill=catpwn!12, minimum width=30mm, minimum height=8mm, rounded corners=3pt, font=\footnotesize, below=4mm of g] (r) {red LSB $\to$ password};
+\node[hwin, right=16mm of g] (f) {unzip $\to$ flag};
+\draw[hflow] (g) -- (f);
+\draw[harr] (r) -| (f);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{each colour channel hides its own layer}};
+\end{tikzpicture}

@@ -1,0 +1,22 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: 'flag{kramer_the_best_hacker_ever}'
+category: forensics
+value: 100
+message: "Forgot the password to my PDF. Only remember it was pretty common. World-class security."
+message_no: "Glemt passordet til PDF-en min. Husker bare at det var ganske vanlig. Sikkerhet i verdensklasse."
+notes: encrypted pdf
+credits: default
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - "10 | If bruteforcing takes too long, try using a password list. `rockyou.txt` is a common one"
+  - "10 | There is a tool called `pdfcrack` which is specifically made for cracking encrypted PDFs"
+hints_no:
+  - "10 | Hvis bruteforce tar for lang tid, prøv en passordliste. `rockyou.txt` er en vanlig en"
+  - "10 | Det finnes et verktøy som heter `pdfcrack`, som er laget spesielt for å knekke krypterte PDF-er"

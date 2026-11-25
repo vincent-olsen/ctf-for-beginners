@@ -1,0 +1,8 @@
+\begin{tikzpicture}[hero]
+\node[hgrey, minimum width=30mm] (a) at (0,0) {cipher letters};
+\node[hbox, minimum width=36mm, right=16mm of a] (b) {most common $\to$ \ttfamily e};
+\node[hwin, minimum width=28mm, below=8mm of b] (c) {readable English};
+\draw[hflow] (a) -- node[hlab, above]{count frequency} (b);
+\draw[hflow] (b) -- (c);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{letter counts reveal the key}};
+\end{tikzpicture}

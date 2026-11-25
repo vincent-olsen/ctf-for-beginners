@@ -1,0 +1,41 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+#
+# AI-modus challenge: a much harder sibling of `mono`. The original is a plain
+# monoalphabetic substitution (one symbol per letter) that falls to a frequency
+# count. This one is HOMOPHONIC (common letters have many symbols, so the
+# histogram is flat), word boundaries are removed, and the token stream is then
+# TRANSPOSED, Z340-style: written in rows of 17 and read off by columns. A
+# homophonic solver on the shipped order finds nothing until the rows are
+# rebuilt. (The version without the transposition fell to an assistant's
+# solver in nine commands.)
+
+name: mono-ai
+category: ai-crypto
+value: 150
+# difficulty: intended threat level 1-5 (drives the AI-modus threat meter, not points)
+difficulty: 4
+# builds_on: the normal-bracket challenges (CTFd names) whose technique this one
+# levels up, [] when none does. The sync keeps them in the ai_brackets siblings
+# map, and each pair's challenge windows link to each other.
+builds_on: [mono]
+flag: "flag{seventeen_columns_and_many_masks}"
+message: "A new alphabet: every symbol is a number. (Attached: the intercept.)"
+message_no: "Et nytt alfabet: hvert symbol er et tall. (Vedlagt: meldingen.)"
+notes: "ai-crypto - homophonic substitution (67 three-digit tokens, ~700 letters, no word boundaries) whose token stream is then transposed: rows of 17, read by columns. The <...> punctuation tokens are transposed too, which is the tell (<}> comes before <{>). Untranspose (the width that puts the flag's <{> <_> <}> back in order near the end), then simulated annealing on English quadgrams; fix the rare letters by reading."
+credits: harder follow-up to mono (github.com/BSidesSF/ctf-2023-release/tree/main/mono)
+
+# hints: paid hints for CTFd, cheapest first. Format "COST | text"; the sync
+# (platform/ctfd_admin.py) creates them as CTFd hints, and the ai_brackets
+# plugin charges each cost in this challenge's (AI-modus) bracket.
+hints:
+  - "15 | The intercept is numeric tokens, one per symbol, so a homophonic-substitution solver is the right tool - but run it and it won't converge. Something rearranged the token order before the substitution; the punctuation tokens (the <...> ones) are your clue to how."
+  - "45 | The <...> tokens are real punctuation, but look where they are: <}> comes before <{>, and the flag's <_> are scattered all over. Something shuffled the order of the tokens before any substitution solver can work. It needs no key."
+  - "60 | Two layers. First a transposition: the stream was written in rows of 17 tokens and read off column by column; rebuild the rows. Then a homophonic substitution (~70 tokens for 26 letters): simulated annealing over token-to-letter maps, scored on English quadgrams within the runs between the <...> tokens. Fix the odd rare letter by reading."
+# hints_no: the same hints in Norwegian, in the same order (the cost comes from hints).
+hints_no:
+  - "15 | Avlyttingen er numeriske symboler, ett per tegn, så en homofon substitusjonsløser er rett verktøy - men kjør den, og den konvergerer ikke. Noe har endret rekkefølgen på symbolene før substitusjonen; tegnsettingssymbolene (<...>-ene) er hintet om hvordan."
+  - "45 | <...>-symbolene er ekte tegnsetting, men se hvor de står: <}> kommer før <{>, og flaggets <_> er spredt utover. Noe har stokket om rekkefølgen på symbolene før en substitusjonsløser kan virke. Det trengs ingen nøkkel."
+  - "60 | To lag. Først en transposisjon: strømmen ble skrevet i rader på 17 symboler og lest av kolonne for kolonne; bygg opp radene igjen. Så en homofon substitusjon (~70 symboler for 26 bokstaver): simulated annealing over avbildninger fra symbol til bokstav, scoret på engelske quadgram innenfor strekkene mellom <...>-symbolene. Rett den rare sjeldne bokstaven ved å lese."

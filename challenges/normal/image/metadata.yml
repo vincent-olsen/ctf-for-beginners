@@ -1,0 +1,22 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: "flag{detective_sh4rk}"
+category: forensics
+value: 30
+extra_flags:  # other spellings accepted as the flag
+  - "flag{detective sh4rk}"
+  - "flag{detectivesh4rk}"
+message: "A friend says there's something in the image. I just see an image. Something about the terminal was mentioned too, or something."
+message_no: "En venn sier det er noe i bildet. Jeg ser bare et bilde. Det ble også nevnt noe om terminalen, eller noe sånt."
+notes: forensics
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - "3 | Which animal says \"meow\"?"
+hints_no:
+  - "3 | Hvilket dyr sier «meow» (på engelsk)?"

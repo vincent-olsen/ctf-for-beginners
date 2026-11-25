@@ -1,0 +1,10 @@
+\begin{tikzpicture}[hero, node distance=7mm]
+\node[hhot, minimum width=46mm] (a) {\ttfamily /assets?id=../db.sqlite3};
+\node[hgrey, minimum width=30mm, right=12mm of a] (db) {the database};
+\draw[hflow] (a) -- node[hlab, above]{read any file} (db);
+\node[hbox, minimum width=34mm, below=6mm of db] (pw) {admin password (clear text)};
+\draw[hflow] (db) -- (pw);
+\node[hwin, left=12mm of pw] (f) {log in $\to$ FLAG cookie};
+\draw[hflow] (pw) -- (f);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{../ walks out of the folder it should stay in}};
+\end{tikzpicture}

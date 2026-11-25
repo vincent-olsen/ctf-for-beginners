@@ -1,0 +1,12 @@
+\begin{tikzpicture}[hero]
+% a wire with birds at different heights
+\draw[line width=0.8pt, teal] (0,0) -- (3.4,0);
+\foreach \x/\h in {0.3/0.55, 0.8/0.25, 1.3/0.7, 1.8/0.4, 2.3/0.6, 2.8/0.3, 3.2/0.5}{
+  \fill[coraldk] (\x,\h) circle (1.6pt);
+  \draw[coraldk, line width=0.7pt] (\x,0) -- (\x,\h);
+}
+\node[hlab, below=1pt] at (1.7,0) {heights on a wire};
+\node[right] at (3.9,0.3) {\dispfont\bfseries\large\color{ink}t h i r t e e n};
+\draw[hflow] (3.55,0.3) -- (3.9,0.3) node[midway,above,hlab]{dCode};
+\node[hnote] at (2.2,-0.9) {\hcap{a known picture alphabet --- look it up, don't break it}};
+\end{tikzpicture}

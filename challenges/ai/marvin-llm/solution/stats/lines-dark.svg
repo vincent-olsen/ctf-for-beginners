@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="208" viewBox="0 0 880 208" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<title id="t">Where the lines of marvin.py go. 2,111 lines. Over half is hand-written replies; the logic is 17%</title>
+<desc id="d">Hand-written replies: 1146 lines (54%); Regexes and keyword lists: 295 lines (14%); Logic (the actual code): 360 lines (17%); Comments and docstrings: 182 lines (9%); Blank lines: 128 lines (6%)</desc>
+<rect x="0.5" y="0.5" width="879" height="207" rx="12" fill="#1a1a19" stroke="rgba(255,255,255,0.10)"/>
+<text x="28" y="40" font-size="17" font-weight="600" fill="#f0efec">Where the lines of marvin.py go</text>
+<text x="28" y="64" font-size="13" fill="#c3c2b7">2,111 lines. Over half is hand-written replies; the logic is 17%</text>
+
+<rect x="28.0" y="92" width="443.0" height="28" rx="4" fill="#3987e5"/>
+<text x="36.0" y="106.0" dy="0.35em" font-size="13" font-weight="600" fill="#ffffff">54%</text>
+<rect x="473.0" y="92" width="114.0" height="28" rx="4" fill="#d95926"/>
+<text x="481.0" y="106.0" dy="0.35em" font-size="13" font-weight="600" fill="#ffffff">14%</text>
+<rect x="589.0" y="92" width="139.2" height="28" rx="4" fill="#199e70"/>
+<text x="597.0" y="106.0" dy="0.35em" font-size="13" font-weight="600" fill="#ffffff">17%</text>
+<rect x="730.2" y="92" width="70.4" height="28" rx="4" fill="#c98500"/>
+<text x="738.2" y="106.0" dy="0.35em" font-size="13" font-weight="600" fill="#ffffff">9%</text>
+<rect x="802.5" y="92" width="49.5" height="28" rx="4" fill="#d55181"/>
+<text x="810.5" y="106.0" dy="0.35em" font-size="13" font-weight="600" fill="#ffffff">6%</text>
+<rect x="28" y="145" width="10" height="10" rx="2" fill="#3987e5"/>
+<text x="46" y="150" dy="0.35em" font-size="13" fill="#c3c2b7">Hand-written replies · <tspan fill="#f0efec" font-weight="600">1,146</tspan> lines</text>
+<rect x="287.8" y="145" width="10" height="10" rx="2" fill="#d95926"/>
+<text x="305.8" y="150" dy="0.35em" font-size="13" fill="#c3c2b7">Regexes and keyword lists · <tspan fill="#f0efec" font-weight="600">295</tspan> lines</text>
+<rect x="571.1300000000001" y="145" width="10" height="10" rx="2" fill="#199e70"/>
+<text x="589.1300000000001" y="150" dy="0.35em" font-size="13" fill="#c3c2b7">Logic (the actual code) · <tspan fill="#f0efec" font-weight="600">360</tspan> lines</text>
+<rect x="28" y="171" width="10" height="10" rx="2" fill="#c98500"/>
+<text x="46" y="176" dy="0.35em" font-size="13" fill="#c3c2b7">Comments and docstrings · <tspan fill="#f0efec" font-weight="600">182</tspan> lines</text>
+<rect x="304.05" y="171" width="10" height="10" rx="2" fill="#d55181"/>
+<text x="322.05" y="176" dy="0.35em" font-size="13" fill="#c3c2b7">Blank lines · <tspan fill="#f0efec" font-weight="600">128</tspan> lines</text>
+</svg>

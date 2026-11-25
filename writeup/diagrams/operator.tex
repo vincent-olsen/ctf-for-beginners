@@ -1,0 +1,8 @@
+\begin{tikzpicture}[hero, node distance=9mm]
+\node[hhot, minimum width=26mm] (c) {\ttfamily flag.enc byte};
+\node[hbox, minimum width=52mm, right=20mm of c] (ops) {\ttfamily \textasciicircum25 \textrightarrow{} +7/3 \textrightarrow{} -5\,\textasciicircum42 \textrightarrow{} -12/2};
+\node[hwin, minimum width=22mm, below=8mm of ops] (p) {\ttfamily plain byte};
+\draw[hflow] (c) -- node[hlab, above]{steps backward} (ops);
+\draw[hflow] (ops) -- (p);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{no key --- just undo the arithmetic}};
+\end{tikzpicture}

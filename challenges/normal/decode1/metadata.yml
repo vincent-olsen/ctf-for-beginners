@@ -1,0 +1,19 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: "flag{th1s_1s_th3_fl4g_n0w}"
+category: crypto
+value: 20
+message: "The string hides something. Obviously."
+message_no: "Strengen skjuler noe. Åpenbart."
+notes: crypto
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - "2 | Someone said that it was encoded with base64."
+hints_no:
+  - "2 | Noen sa at den var kodet med base64."

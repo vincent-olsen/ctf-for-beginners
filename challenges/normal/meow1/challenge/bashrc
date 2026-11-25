@@ -1,0 +1,11 @@
+#!/bin/bash -eu
+set -o pipefail
+
+cd $HOME
+
+cat << EOF
+Welcome to the first terminal challenge!
+
+I'm not kitten around, just take a look to find the flag.
+
+EOF

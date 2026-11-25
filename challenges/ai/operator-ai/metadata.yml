@@ -1,0 +1,39 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+#
+# AI-modus challenge: a much harder sibling of `operator`. The original was
+# "keyless" (invertible arithmetic). This one takes the original's own advice
+# ("l3ts_u5e_4_key_n3xt_t1me") and uses a key: a one-time pad, reused for all
+# seven messages of the day (a many-time pad). The messages are telegrams
+# (capitals, no spaces, STOP), so the usual space trick is gone: statistics get
+# you about 70% and a garbled leetspeak flag; you finish by crib-dragging. (The
+# first version used a short repeating XOR key, which an AI broke with one
+# script; a draft of this one with ordinary sentences fell in six tool calls.)
+
+name: operator-ai
+category: ai-crypto
+value: 80
+# difficulty: intended threat level 1-5 (drives the AI-modus threat meter, not points)
+difficulty: 4
+# builds_on: the normal-bracket challenges (CTFd names) whose technique this one
+# levels up, [] when none does. The sync keeps them in the ai_brackets siblings
+# map, and each pair's challenge windows link to each other.
+builds_on: [operator]
+flag: "flag{0ne_t1me_p4d_m4ny_t1me5}"
+message: "Last time there was no key. Now there is, and it is a one-time pad: random bytes as long as the message. Unbreakable. `encrypt.py` shows the scheme (messages redacted), and `flag.enc` is today's radio traffic, one hex line per message."
+message_no: "Forrige gang var det ingen nøkkel. Nå er det det, og det er et engangsblokk-chiffer (one-time pad): tilfeldige byte like lange som meldingen. Umulig å knekke. `encrypt.py` viser oppsettet (meldingene er sladdet), og `flag.enc` er dagens radiotrafikk, én hex-linje per melding."
+notes: ai-crypto - many-time pad (one XOR pad reused for 7 telegram-style messages - capitals, no spaces, STOP). Per-column statistics (pad bytes that keep every message in A-Z0-9{}_, scored by letter frequency) get ~70%; the leetspeak flag needs exact pad bytes, recovered by crib-dragging the telegrams (pad = c ^ m)
+credits: follow-up to operator (ctf-archives/1337UP/2023/crypto/Keyless)
+
+# hints: paid hints for CTFd, cheapest first. Format "COST | text"; the sync
+# (platform/ctfd_admin.py) creates them as CTFd hints, and the ai_brackets
+# plugin charges each cost in this challenge's (AI-modus) bracket.
+hints:
+  - "10 | Look at the loop: how many pads are there? XOR two ciphertexts and the pad cancels out, leaving the XOR of two plaintexts. The messages are telegrams: CAPITALS, no spaces, STOP for a full stop."
+  - "40 | Many-time pad: per byte position, keep the pad bytes that turn every message into capitals, digits or {}_, and prefer the one that gives common letters. That gets most of it; the flag needs exact bytes, so finish one telegram by hand (the longest starts MORNINGREPORTSTOP), turn it into pad bytes (pad = ciphertext XOR plaintext), and decrypt the rest."
+# hints_no: the same hints in Norwegian, in the same order (the cost comes from hints).
+hints_no:
+  - "10 | Se på løkken: hvor mange nøkler (pads) finnes det? XOR to chiffertekster, og nøkkelen faller bort; igjen står XOR av to klartekster. Meldingene er telegrammer på engelsk: STORE BOKSTAVER, ingen mellomrom, STOP for punktum."
+  - "40 | Many-time pad: for hver byteposisjon, behold nøkkelbytene som gjør alle meldingene til store bokstaver, sifre eller {}_, og foretrekk den som gir vanlige bokstaver. Det gir det meste; flagget trenger eksakte byte, så fullfør ett telegram for hånd (det lengste starter MORNINGREPORTSTOP), gjør det om til nøkkelbyte (nøkkel = chiffertekst XOR klartekst), og dekrypter resten."

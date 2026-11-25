@@ -1,0 +1,11 @@
+\begin{tikzpicture}[hero]
+\node[hgrey, minimum width=30mm, minimum height=9mm] (pad) {72 filler bytes};
+\node[hhot, minimum width=28mm, minimum height=9mm, right=0mm of pad] (g) {\ttfamily pop rdi; ret};
+\node[hhot, minimum width=22mm, minimum height=9mm, right=0mm of g] (k) {\ttfamily 0xc0ffee};
+\node[hwin, minimum width=16mm, minimum height=9mm, right=0mm of k] (w) {\ttfamily win};
+\node[hlab, below=1.5mm of pad] {fill the buffer};
+\node[hlab, below=1.5mm of g] {into rdi};
+\node[hlab, below=1.5mm of k] {the key};
+\node[hlab, below=1.5mm of w] {jump};
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{set the argument, then return into win}};
+\end{tikzpicture}

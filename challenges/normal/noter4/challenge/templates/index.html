@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="relative md:mx-auto w-1/2 lg:w-1/4 z-20">
+  <div class="shadow-lg bg-white rounded-lg p-8">
+    <h1 class="text-center text-2xl text-green-500">Account</h1>
+
+    <form class="pt-6 pb-2 my-2" method="post">
+      <div class="mb-4">
+        <label class="block text-sm font-bold mb-2" for="username">Username</label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500"
+               name="username" id="username" type="text" placeholder="Username" required />
+      </div>
+      <div class="mb-6">
+        <label class="block text-sm font-bold mb-2" for="password">Password</label>
+        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500 mb-3"
+               name="password" id="password" type="password" placeholder="Password" required />
+      </div>
+
+      <div class="block md:flex items-center justify-between gap-2">
+        <button class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded border-b-4 border-green-500"
+                type="submit" formaction="/login">
+          Login
+        </button>
+
+        <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded border-b-4 border-gray-400"
+                type="submit" formaction="/register">
+          Register
+        </button>
+      </div>
+        {% if request.args.get('error') %}
+          <p id="error-msg"
+             role="alert"
+             class="animate-shake text-red-700 text-sm mt-4 bg-red-50 border border-red-200 rounded px-3 py-2">
+            {{ request.args.get('error') }}
+          </p>
+          <script>
+            setTimeout(() => {
+              const el = document.getElementById('error-msg');
+              if (el) {
+                el.style.transition = "opacity 0.5s ease";
+                el.style.opacity = "0";
+                setTimeout(() => el.remove(), 500);
+              }
+            }, 3000); // 3 seconds
+          </script>
+        {% endif %}
+    </form>
+  </div>
+</div>
+{% endblock %}

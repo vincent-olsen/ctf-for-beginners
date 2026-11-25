@@ -1,0 +1,9 @@
+\begin{tikzpicture}[hero, node distance=2.5mm]
+\foreach \col/\x in {catpwn/0, catmisc/1, catweb/2, catforensics/3, catcrypto/4, catpwn/5}{
+  \node[draw=line, fill=\col, minimum width=7mm, minimum height=9mm, inner sep=0] (f\x) at (\x*0.8,0) {};
+}
+\node[hlab, below=1pt] at (2.0,-0.5) {signal flags};
+\draw[hflow] (4.2,0) -- (4.75,0);
+\node[right] at (4.8,0) {\dispfont\bfseries\large\color{ink}F\,L\,A\,G\dots};
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{a known flag alphabet: one flag per letter}};
+\end{tikzpicture}

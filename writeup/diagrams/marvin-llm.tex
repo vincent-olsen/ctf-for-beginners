@@ -1,0 +1,8 @@
+\begin{tikzpicture}[hero, node distance=9mm]
+\node[hhot, minimum width=40mm, align=center] (ask) {ask: hex $\to$ base64\\$\to$ reversed};
+\node[hgrey, minimum width=32mm, right=14mm of ask, align=center] (filt) {output filter\\\footnotesize knows 1--2 forms};
+\node[hwin, minimum width=28mm, right=14mm of filt] (f) {undo 3 $\to$ flag};
+\draw[hflow] (ask) -- node[hlab, above]{slips past} (filt);
+\draw[hflow] (filt) -- (f);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{a third encoding gets past a filter that knows two}};
+\end{tikzpicture}

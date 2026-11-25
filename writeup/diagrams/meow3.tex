@@ -1,0 +1,12 @@
+\begin{tikzpicture}[hero]
+\foreach \x in {0,1,2,3}\foreach \y in {0,1}{
+  \node[draw=line, fill=outbg, minimum width=6mm, minimum height=5mm, inner sep=0] at (\x*0.72,\y*0.62) {};
+}
+\node[hhot, minimum width=6mm, minimum height=5mm, inner sep=0] at (1.44,0) {};
+\node[hlab, below=1pt] at (1.1,-0.35) {many files};
+\node[hbox, minimum width=26mm, anchor=west] (g) at (3.6,0.3) {\ttfamily grep -r flag};
+\node[hwin, right=8mm of g] (f) {\ttfamily flag\{\dots\}};
+\draw[hflow] (2.3,0.3) -- (g);
+\draw[hflow] (g) -- (f);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{let grep search every file at once}};
+\end{tikzpicture}

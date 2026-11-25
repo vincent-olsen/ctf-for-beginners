@@ -1,0 +1,8 @@
+\begin{tikzpicture}[hero, node distance=8mm]
+\node[hhot, minimum width=40mm, align=center] (s) {SUID helper\\\footnotesize runs bash as root};
+\node[hbox, minimum width=34mm, right=16mm of s] (be) {\ttfamily\footnotesize BASH\_ENV=x.sh};
+\draw[hflow] (s) -- (be);
+\node[hwin, below=6mm of be] (f) {\ttfamily cat /root/flag.txt};
+\draw[hflow] (be) -- node[hlab, right]{runs as root} (f);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{bash runs the file you name, as root}};
+\end{tikzpicture}

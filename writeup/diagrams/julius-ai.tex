@@ -1,0 +1,8 @@
+\begin{tikzpicture}[hero, node distance=8mm]
+\node[hhot, minimum width=26mm] (c) {ciphertext};
+\node[hgrey, minimum width=44mm, below=6mm of c] (k) {key = a book's text (De Bello Gallico)};
+\node[hwin, minimum width=26mm, right=20mm of c] (p) {plain English};
+\draw[hflow] (c) -- node[hlab, above]{subtract} (p);
+\draw[hbad] (k) -- node[hlab, right]{crib FLAG\{} (c);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{a key as long as the text, but taken from a book}};
+\end{tikzpicture}

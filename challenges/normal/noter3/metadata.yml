@@ -1,0 +1,19 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: "flag{im_the_adm1n_n0w}" 
+category: web
+value: 100
+message: "Authentication is in! The backend isn't quite ready yet, but some notes are admin-only now. That should do it."
+message_no: "Innlogging er på plass! Backenden er ikke helt klar ennå, men noen notater er nå bare for admin. Det holder sikkert."
+notes: cookies
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - "5 | Cookies nomnom"
+hints_no:
+  - "5 | Cookies, nomnom"

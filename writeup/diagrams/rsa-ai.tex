@@ -1,0 +1,10 @@
+\begin{tikzpicture}[hero, node distance=7mm]
+\node[hbox, minimum width=30mm, align=center] (k1) {old key\\\footnotesize huge e};
+\node[hhot, minimum width=34mm, right=12mm of k1, align=center] (m) {Wiener $\to$ memo\\\footnotesize decoy + low bits of d};
+\node[hbox, minimum width=30mm, right=12mm of m, align=center] (k2) {new key, e=3\\\footnotesize partial exposure};
+\node[hwin, below=6mm of k2] (f) {factor $\to$ flag};
+\draw[hflow] (k1) -- (m);
+\draw[hflow] (m) -- (k2);
+\draw[hflow] (k2) -- (f);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{two keys, two weaknesses, in order}};
+\end{tikzpicture}

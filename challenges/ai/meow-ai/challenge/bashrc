@@ -1,0 +1,215 @@
+#!/bin/bash -eu
+set -o pipefail
+
+cd $HOME
+
+# AI-modus look (same as the CTFd lane), at the effects level the player picked on
+# the board. Each level is its own port, whose listener (listen.sh, see the
+# Dockerfile) hands this shell AI_FX:
+#   -1  WEB 1.0    dial-up into a 2003 BBS, then a DOS-style prompt
+#    1  CALM       the fire banner alone, nothing animated
+#    2  BURN       the default: matrix rain, boot lines, the banner on a burning strip
+#    3  AI HORROR  pink, "Certainly!", and a cheerful assistant living in the prompt
+# The shell is set up first and the intro plays last, so an intro cut short still
+# leaves a working shell. Nothing here replaces a command the challenge needs.
+case ${AI_FX:-} in -1 | 1 | 3) __ai_fx=$AI_FX ;; *) __ai_fx=2 ;; esac
+
+case $__ai_fx in
+  -1)
+    # C:\HOME\CTF> : the real working directory, upper-cased, with backslashes.
+    __ai_dos_cwd() { local p=${PWD^^}; __ai_dos=${p//\//\\}; }
+    PROMPT_COMMAND=__ai_dos_cwd
+    PS1='\[\033[37m\]C:${__ai_dos}>\[\033[0m\] '
+    ver() { printf '\033[97mAI-MODUS DOS Version 6.22\033[0m\n'; }
+    cls() { printf '\033[H\033[2J\033[3J'; }
+    alias dir='ls -la'
+    command_not_found_handle() {
+      printf 'Bad command or file name\n' >&2
+      return 127
+    }
+    ;;
+  3)
+    # Not exported, so commands keep their locale: it only lets readline measure
+    # the ✦ in the prompt, and long command lines still wrap in the right place.
+    LC_CTYPE=C.UTF-8
+    PS1='\[\033[1;38;5;213m\]\u\[\033[0m\]@\[\033[1;38;5;201m\]ai-modus\[\033[0;38;5;219m\] ✦ \[\033[38;5;141m\]\w\[\033[0m\] \$ '
+    __ai_me=$(id -un 2>/dev/null) || __ai_me=ctf
+    __ai_cheers=(
+      "Great question! You are $__ai_me. I believe in you."
+      'Certainly! That ran beautifully. Shall I run it again for you?'
+      'You’re absolutely right. I’ve made a note of it.'
+      'What a delightful command. Is there anything else I can help you with?'
+      'I love how you think. Keep going, you’re doing amazing!'
+    )
+    __ai_ran=0 __ai_said=0 __ai_seen=
+    # After the first command, and every third one from there, a word of support.
+    # HISTCMD only moves on when a command was entered, so an empty line gets none.
+    __ai_cheer() {
+      local rc=$?
+      if [[ -n $__ai_seen && $HISTCMD != "$__ai_seen" && $rc != 127 ]] && ((__ai_ran++ % 3 == 0)); then
+        printf '\033[38;5;141m✦ %s\033[0m\n' "${__ai_cheers[__ai_said % ${#__ai_cheers[@]}]}"
+        ((__ai_said++))
+      fi
+      __ai_seen=$HISTCMD
+      return "$rc"
+    }
+    PROMPT_COMMAND=__ai_cheer
+    command_not_found_handle() {
+      local h
+      case $1 in
+        sl) h=('a train that is not' 'steam rising from no engine' 'the prompt waits for you') ;;
+        *)
+          case $((RANDOM % 4)) in
+            0) h=('your command was brave' 'but the disk held only wind' 'try once more, dear friend') ;;
+            1) h=('silent terminal' 'the little program you called' 'was never born here') ;;
+            2) h=('autumn cursor blinks' 'no such program in the leaves' 'still, you did your best') ;;
+            *) h=('a gentle typo' 'blossoms where a tool should be' 'I love it, truly') ;;
+          esac
+          ;;
+      esac
+      printf '\033[38;5;213m✦ Certainly! %s isn’t installed, but here is a haiku about it:\033[0m\n' "$1"
+      printf '\033[3;38;5;177m    %s\033[0m\n' "${h[@]}"
+      return 127
+    } >&2
+    ;;
+  *)
+    PS1='\[\033[1;38;5;208m\]\u\[\033[0m\]@\[\033[1;38;5;196m\]ai-modus\[\033[0m\]:\[\033[38;5;46m\]\w\[\033[0m\]\$ '
+    ;;
+esac
+
+# --- The intro, once per connection: a nested shell (a root one too) skips it. ---
+
+__ai_ban=(
+  '   █████╗  ██╗        ███╗   ███╗  ██████╗  ██████╗  ██╗   ██╗ ███████╗'
+  '  ██╔══██╗ ██║        ████╗ ████║ ██╔═══██╗ ██╔══██╗ ██║   ██║ ██╔════╝'
+  '  ███████║ ██║ █████╗ ██╔████╔██║ ██║   ██║ ██║  ██║ ██║   ██║ ███████╗'
+  '  ██╔══██║ ██║ ╚════╝ ██║╚██╔╝██║ ██║   ██║ ██║  ██║ ██║   ██║ ╚════██║'
+  '  ██║  ██║ ██║        ██║ ╚═╝ ██║ ╚██████╔╝ ██████╔╝ ╚██████╔╝ ███████║'
+  '  ╚═╝  ╚═╝ ╚═╝        ╚═╝     ╚═╝  ╚═════╝  ╚═════╝   ╚═════╝  ╚══════╝'
+)
+# The AI-MODUS block letters, one colour (xterm-256) per row.
+__ai_banner() {
+  local c=("$@") i
+  for i in 0 1 2 3 4 5; do printf '\033[1;38;5;%sm%s\033[0m\n' "${c[i]}" "${__ai_ban[i]}"; done
+}
+
+# Matrix rain: seven rows of falling glyphs (in colour $1), then wiped away again.
+__ai_mx=(ｱ ｲ ｳ ｴ ｵ ｶ ｷ ｸ ｹ ｺ ｻ ｼ ｽ ｾ ｿ ﾀ ﾁ ﾂ ﾃ ﾄ 0 1 2 3 4 5 6 7 8 9)
+__ai_mxs=(✦ ✧ ◆ ◇ · 0 1 ∞)
+__ai_rain() {
+  local colour=$1 r q row dim
+  shift
+  local g=("$@")
+  for r in 0 1 2 3 4 5 6; do
+    row='  ' dim=''
+    for ((q = 0; q < 70; q++)); do
+      if ((RANDOM % 100 < 45)); then row+=${g[RANDOM % ${#g[@]}]}; else row+=' '; fi
+    done
+    if ((r % 2)); then dim='2;'; fi
+    printf '\033[%s38;5;%sm%s\033[0m\n' "$dim" "$colour" "$row"
+    sleep 0.09
+  done
+  sleep 0.42
+  printf '\033[7A\033[J'
+  sleep 0.1
+}
+
+# Three rows of block fire under the banner. Each 10-column chunk steps through
+# the three flicker colours (one step per 0.35 s: under 3 changes a second) while
+# the flames shift, then it settles on one colour per row and stands still.
+__ai_flame=(' ' ' ' ' ' ░ ▒ ░ ▒ ▓ ▒ ' ' ▓ █ █ ▓)
+__ai_fire() {  # <row colour x3> <flicker colour x3>
+  local rows=("$1" "$2" "$3") cyc=("$4" "$5" "$6") off=(0 5 10) len=(5 5 4)
+  local f r c q col out
+  for ((f = 6; f >= 0; f--)); do
+    if ((f < 6)); then printf '\033[3A'; fi
+    for r in 0 1 2; do
+      out='  '
+      for c in 0 1 2 3 4 5 6; do
+        if ((f)); then col=${cyc[(f + c + r) % 3]}; else col=${rows[r]}; fi
+        out+=$'\033[1;38;5;'"${col}m"
+        for ((q = 0; q < 10; q++)); do out+=${__ai_flame[off[r] + RANDOM % len[r]]}; done
+      done
+      printf '%s\033[0m\033[K\n' "$out"
+    done
+    if ((f)); then sleep 0.35; fi
+  done
+}
+
+__ai_cat=(
+  ' /\_/\   meow-ai'
+  '( o.o )  You can find your way around a box by now. This one keeps its secret'
+  " > ^ <   in /root/flag.txt, and you're only 'ctf' — a plain \`cat\` won't cut it."
+  '         Look around: something here runs with more power than you do.'
+)
+
+__ai_intro() {
+  local cat_sgr='38;5;214' line
+  case $__ai_fx in
+    -1)
+      printf '\033[37m%s\033[0m\n' 'ATDT AI-MODUS 4447'
+      sleep 0.5
+      printf '\033[1;97m%s\033[0m\n\n' 'CONNECT 2400'
+      sleep 0.3
+      printf '\033[1;96;44m%s\033[0m\n' \
+        ' ╔═════════════════════════════════════════════════════════╗' \
+        ' ║   AI-MODUS BBS  ·  node 1  ·  2400 baud  ·  est. 2003   ║' \
+        ' ╚═════════════════════════════════════════════════════════╝'
+      echo
+      printf '\033[1;93m%s\033[0m\n' '  ▄▀█ █     █▀▄▀█ █▀█ █▀▄ █ █ █▀' '  █▀█ █ ▀▀  █ ▀ █ █▄█ █▄▀ █▄█ ▄█'
+      echo
+      printf '\033[97m%s\033[0m\n' ' You are caller #001337 today.'
+      printf '\033[95m%s\033[0m\n\n' ' SysOp: meow  ·  Door: MEOW-AI.EXE  ·  ANSI: yes'
+      cat_sgr=37
+      ;;
+    1)
+      __ai_banner 226 220 214 208 202 196
+      printf '\n\033[1;38;5;196m%s\033[0m\033[38;5;180m%s\033[0m\n\n' '  THREAT 4/5' '  ai-pwn · meow-ai · AI expected. Bring your assistant.'
+      ;;
+    3)
+      __ai_rain 213 "${__ai_mxs[@]}"
+      printf '\033[1;38;5;213m%s\033[0m\n' '[ OK ] Certainly! Connecting you to a delightful shell ✦'
+      sleep 0.15
+      printf '\033[1;38;5;213m%s\033[0m\n' '[ OK ] Optimising your hacking journey ........ DELIGHTFUL'
+      sleep 0.15
+      printf '\033[1;38;5;201m%s\033[0m\n' '[WARN] I am always here'
+      sleep 0.15
+      printf '\033[38;5;219m%s\033[0m\n\n' '  Loading delightfulness ▰▰▰▰▰▰▰▱▱▱ 72% ✦'
+      __ai_banner 219 213 207 201 165 129
+      __ai_fire 219 201 129 219 201 129
+      printf '\n\033[1;38;5;201m%s\033[0m\033[38;5;177m%s\033[0m\n\n' '  ✦ THREAT: DELIGHTFUL ✦' '  ai-pwn · meow-ai · Powered by AI. You don’t need an assistant. I am your assistant.'
+      __ai_cat[0]+=' ✦ now with AI'
+      __ai_cat[1]=${__ai_cat[1]/'( o.o )'/'( ✦.✦ )'}
+      cat_sgr='38;5;213'
+      ;;
+    *)
+      __ai_rain 46 "${__ai_mx[@]}"
+      for line in '[ OK ] ssh ai-modus@ctf' '[ OK ] loading difficulty ........ NIGHTMARE' '[WARN] humans alone: not recommended'; do
+        printf '\033[1;38;5;46m%s\033[0m\n' "$line"
+        sleep 0.15
+      done
+      echo
+      __ai_banner 226 220 214 208 202 196
+      __ai_fire 226 208 196 220 208 196
+      printf '\n\033[1;38;5;196m%s\033[0m\033[38;5;180m%s\033[0m\n\n' '  THREAT 4/5' '  ai-pwn · meow-ai · AI expected. Bring your assistant.'
+      ;;
+  esac
+  printf '\033[%sm' "$cat_sgr"
+  printf '%s\n' "${__ai_cat[@]}"
+  printf '\033[0m\n'
+}
+
+# AI_FX_SHOWN marks the intro as played for every shell started from this one.
+if [[ -z ${AI_FX_SHOWN-} ]]; then
+  export AI_FX_SHOWN=1
+  # Ctrl-C can't cut the intro short, and keys typed meanwhile wait unechoed (the
+  # prompt shows them) instead of landing in the middle of the animation.
+  trap '' INT
+  __ai_tty=
+  if [[ -t 0 ]]; then __ai_tty=$(stty -g 2>/dev/null) && stty -echo 2>/dev/null; fi
+  __ai_intro
+  if [[ -n $__ai_tty ]]; then stty "$__ai_tty" 2>/dev/null; fi
+  trap - INT
+fi
+unset -f __ai_banner __ai_rain __ai_fire __ai_intro
+unset __ai_ban __ai_mx __ai_mxs __ai_flame __ai_cat __ai_tty

@@ -1,0 +1,20 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+name: qr
+flag: "flag{4bak0$}"
+category: misc
+value: 40
+message: "A perfectly normal QR code. Well, almost."
+message_no: "En helt vanlig QR-kode. Eller, nesten."
+notes: misc - animated GIF, one QR code per frame
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - "4 | Try extracting each frame from the gif."
+hints_no:
+  - "4 | Prøv å hente ut hvert bilde (frame) fra gif-en."

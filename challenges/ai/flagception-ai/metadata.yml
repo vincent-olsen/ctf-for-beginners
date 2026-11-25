@@ -1,0 +1,41 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+#
+# AI-modus challenge: a much harder sibling of flagception / image / birds. Those
+# hide the flag where `strings` or a glance finds it. This one is three layers of
+# LSB steganography, one per colour channel, and the first flag you find is a
+# decoy: blue LSBs hold a zlib-compressed fake flag (the old version of this
+# challenge, which an AI solved in one prompt); green LSBs, read column by
+# column, hold a password-protected zip with the real flag; the password is drawn
+# as text in the red LSB plane, so you have to look at the bit plane, not parse it.
+
+name: flagception-ai
+category: ai-forensics
+value: 150
+# difficulty: intended threat level 1-5 (drives the AI-modus threat meter, not points)
+difficulty: 4
+# builds_on: the normal-bracket challenges (CTFd names) whose technique this one
+# levels up, [] when none does. The sync keeps them in the ai_brackets siblings
+# map, and each pair's challenge windows link to each other.
+builds_on: [image]
+flag: "flag{three_dreams_deep_in_limbo}"
+message: "A flag inside a flag inside a flag. Don't wake up too early. (Attached: stego.png.)"
+message_no: "Et flagg inni et flagg inni et flagg. Ikke våkn for tidlig. (Vedlagt: stego.png.)"
+notes: ai-forensics - layered LSB steganography. Blue LSBs row-major = length-prefixed zlib decoy flag; green LSBs column-major = ZipCrypto zip (zsteg -a finds it as b1,g,lsb,yx); red LSB plane = the zip password drawn as text (Stegsolve / Aperi'Solve). The cover is noisy, so diffing against a predicted cover finds nothing.
+
+# hints: paid hints for CTFd, cheapest first. Format "COST | text"; the sync
+# (platform/ctfd_admin.py) creates them as CTFd hints, and the ai_brackets
+# plugin charges each cost in this challenge's (AI-modus) bracket.
+hints:
+  - "10 | Don't stop at the first flag you recover - the challenge warns you not to wake up too early, and it means it. There is more than one hidden layer, and more than one colour channel is carrying something; keep digging past the obvious one."
+  - "25 | The door to limbo is a password-protected zip, and the password is in no wordlist, so don't crack it. Look at the picture one bit plane at a time (Stegsolve, Aperi'Solve) and read what you see."
+  - "40 | The first flag you find is only a dream. Each colour channel has its own layer: sweep all of them, row by row and column by column (zsteg -a does)."
+  - "55 | Blue LSBs, row-major: a decoy. Green LSBs, column by column (down column 0, then column 1, ...), MSB-first: a zip. The red LSB plane shows the totem, which is the zip password. Unzip limbo.txt."
+# hints_no: the same hints in Norwegian, in the same order (the cost comes from hints).
+hints_no:
+  - "10 | Ikke stopp ved det første flagget du finner - oppgaven advarer deg mot å våkne for tidlig, og den mener det. Det finnes mer enn ett skjult lag, og mer enn én fargekanal bærer noe; grav videre forbi det åpenbare."
+  - "25 | Døren til limbo er en passordbeskyttet zip, og passordet står ikke i noen ordliste, så ikke prøv å knekke det. Se på bildet ett bitplan om gangen (Stegsolve, Aperi'Solve) og les det du ser."
+  - "40 | Det første flagget du finner, er bare en drøm. Hver fargekanal har sitt eget lag: gå gjennom alle, rad for rad og kolonne for kolonne (zsteg -a gjør det)."
+  - "55 | Blå LSB-er, rad for rad: et lokkeflagg. Grønne LSB-er, kolonne for kolonne (nedover kolonne 0, så kolonne 1, ...), MSB først: en zip. Det røde LSB-planet viser totemet, som er zip-passordet. Pakk ut limbo.txt."

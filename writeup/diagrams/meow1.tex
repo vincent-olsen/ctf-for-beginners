@@ -1,0 +1,7 @@
+\begin{tikzpicture}[hero, node distance=4mm]
+\node[draw=line, fill=codebg, text=codefg, rounded corners=3pt, align=left, font=\ttfamily\footnotesize, inner sep=7pt] (t)
+{\textcolor{coral}{\$} ls\\\textcolor{teal}{flag.txt}\\\textcolor{coral}{\$} cat flag.txt};
+\node[hwin, right=12mm of t] (f) {\ttfamily flag\{\dots\}};
+\draw[hflow] (t) -- (f);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{connect with nc, then ls and cat}};
+\end{tikzpicture}

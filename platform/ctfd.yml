@@ -1,0 +1,31 @@
+# Override for CTFd's own docker-compose.yml, applied by ctf.sh in every mode.
+
+services:
+  ctfd:
+    # Only reachable through the proxy in front of it.
+    ports: !reset []
+    environment:
+      # CTFd's source is mounted read-only, so it can't persist a generated key.
+      # A stable key keeps sessions valid across restarts, and lets the workers share
+      # them (CTFd refuses more than one worker without it).
+      - SECRET_KEY=${CTFD_SECRET_KEY:?set by ctf.sh}
+      # Two gevent workers instead of CTFd's one: a slow request (the per-bracket
+      # scoreboard recompute after a solve) no longer holds up every other one.
+      - WORKERS=2
+    volumes:
+      # The theme's CSS and JS, which the ctf_theme plugin serves (platform/plugins/).
+      - ${CTF_PLATFORM_DIR:?set by ctf.sh}/theme:/opt/ctf-theme:ro
+    # Twice the default CPU weight: when the challenge containers keep the VM busy,
+    # CTFd and its database get served first. It costs nothing while the VM is idle.
+    cpu_shares: 2048
+
+  db:
+    cpu_shares: 2048
+
+  nginx:
+    # unless-stopped (not CTFd's default "always"): ctf.sh stops the proxy while it
+    # imports/configures CTFd, so a daemon restart must not bring it back in front of
+    # a half-configured CTFd (see the same note on caddy in ctfd.hosted.yml).
+    restart: unless-stopped
+    ports: !override
+      - "${CTF_BIND:-127.0.0.1}:${CTFD_HTTP_PORT:-80}:80"

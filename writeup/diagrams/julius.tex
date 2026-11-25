@@ -1,0 +1,10 @@
+\begin{tikzpicture}[hero]
+\foreach \c/\p/\x in {i/f/0, o/l/1, d/a/2, j/g/3}{
+  \node[hhot, minimum width=9mm, minimum height=7mm] (c\x) at (\x*1.15,0) {\ttfamily \c};
+  \node[hbox, minimum width=9mm, minimum height=7mm] (p\x) at (\x*1.15,-1.25) {\ttfamily \p};
+  \draw[hbad] (c\x) -- node[hlab, right=1pt]{$-3$} (p\x);
+}
+\node[hlab, left=2pt] at (-0.75,0) {cipher};
+\node[hlab, left=2pt] at (-0.75,-1.25) {plain};
+\node[hnote, right] at (4.4,-0.62) {\hcap{every letter shifts the same 3 places}};
+\end{tikzpicture}

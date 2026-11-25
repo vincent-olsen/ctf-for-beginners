@@ -1,0 +1,23 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: "flag{inj3cti0s_sql}"
+category: crypto
+value: 30
+extra_flags:  # other spellings accepted as the flag
+  - "flag{inj3cti0ssql}"
+  - "flaginj3cti0ssql"
+  - "flaginj3cti0s_sql"
+message: "Heard you like flags. So I hid the flag with flags. You're welcome."
+message_no: "Hørte du liker flagg. Så jeg gjemte flagget med flagg."
+notes: crypto - maritime signal flag substitution
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - "3 | Try searching for `flag signals`."
+hints_no:
+  - "3 | Prøv å søke etter `flag signals` (signalflagg)."

@@ -1,0 +1,22 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: 'flag{of_1s_n4ughty_&&_s0_are_u}'
+category: pwn
+value: 80
+message: "Hope you know hex."
+message_no: "Håper du kan hex."
+connection: nc <host> <port>
+port: <port>
+protocol: tcp
+notes: 64-bit ELF, no PIE, no canary. Overflow that must preserve the guard and hit an exact value.
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up. Format
+# "COST | text"; hints_no holds the same hints in Norwegian, in the same order
+# (the cost is taken from hints).
+hints:
+  - "5 | Write the target value as little-endian bytes. One of them is `0x0A`, a newline, and `fgets` stops reading at a newline, so you can't type it in the middle of your input. Look at what `fgets` does with the newline that ends your input."
+hints_no:
+  - "5 | Skriv målverdien som little-endian-bytes. En av dem er `0x0A`, et linjeskift, og `fgets` slutter å lese ved et linjeskift, så du kan ikke skrive det midt i inputen din. Se på hva `fgets` gjør med linjeskiftet som avslutter inputen din."

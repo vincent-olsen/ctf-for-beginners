@@ -1,0 +1,23 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: "flag{p4wsitively_purrf3ct}"
+category: misc
+value: 20
+message: "Now the flag is hidden. For real."
+message_no: "Nå er flagget skjult. Ordentlig."
+connection: nc <host> <port>
+port: <port>
+protocol: tcp
+notes: hidden
+credits: https://github.com/BSidesSF/ctf-2023-release/tree/main/meow
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - "2 | The file is `hidden`, which means something special on unix-systems. You can use the manual (`man ls`) to see available options for `ls` to not ignore these files."
+hints_no:
+  - "2 | Filen er `hidden` (skjult), og det betyr noe spesielt på unix-systemer. Bruk manualen (`man ls`) for å se hvilke valg `ls` har for å ikke hoppe over slike filer."

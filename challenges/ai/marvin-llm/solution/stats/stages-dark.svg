@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="412" viewBox="0 0 880 412" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<title id="t">What each stage looks for. Regex alternatives plus plain strings, per step of the pipeline: the closest thing Marvin has to knowledge</title>
+<desc id="d">Small talk and lore: 601; Prompt-injection detector: 259 (184 regex alternatives + 75 keywords); Language detection: 125 (2 regex alternatives + 123 keywords); Refusal flavours: 108; Maths, encode, decode, echo: 84; Wrong-category attacks: 52; Output filter: 52 (2 regex alternatives + 50 encoded flags); Encoding detector: 47; Fallbacks: 27; Input guard (blocklist): 23 (12 regex alternatives + 11 keywords)</desc>
+<rect x="0.5" y="0.5" width="879" height="411" rx="12" fill="#1a1a19" stroke="rgba(255,255,255,0.10)"/>
+<text x="28" y="40" font-size="17" font-weight="600" fill="#f0efec">What each stage looks for</text>
+<text x="28" y="64" font-size="13" fill="#c3c2b7">Regex alternatives plus plain strings, per step of the pipeline: the closest thing Marvin has to knowledge</text>
+
+<text x="212.2" y="100.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">Small talk and lore</text>
+<path d="M224.2,92.0H565.3A4,4 0 0 1 569.3,96.0V104.0A4,4 0 0 1 565.3,108.0H224.2Z" fill="#3987e5"/>
+<text x="577.3" y="100.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">601</tspan></text>
+<text x="212.2" y="130.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">Prompt-injection detector</text>
+<path d="M224.2,122.0H368.9A4,4 0 0 1 372.9,126.0V134.0A4,4 0 0 1 368.9,138.0H224.2Z" fill="#3987e5"/>
+<text x="380.9" y="130.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">259</tspan><tspan fill="#898781">  184 regex alternatives + 75 keywords</tspan></text>
+<text x="212.2" y="160.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">Language detection</text>
+<path d="M224.2,152.0H291.9A4,4 0 0 1 295.9,156.0V164.0A4,4 0 0 1 291.9,168.0H224.2Z" fill="#3987e5"/>
+<text x="303.9" y="160.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">125</tspan><tspan fill="#898781">  2 regex alternatives + 123 keywords</tspan></text>
+<text x="212.2" y="190.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">Refusal flavours</text>
+<path d="M224.2,182.0H282.2A4,4 0 0 1 286.2,186.0V194.0A4,4 0 0 1 282.2,198.0H224.2Z" fill="#3987e5"/>
+<text x="294.2" y="190.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">108</tspan></text>
+<text x="212.2" y="220.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">Maths, encode, decode, echo</text>
+<path d="M224.2,212.0H268.4A4,4 0 0 1 272.4,216.0V224.0A4,4 0 0 1 268.4,228.0H224.2Z" fill="#3987e5"/>
+<text x="280.4" y="220.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">84</tspan></text>
+<text x="212.2" y="250.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">Wrong-category attacks</text>
+<path d="M224.2,242.0H250.0A4,4 0 0 1 254.0,246.0V254.0A4,4 0 0 1 250.0,258.0H224.2Z" fill="#3987e5"/>
+<text x="262.0" y="250.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">52</tspan></text>
+<text x="212.2" y="280.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">Output filter</text>
+<path d="M224.2,272.0H250.0A4,4 0 0 1 254.0,276.0V284.0A4,4 0 0 1 250.0,288.0H224.2Z" fill="#3987e5"/>
+<text x="262.0" y="280.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">52</tspan><tspan fill="#898781">  2 regex alternatives + 50 encoded flags</tspan></text>
+<text x="212.2" y="310.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">Encoding detector</text>
+<path d="M224.2,302.0H247.1A4,4 0 0 1 251.1,306.0V314.0A4,4 0 0 1 247.1,318.0H224.2Z" fill="#3987e5"/>
+<text x="259.1" y="310.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">47</tspan></text>
+<text x="212.2" y="340.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">Fallbacks</text>
+<path d="M224.2,332.0H235.7A4,4 0 0 1 239.7,336.0V344.0A4,4 0 0 1 235.7,348.0H224.2Z" fill="#3987e5"/>
+<text x="247.7" y="340.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">27</tspan></text>
+<text x="212.2" y="370.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">Input guard (blocklist)</text>
+<path d="M224.2,362.0H233.4A4,4 0 0 1 237.4,366.0V374.0A4,4 0 0 1 233.4,378.0H224.2Z" fill="#3987e5"/>
+<text x="245.4" y="370.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">23</tspan><tspan fill="#898781">  12 regex alternatives + 11 keywords</tspan></text>
+<line x1="224.15" y1="86" x2="224.15" y2="384" stroke="#383835"/>
+</svg>

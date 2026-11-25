@@ -1,0 +1,6 @@
+\begin{tikzpicture}[hero, node distance=10mm]
+\node[hgrey, minimum width=40mm, align=left] (l) {\ttfamily GET /flags\\\footnotesize list, no value};
+\node[hwin, minimum width=44mm, right=18mm of l, align=left] (d) {\ttfamily GET /flags/5\\\footnotesize returns the value};
+\draw[hflow] (l) -- (d);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{the detail endpoint shows what the list hides}};
+\end{tikzpicture}

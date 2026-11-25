@@ -1,0 +1,48 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: "flag{axel_knudsen_2021_sverdrups_gate_23}"
+category: misc
+value: 50
+extra_flags:  # other spellings accepted as the flag
+  - "flag{alex_knudsen_2021_sverdrups_gate_23}"
+  - "flag{alex_knudsen_2021_sverdrupsgate_23}"
+  - "flag{alexknudsen2021sverdrupsgate23}"
+  - "flag{axelknudsen2021sverdrupsgate23}"
+  - "flag{alex_knudsen_2021_sverdrupsgate_23}"
+  - "flag{axel_knudsen_2021_sverdrupsgate_23}"
+  - "flag{aksel_knudsen_2021_sverdrups_gate_23}"
+  - "flag{aksel_knudsen_2021_sverdrupsgate_23}"
+message: |
+  Some detective work. Find out:
+
+  1. What's the artist's name? (firstname_lastname)
+  2. What year was it drawn? (XXXX)
+  3. What's the address of the building it's drawn on? (streetname_streetnumber)
+
+  Note: First and last name only, no middle name. Use "_" if the street name has several words.
+
+  Flag format:
+  flag{firstname_lastname_year_streetname_streetnumber}
+message_no: |
+  Litt detektivarbeid. Finn ut:
+
+  1. Hva heter kunstneren? (fornavn_etternavn)
+  2. Hvilket år ble det tegnet? (XXXX)
+  3. Hvilken adresse har bygningen det er tegnet på? (gatenavn_gatenummer)
+
+  Merk: Bare fornavn og etternavn, ikke mellomnavn. Bruk "_" hvis gatenavnet har flere ord.
+
+  Flaggformat:
+  flag{fornavn_etternavn_årstall_gatenavn_gatenummer}
+notes: misc - OSINT / reverse image search
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - "5 | Have you tried to **search with image** on google.com?"
+hints_no:
+  - "5 | Har du prøvd å **søke med bilde** på google.com?"

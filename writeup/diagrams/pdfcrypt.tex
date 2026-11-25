@@ -1,0 +1,12 @@
+\begin{tikzpicture}[hero, node distance=9mm]
+\node[hhot, minimum width=30mm] (p) {\ttfamily encrypted.pdf};
+\node[hgrey, minimum width=24mm, below=6mm of p] (w) {\ttfamily rockyou.txt};
+\node[hbox, minimum width=22mm, right=16mm of p] (c) {pdfcrack};
+\node[hbox, minimum width=22mm, right=12mm of c] (pw) {\ttfamily hacked};
+\draw[hflow] (p) -- (c);
+\draw[hflow] (w) -| (c);
+\draw[hflow] (c) -- node[hlab, above]{found} (pw);
+\node[hwin, below=6mm of pw] (f) {open $\to$ flag\{\dots\}};
+\draw[hflow] (pw) -- (f);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{strong cipher, but a common password}};
+\end{tikzpicture}

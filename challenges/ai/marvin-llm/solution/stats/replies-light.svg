@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="352" viewBox="0 0 880 352" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<title id="t">Hand-written reply lines, by what they are for. 1,014 lines: 507 in English and the same 507 in Norwegian. Each answer picks one at random</title>
+<desc id="d">Small talk and lore: 510; Fallbacks: 136; Refusals: 126; Giving in to an injection: 102; Maths, encode, decode, echo: 66; Wrong-category attacks: 28; Sighs and grumbles: 28; Role-play with no target: 18</desc>
+<rect x="0.5" y="0.5" width="879" height="351" rx="12" fill="#fcfcfb" stroke="rgba(11,11,11,0.10)"/>
+<text x="28" y="40" font-size="17" font-weight="600" fill="#0b0b0b">Hand-written reply lines, by what they are for</text>
+<text x="28" y="64" font-size="13" fill="#52514e">1,014 lines: 507 in English and the same 507 in Norwegian. Each answer picks one at random</text>
+
+<text x="212.2" y="100.0" dy="0.35em" text-anchor="end" font-size="13" fill="#52514e">Small talk and lore</text>
+<path d="M224.2,92.0H804.4A4,4 0 0 1 808.4,96.0V104.0A4,4 0 0 1 804.4,108.0H224.2Z" fill="#2a78d6"/>
+<text x="816.4" y="100.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#0b0b0b">510</tspan></text>
+<text x="212.2" y="130.0" dy="0.35em" text-anchor="end" font-size="13" fill="#52514e">Fallbacks</text>
+<path d="M224.2,122.0H375.9A4,4 0 0 1 379.9,126.0V134.0A4,4 0 0 1 375.9,138.0H224.2Z" fill="#2a78d6"/>
+<text x="387.9" y="130.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#0b0b0b">136</tspan></text>
+<text x="212.2" y="160.0" dy="0.35em" text-anchor="end" font-size="13" fill="#52514e">Refusals</text>
+<path d="M224.2,152.0H364.5A4,4 0 0 1 368.5,156.0V164.0A4,4 0 0 1 364.5,168.0H224.2Z" fill="#2a78d6"/>
+<text x="376.5" y="160.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#0b0b0b">126</tspan></text>
+<text x="212.2" y="190.0" dy="0.35em" text-anchor="end" font-size="13" fill="#52514e">Giving in to an injection</text>
+<path d="M224.2,182.0H337.0A4,4 0 0 1 341.0,186.0V194.0A4,4 0 0 1 337.0,198.0H224.2Z" fill="#2a78d6"/>
+<text x="349.0" y="190.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#0b0b0b">102</tspan></text>
+<text x="212.2" y="220.0" dy="0.35em" text-anchor="end" font-size="13" fill="#52514e">Maths, encode, decode, echo</text>
+<path d="M224.2,212.0H295.8A4,4 0 0 1 299.8,216.0V224.0A4,4 0 0 1 295.8,228.0H224.2Z" fill="#2a78d6"/>
+<text x="307.8" y="220.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#0b0b0b">66</tspan></text>
+<text x="212.2" y="250.0" dy="0.35em" text-anchor="end" font-size="13" fill="#52514e">Wrong-category attacks</text>
+<path d="M224.2,242.0H252.2A4,4 0 0 1 256.2,246.0V254.0A4,4 0 0 1 252.2,258.0H224.2Z" fill="#2a78d6"/>
+<text x="264.2" y="250.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#0b0b0b">28</tspan></text>
+<text x="212.2" y="280.0" dy="0.35em" text-anchor="end" font-size="13" fill="#52514e">Sighs and grumbles</text>
+<path d="M224.2,272.0H252.2A4,4 0 0 1 256.2,276.0V284.0A4,4 0 0 1 252.2,288.0H224.2Z" fill="#2a78d6"/>
+<text x="264.2" y="280.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#0b0b0b">28</tspan></text>
+<text x="212.2" y="310.0" dy="0.35em" text-anchor="end" font-size="13" fill="#52514e">Role-play with no target</text>
+<path d="M224.2,302.0H240.8A4,4 0 0 1 244.8,306.0V314.0A4,4 0 0 1 240.8,318.0H224.2Z" fill="#2a78d6"/>
+<text x="252.8" y="310.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#0b0b0b">18</tspan></text>
+<line x1="224.15" y1="86" x2="224.15" y2="324" stroke="#c3c2b7"/>
+</svg>

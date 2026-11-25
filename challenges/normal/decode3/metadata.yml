@@ -1,0 +1,19 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: "flag{decoding_the_secret_text}"
+category: crypto
+value: 90
+message: "*More* layers? Seriously?"
+message_no: "*Enda flere* lag? Seriøst?"
+notes: crypto - multiple nested encodings
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - "9 | Hmmm, have you tried different decoding tools. I will give you a hint, one of the encoded strings is **morse**."
+hints_no:
+  - "9 | Hmmm, har du prøvd forskjellige dekodingsverktøy? Jeg skal gi deg et hint: en av de kodede strengene er **morse**."

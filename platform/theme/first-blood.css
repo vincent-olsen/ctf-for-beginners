@@ -1,0 +1,290 @@
+/* =========================================================================
+   FIRST BLOOD  -  styles for first-blood.js (see platform/theme/README.md)
+
+   The show over the Scoreboard page (#ctf-fb), the banner on every other page
+   (#ctf-fb-toasts), the stamp on a player's own solve moment (.ctf-fb-stamp)
+   and the sound control under the Scoreboard's title (#ctf-fb-dock). One look
+   in both lanes and at every level of the AI Slop-o-meter: blood on a machine.
+   Blood red on black, and around it the monitor it is shown on: hex raining
+   behind, scanlines over it, a frame with the solve's number, its time and the
+   announcement as a hexdump, a picture that tears now and then, and a screen
+   that switches off at the end.
+
+   The show's clock comes from first-blood.js as custom properties on #ctf-fb:
+   --fb-show is how long it lasts, and --fb-b0 and --fb-b1 are when FIRST and
+   BLOOD land (on the voice's two words). Everything before --fb-b0 is the
+   intro: the screen coming up while a deep note grows.
+   --fb-team and --fb-chal when the team and the challenge follow, and
+   --fb-heart is the time between the heartbeats behind them.
+   Nothing here takes a click: every layer is pointer-events:none. One bloom of
+   red at --fb-b1 is the only thing close to a flash; the blocks of a tear are
+   small and the switch-off is one thin line. Reduced motion keeps the words
+   and drops everything that moves.
+   ========================================================================= */
+
+:root {
+  --fb-display: Impact, Haettenschweiler, "Anton", "Bebas Neue", "League Gothic", "Arial Narrow Bold", "Arial Black", sans-serif;
+  --fb-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Courier New", monospace;
+  --fb-red: #ff2e1f;
+  --fb-blood: #a30606;
+}
+
+/* ---- the show ------------------------------------------------------------ */
+.ctf-fb { position:fixed; inset:0; z-index:10010; pointer-events:none; overflow:hidden; text-align:center; color:#fff;
+  font-family:"Lato", system-ui, -apple-system, "Segoe UI", sans-serif; }
+/* everything "on the monitor"; the dim under it and the scanlines over it are the monitor */
+.ctf-fb-screen { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+
+/* the end: the picture collapses to a line, the line to a dot, and the room comes back */
+.ctf-fb-out .ctf-fb-screen { animation:ctf-fb-poweroff .42s cubic-bezier(.7,0,.9,.4) forwards; }
+.ctf-fb-out .ctf-fb-off { animation:ctf-fb-offline .5s ease-in forwards; }
+.ctf-fb-out .ctf-fb-dim, .ctf-fb-out .ctf-fb-scan { opacity:0; transition:opacity .34s ease-in .3s; }
+.ctf-fb-off { position:absolute; left:0; right:0; top:50%; height:3px; margin-top:-1.5px; opacity:0; background:#fff;
+  box-shadow:0 0 22px 5px rgba(255,255,255,.7), 0 0 80px 18px rgba(255,60,40,.6); }
+
+.ctf-fb-dim { position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 44%, rgba(46,3,3,.955) 0%, rgba(15,0,0,.97) 52%, rgba(0,0,0,.985) 100%);
+  animation:ctf-fb-fade .3s ease-out both; }
+/* hex raining behind it all: first-blood.js draws it at half size, thinner behind the words */
+.ctf-fb-rain { position:absolute; inset:0; width:100%; height:100%; opacity:.55; animation:ctf-fb-fade .9s ease-out both; }
+/* scanlines over the picture, and a beam reading down it: once fast as it comes up, once slowly later */
+.ctf-fb-scan { position:absolute; inset:0;
+  background:repeating-linear-gradient(0deg, rgba(0,0,0,.24) 0, rgba(0,0,0,.24) 1px, transparent 1px, transparent 3px); }
+.ctf-fb-scan i { position:absolute; left:0; right:0; top:0; height:18vh; transform:translateY(-20vh);
+  background:linear-gradient(180deg, transparent, rgba(255,70,50,.08) 55%, rgba(255,130,110,.26) 96%, transparent);
+  animation:ctf-fb-beam 1.4s linear .2s both, ctf-fb-beam 3.8s linear var(--fb-chal) forwards; }
+/* the intro: a red glow that grows with the deep note, gone the moment the blade lands */
+.ctf-fb-charge { position:absolute; inset:0; opacity:0;
+  background:radial-gradient(ellipse at 50% 44%, rgba(255,44,26,.34), rgba(150,0,0,.14) 34%, transparent 62%);
+  animation:ctf-fb-charge var(--fb-b0) cubic-bezier(.45,0,.85,.5) both; }
+/* a heart beating behind the names */
+.ctf-fb-pulse { position:absolute; inset:-8%; opacity:0;
+  background:radial-gradient(ellipse at 50% 46%, rgba(255,40,24,.36), rgba(160,0,0,.14) 38%, transparent 64%);
+  animation:ctf-fb-heart var(--fb-heart, 1.06s) ease-out var(--fb-team) infinite; }
+/* the one bloom of red, as BLOOD lands */
+.ctf-fb-bloom { position:absolute; inset:0; opacity:0;
+  background:radial-gradient(ellipse at 50% 42%, rgba(255,84,60,.5), rgba(190,0,0,.24) 38%, transparent 70%);
+  animation:ctf-fb-bloom .75s ease-out var(--fb-b1) both; }
+
+/* the cut: a white-hot blade across the screen, and the wound it leaves */
+.ctf-fb-cut { position:absolute; left:-20vw; right:-20vw; top:43%; height:0; transform:rotate(-9deg); }
+.ctf-fb-cut i, .ctf-fb-cut b, .ctf-fb-cut u { position:absolute; left:0; right:0; display:block; }
+/* through the intro, the line of the cut being traced, thin and red, before the blade follows it */
+.ctf-fb-cut u { top:0; height:1px; transform-origin:0 50%; transform:scaleX(0);
+  background:linear-gradient(90deg, transparent, rgba(255,60,44,.85) 12%, rgba(255,60,44,.85) 100%);
+  box-shadow:0 0 10px 1px rgba(255,46,31,.55);
+  animation:ctf-fb-blade calc(var(--fb-b0) - 260ms) cubic-bezier(.3,0,.7,1) 150ms both,
+            ctf-fb-vanish .12s linear calc(var(--fb-b0) - 60ms) forwards; }
+.ctf-fb-cut i { top:-2px; height:4px; transform-origin:0 50%; transform:scaleX(0);
+  background:linear-gradient(90deg, transparent, #fff 18%, #fff 82%, transparent);
+  box-shadow:0 0 18px 4px rgba(255,255,255,.85), 0 0 64px 14px rgba(255,60,40,.7);
+  animation:ctf-fb-blade .2s cubic-bezier(.7,0,.2,1) calc(var(--fb-b0) - 110ms) both,
+            ctf-fb-vanish .4s ease-out calc(var(--fb-b0) + 100ms) forwards; }
+.ctf-fb-cut b { top:-1px; height:3px; opacity:0;
+  background:linear-gradient(90deg, transparent, #b90c0c 14%, #ff4a3a 50%, #b90c0c 86%, transparent);
+  box-shadow:0 0 24px 4px rgba(255,36,24,.6);
+  animation:ctf-fb-wound 2.6s ease-out var(--fb-b0) both; }
+
+.ctf-fb-stage { position:relative; z-index:2; width:min(94vw, 1600px); padding:0 2vw;
+  animation:ctf-fb-push var(--fb-show, 8.8s) linear both; }
+
+/* typed, one character a step (--fb-n of them), with a cursor after it */
+.ctf-fb-kicker { font-family:var(--fb-mono); font-size:clamp(.78rem, 1.3vw, 1.25rem); letter-spacing:.44em;
+  text-transform:uppercase; white-space:nowrap; color:#ff6b5e; }
+.ctf-fb-kicker span { display:inline-block; clip-path:inset(0 100% 0 0);
+  animation:ctf-fb-type .5s steps(var(--fb-n, 20)) calc(var(--fb-b0) * .26) both; }
+.ctf-fb-kicker::after { content:""; display:inline-block; width:.6em; height:1.05em; margin-left:-.25em; vertical-align:-.16em;
+  background:#ff6b5e; animation:ctf-fb-blink .8s steps(2, jump-none) infinite; }
+
+/* FIRST in bone, BLOOD in blood: each slams in on its beat. 900 picks the bold
+   face of a fallback font; Impact has one weight, and none is faked. */
+.ctf-fb-title { display:inline-block; margin:.08em 0 .2em; font-family:var(--fb-display); font-weight:900; font-synthesis:none;
+  font-size:clamp(3.2rem, 15.5vw, 16rem); line-height:.92; letter-spacing:.012em; text-transform:uppercase;
+  white-space:nowrap; transform:skewX(-7deg); filter:drop-shadow(0 .045em 0 #170000); }
+/* the glow: a halo behind the words (a blur filter over them would be redone for every frame a drip moves) */
+.ctf-fb-title::before { content:""; position:absolute; inset:-22% -7%; z-index:-1; opacity:0;
+  background:radial-gradient(ellipse at 50% 52%, rgba(255,44,26,.38), rgba(200,10,5,.16) 45%, transparent 70%);
+  animation:ctf-fb-fade .35s ease-out var(--fb-b0) both; }
+.ctf-fb-word { position:relative; display:inline-block; opacity:0; transform-origin:50% 62%; }
+/* each word's ghosts, in cyan and red: slices of them slip sideways while the picture tears */
+.ctf-fb-word::before, .ctf-fb-word::after { content:attr(data-text); position:absolute; left:0; top:0; white-space:nowrap; opacity:0; }
+.ctf-fb-word::before { color:#00e5ff; }
+.ctf-fb-word::after { color:#ff0a3c; }
+.ctf-fb-tear .ctf-fb-word::before { opacity:.9; animation:ctf-fb-ghost-a .22s steps(1) both; }
+.ctf-fb-tear .ctf-fb-word::after { opacity:.9; animation:ctf-fb-ghost-b .22s steps(1) both; }
+.ctf-fb-tear .ctf-fb-title { animation:ctf-fb-jolt .22s steps(1) both; }
+.ctf-fb-block { position:absolute; display:block; opacity:0; }
+.ctf-fb-w0 { animation:ctf-fb-slam .36s cubic-bezier(.2,.9,.25,1) var(--fb-b0) both,
+                       ctf-fb-split .32s steps(4) var(--fb-b0) both; }
+.ctf-fb-w1 { animation:ctf-fb-slam .42s cubic-bezier(.2,.9,.25,1) var(--fb-b1) both,
+                       ctf-fb-split .36s steps(4) var(--fb-b1) both; }
+.ctf-fb-ch { position:relative; display:inline-block; color:transparent; -webkit-text-fill-color:transparent;
+  -webkit-background-clip:text; background-clip:text; }
+.ctf-fb-w0 .ctf-fb-ch { background-image:linear-gradient(180deg, #ffffff 0%, #f1e4e0 38%, #b9a39e 72%, #7b6460 100%); }
+.ctf-fb-w1 .ctf-fb-ch { background-image:linear-gradient(180deg, #ff8a7a 0%, #ff3a2c 18%, #d8110c 50%, #9b0505 80%, #6a0202 100%); }
+
+/* blood running from the letters; the title leans, the drips hang straight */
+.ctf-fb-drip { position:absolute; top:calc(100% - .17em); width:var(--fb-wide); height:var(--fb-len);
+  margin-left:calc(var(--fb-wide) / -2); border-radius:0 0 999px 999px;
+  background:linear-gradient(180deg, #6a0202, #a30808); transform-origin:50% 0; transform:skewX(7deg) scaleY(0);
+  animation:ctf-fb-drip 2.6s cubic-bezier(.45,0,.8,.55) both; }
+.ctf-fb-drip::after { content:""; position:absolute; left:50%; bottom:-.03em; width:170%; aspect-ratio:1 / 1.25;
+  transform:translateX(-50%); border-radius:50% 50% 50% 50% / 62% 62% 38% 38%; background:#a30808; }
+
+.ctf-fb-rule { height:2px; width:min(62vw, 820px); margin:.3rem auto 1.2rem; transform:scaleX(0);
+  background:linear-gradient(90deg, transparent, var(--fb-red) 28%, #fff 50%, var(--fb-red) 72%, transparent);
+  box-shadow:0 0 16px rgba(255,50,40,.75);
+  animation:ctf-fb-rule .5s cubic-bezier(.2,.8,.2,1) calc(var(--fb-team) - 260ms) both; }
+
+.ctf-fb-team { font-size:clamp(1.8rem, 5.8vw, 6rem); font-weight:900; line-height:1.06; letter-spacing:.02em;
+  overflow-wrap:anywhere; color:#fff; text-shadow:0 0 .45em rgba(255,60,40,.6), 0 .04em 0 #000; opacity:0;
+  animation:ctf-fb-rise .42s cubic-bezier(.2,.8,.2,1) var(--fb-team) both; }
+.ctf-fb-team[data-long="1"] { font-size:clamp(1.5rem, 4.3vw, 4.4rem); }
+.ctf-fb-team[data-long="2"] { font-size:clamp(1.15rem, 3vw, 3rem); }
+
+.ctf-fb-line { margin:1rem 0 .4rem; font-family:var(--fb-mono); font-size:clamp(.74rem, 1.2vw, 1.15rem);
+  letter-spacing:.36em; text-transform:uppercase; color:#ff8a7d; opacity:0;
+  animation:ctf-fb-fade .4s ease-out var(--fb-chal) both; }
+
+.ctf-fb-chal { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:.5rem 1.2rem; opacity:0;
+  animation:ctf-fb-rise .42s cubic-bezier(.2,.8,.2,1) calc(var(--fb-chal) + 140ms) both; }
+.ctf-fb-chal-name { font-size:clamp(1.5rem, 4.2vw, 4.2rem); font-weight:800; line-height:1.1; overflow-wrap:anywhere;
+  color:#ffd9a8; text-shadow:0 0 .5em rgba(255,120,40,.5), 0 .04em 0 #000; }
+.ctf-fb-chips { display:inline-flex; flex-wrap:wrap; justify-content:center; gap:.45rem; }
+.ctf-fb-chip { padding:.22em .8em; border:1px solid rgba(255,90,74,.6); border-radius:999px; background:rgba(40,2,2,.7);
+  font-family:var(--fb-mono); font-size:clamp(.72rem, 1.15vw, 1.1rem); font-weight:700; letter-spacing:.08em;
+  text-transform:uppercase; white-space:nowrap; color:#ffd0c9; }
+.ctf-fb-chip-pts { border-color:var(--fb-red); background:linear-gradient(180deg, #e3160f, #9b0505); color:#fff; }
+.ctf-fb[data-lane="normal"] .ctf-fb-chip-lane { border-color:#5ab0ff; color:#bfe0ff; }
+.ctf-fb[data-lane="ai"] .ctf-fb-chip-lane { border-color:#ffc400; color:#ffe08a; }
+
+/* ---- the frame: corner brackets and three read-outs ---------------------------- */
+.ctf-fb-hud { position:absolute; inset:clamp(10px, 2.2vw, 34px); font-family:var(--fb-mono);
+  font-size:clamp(.64rem, 1.02vw, 1.08rem); letter-spacing:.1em; text-align:left; color:#ff8a7d; }
+.ctf-fb-corner { position:absolute; width:clamp(18px, 3vw, 46px); height:clamp(18px, 3vw, 46px); border:2px solid rgba(255,74,58,.9);
+  animation:ctf-fb-corner .36s cubic-bezier(.2,.8,.2,1) 60ms both; }
+.ctf-fb-tl { left:0; top:0; border-right:0; border-bottom:0; }
+.ctf-fb-tr { right:0; top:0; border-left:0; border-bottom:0; }
+.ctf-fb-bl { left:0; bottom:0; border-right:0; border-top:0; }
+.ctf-fb-br { right:0; bottom:0; border-left:0; border-top:0; }
+.ctf-fb-read { position:absolute; padding:.4em .75em; border:1px solid rgba(255,74,58,.3); background:rgba(10,0,0,.62);
+  white-space:nowrap; animation:ctf-fb-fade .3s ease-out 200ms both; }
+.ctf-fb-read-tl { left:clamp(26px, 3.8vw, 62px); top:.15em; display:flex; align-items:center; gap:.9em; color:#ffb0a6; }
+.ctf-fb-read-tr { right:clamp(26px, 3.8vw, 62px); top:.15em; }
+.ctf-fb-dot { width:.62em; height:.62em; border-radius:50%; background:var(--fb-red); box-shadow:0 0 .7em var(--fb-red);
+  animation:ctf-fb-blink 1s steps(2, jump-none) infinite; }
+.ctf-fb-dimmer { color:rgba(255,138,125,.62); }
+/* the announcement as xxd prints it, typed a line at a time as the team comes up */
+.ctf-fb-hex { left:clamp(26px, 3.8vw, 62px); bottom:.15em; letter-spacing:0; line-height:1.45; white-space:pre;
+  color:rgba(255,150,138,.9); animation-delay:calc(var(--fb-team) - 100ms); }
+.ctf-fb-hex div { clip-path:inset(0 100% 0 0);
+  animation:ctf-fb-type .34s steps(34) calc(var(--fb-team) + var(--fb-i) * 160ms) both; }
+
+.ctf-fb-drop { position:absolute; display:block; border-radius:50% 50% 50% 50% / 62% 62% 38% 38%;
+  background:radial-gradient(circle at 35% 30%, #e62018, #7a0303); }
+
+@keyframes ctf-fb-fade { from { opacity:0; } to { opacity:1; } }
+@keyframes ctf-fb-blink { from { opacity:1; } to { opacity:.15; } }
+@keyframes ctf-fb-charge { 0% { opacity:0; transform:scale(.6); } 94% { opacity:1; transform:scale(1.08); }
+  100% { opacity:0; transform:scale(1.08); } }
+@keyframes ctf-fb-type { from { clip-path:inset(0 100% 0 0); } to { clip-path:inset(0 0 0 0); } }
+@keyframes ctf-fb-beam { from { transform:translateY(-20vh); } to { transform:translateY(102vh); } }
+@keyframes ctf-fb-corner { from { opacity:0; transform:scale(1.9); } to { opacity:1; transform:none; } }
+@keyframes ctf-fb-ghost-a { 0% { clip-path:inset(8% 0 64% 0); transform:translateX(-.07em); }
+  25% { clip-path:inset(56% 0 18% 0); transform:translateX(.06em); } 50% { clip-path:inset(30% 0 46% 0); transform:translateX(-.04em); }
+  75% { clip-path:inset(74% 0 6% 0); transform:translateX(.08em); } 100% { clip-path:inset(50% 0 50% 0); transform:none; } }
+@keyframes ctf-fb-ghost-b { 0% { clip-path:inset(44% 0 30% 0); transform:translateX(.08em); }
+  25% { clip-path:inset(12% 0 70% 0); transform:translateX(-.05em); } 50% { clip-path:inset(66% 0 12% 0); transform:translateX(.05em); }
+  75% { clip-path:inset(22% 0 58% 0); transform:translateX(-.08em); } 100% { clip-path:inset(50% 0 50% 0); transform:none; } }
+@keyframes ctf-fb-jolt { 0% { transform:skewX(-7deg) translateX(.02em); } 33% { transform:skewX(-13deg) translateX(-.03em); }
+  66% { transform:skewX(-2deg) translateX(.018em); } 100% { transform:skewX(-7deg); } }
+@keyframes ctf-fb-poweroff { 0% { transform:scale(1, 1); opacity:1; } 60% { transform:scale(1, .004); opacity:1; }
+  100% { transform:scale(0, .004); opacity:0; } }
+@keyframes ctf-fb-offline { 0%, 44% { opacity:0; transform:scaleX(1); } 52% { opacity:1; transform:scaleX(1); }
+  86% { opacity:1; transform:scaleX(.02); } 100% { opacity:0; transform:scaleX(0); } }
+@keyframes ctf-fb-vanish { to { opacity:0; } }
+@keyframes ctf-fb-push { from { transform:scale(1); } to { transform:scale(1.05); } }
+@keyframes ctf-fb-blade { from { transform:scaleX(0); } to { transform:scaleX(1); } }
+@keyframes ctf-fb-wound { 0% { opacity:0; transform:scaleY(1); } 5% { opacity:1; transform:scaleY(2.6); } 100% { opacity:0; transform:scaleY(.4); } }
+@keyframes ctf-fb-bloom { 0% { opacity:0; } 14% { opacity:1; } 100% { opacity:0; } }
+@keyframes ctf-fb-heart { 0% { opacity:0; transform:scale(.96); } 8% { opacity:.95; transform:scale(1); } 19% { opacity:.3; }
+  27% { opacity:.7; } 56%, 100% { opacity:0; transform:scale(1.03); } }
+@keyframes ctf-fb-slam { 0% { opacity:0; transform:scale(3.4); } 50% { opacity:1; transform:scale(.93); }
+  74% { transform:scale(1.035); } 100% { opacity:1; transform:scale(1); } }
+/* a split second of red and cyan as the word hits */
+@keyframes ctf-fb-split { 0% { filter:drop-shadow(.07em 0 0 #00e5ff) drop-shadow(-.07em 0 0 #ff0030); }
+  70% { filter:drop-shadow(.02em 0 0 #00e5ff) drop-shadow(-.02em 0 0 #ff0030); } 100% { filter:none; } }
+@keyframes ctf-fb-drip { from { transform:skewX(7deg) scaleY(0); } to { transform:skewX(7deg) scaleY(1); } }
+@keyframes ctf-fb-rule { from { transform:scaleX(0); } to { transform:scaleX(1); } }
+@keyframes ctf-fb-rise { from { opacity:0; transform:translateY(.5em); } to { opacity:1; transform:none; } }
+
+/* a phone held upright: one word per line */
+@media (max-aspect-ratio: 3/4) {
+  .ctf-fb-title { font-size:27vw; white-space:normal; }
+  .ctf-fb-word { display:block; }
+}
+/* a narrow screen has no room for the hexdump or the clock */
+@media (max-width: 760px) {
+  .ctf-fb-hex, .ctf-fb-read-tr { display:none; }
+  .ctf-fb-kicker { letter-spacing:.2em; }
+}
+
+/* ---- the banner on the other pages -------------------------------------------- */
+#ctf-fb-toasts { position:fixed; top:74px; left:0; right:0; z-index:10005; display:flex; flex-direction:column;
+  align-items:center; gap:.5rem; padding:0 12px; pointer-events:none; }
+.ctf-fb-toast { display:flex; align-items:center; gap:.9rem; max-width:min(100%, 780px); padding:.55rem 1.1rem .6rem .6rem;
+  border:1px solid var(--fb-blood); border-left:4px solid var(--fb-red); border-radius:10px;
+  background:linear-gradient(180deg, rgba(40,4,4,.97), rgba(18,1,1,.97)); color:#ffe9e6;
+  box-shadow:0 10px 34px rgba(0,0,0,.55), 0 0 26px rgba(255,40,25,.3);
+  font:600 1rem/1.3 "Lato", system-ui, -apple-system, "Segoe UI", sans-serif;
+  transition:opacity .4s ease-in, transform .4s ease-in;
+  animation:ctf-fb-toast-in .5s cubic-bezier(.2,1.3,.4,1) both; }
+.ctf-fb-toast.ctf-fb-toast-out { opacity:0; transform:translateY(-14px); }
+.ctf-fb-toast-tag { flex:none; padding:.12rem .6rem .08rem; border-radius:4px; transform:skewX(-7deg);
+  background:linear-gradient(180deg, #ff4a3a, var(--fb-blood)); color:#fff; font-family:var(--fb-display);
+  font-size:1.25rem; font-weight:900; font-synthesis:none; letter-spacing:.04em; line-height:1.2; white-space:nowrap;
+  text-shadow:0 1px 0 #400; }
+.ctf-fb-toast-text { min-width:0; overflow-wrap:anywhere; }
+.ctf-fb-toast-text b { color:#fff; font-weight:800; }
+.ctf-fb-toast-pts { margin-left:.6rem; font-family:var(--fb-mono); font-size:.9em; white-space:nowrap; color:#ffb347; }
+@keyframes ctf-fb-toast-in { from { opacity:0; transform:translateY(-28px) scale(.96); } to { opacity:1; transform:none; } }
+
+/* ---- the stamp on a player's own solve moment (ai-mode.js, #ctf-win) -------------- */
+.ctf-fb-stamp { display:flex; flex-direction:column; align-items:center; width:fit-content; margin:1rem auto 0;
+  padding:.4rem 1.1rem .45rem; border:3px solid var(--fb-red); border-radius:8px; background:rgba(60,0,0,.4);
+  box-shadow:0 0 24px rgba(255,40,25,.45); transform:rotate(-4deg);
+  animation:ctf-fb-stamp .45s cubic-bezier(.2,1.6,.4,1) both; }
+.ctf-fb-stamp strong { font-family:var(--fb-display); font-size:clamp(1.7rem, 5vw, 2.5rem); font-weight:900;
+  font-synthesis:none; letter-spacing:.05em; line-height:1.05; color:#ff4a3a; text-shadow:0 2px 0 #300; }
+.ctf-fb-stamp span { font:600 .85rem/1.3 "Lato", system-ui, sans-serif; letter-spacing:.02em; color:#ffd0c9; }
+@keyframes ctf-fb-stamp { from { opacity:0; transform:rotate(-12deg) scale(2.4); } to { opacity:1; transform:rotate(-4deg) scale(1); } }
+
+/* ---- the sound control under the Scoreboard's title --------------------------------- */
+#ctf-fb-dock { display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:.5rem .6rem;
+  margin-top:1rem; font:600 .85rem/1.2 "Lato", system-ui, -apple-system, "Segoe UI", sans-serif; }
+.ctf-fb-dock-label { font-size:.74rem; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:#ff6b5e; }
+#ctf-fb-dock button { display:inline-flex; align-items:center; gap:.4rem; padding:.3rem .8rem; border:1px solid rgba(255,90,74,.55);
+  border-radius:999px; background:rgba(60,6,6,.4); color:#ffd9d2; font:inherit; cursor:pointer; }
+#ctf-fb-dock button:hover { background:rgba(130,12,12,.55); color:#fff; }
+#ctf-fb-dock button:focus-visible { outline:2px solid #ff6b5e; outline-offset:2px; }
+#ctf-fb-dock[data-sound="on"] .ctf-fb-dock-sound { border-color:#ff6b5e; background:#b3110d; color:#fff; }
+.ctf-fb-dock-icon svg { display:block; width:1.05rem; height:1.05rem; fill:currentColor; }
+.ctf-fb-wave { fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; }
+.ctf-fb-dock-hint { display:none; flex-basis:100%; font-size:.8rem; color:#ffb347; }
+#ctf-fb-dock[data-sound="on"][data-armed="false"] .ctf-fb-dock-hint { display:block;
+  animation:ctf-fb-hint 1.3s ease-in-out infinite alternate; }
+@keyframes ctf-fb-hint { from { opacity:.55; } to { opacity:1; } }
+
+/* for a screen reader only */
+#ctf-fb-live { position:absolute; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0);
+  white-space:nowrap; border:0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ctf-fb, .ctf-fb *, .ctf-fb *::before, .ctf-fb *::after, .ctf-fb-toast, .ctf-fb-stamp, .ctf-fb-dock-hint {
+    animation:none !important; transition:none !important; }
+  .ctf-fb-cut, .ctf-fb-bloom, .ctf-fb-charge, .ctf-fb-pulse, .ctf-fb-drip, .ctf-fb-rain, .ctf-fb-scan i, .ctf-fb-off { display:none; }
+  .ctf-fb-word, .ctf-fb-team, .ctf-fb-line, .ctf-fb-chal, .ctf-fb-title::before { opacity:1; }
+  .ctf-fb-kicker span, .ctf-fb-hex div { clip-path:none; }
+  .ctf-fb.ctf-fb-out { opacity:0; }
+  .ctf-fb-rule { transform:none; }
+}

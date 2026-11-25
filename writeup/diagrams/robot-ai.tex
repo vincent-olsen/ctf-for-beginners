@@ -1,0 +1,8 @@
+\begin{tikzpicture}[hero, node distance=4mm]
+\node[draw=ink, fill=codebg, text=codefg, rounded corners=3pt, inner sep=6pt, font=\ttfamily\scriptsize, align=left] (t)
+{\{"alg":"\textcolor{coral}{none}"\}.\\\{"role":"\textcolor{green}{admin}"\}.};
+\node[hlab, above=0.5mm of t] {forged token};
+\node[hwin, right=18mm of t] (f) {\ttfamily GET /admin $\to$ flag};
+\draw[hbad] (t) -- node[hlab, above]{no signature} (f);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{the server lets the token pick alg:none}};
+\end{tikzpicture}

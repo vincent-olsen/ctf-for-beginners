@@ -1,0 +1,261 @@
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+/* =========================================================================
+   PREVIEW  -  a vintage green-phosphor terminal, for ctf.sh up --preview only.
+   Injected after ai-mode.css by ctfd_admin.py while a preview runs, and only
+   then; every rule needs html[data-ctf-preview]. The board reads like `ls -la`
+   and a challenge window like `cat`. preview.js plays the boot screen.
+   Animation stops under reduced motion.
+   ========================================================================= */
+
+html[data-ctf-preview] {
+  --pv-bg:     #010802;
+  --pv-panel:  #021006;
+  --pv-fg:     #33ff66;
+  --pv-bright: #c2ffd2;
+  --pv-dim:    #1f9e48;
+  --pv-faint:  #0d4420;
+  --pv-lime:   #d4ff3a;
+  --pv-amber:  #ffb000;
+  --pv-font:   "VT323", ui-monospace, SFMono-Regular, Menlo, Consolas, "Courier New", monospace;
+  --pv-glow:   0 0 2px rgba(51,255,102,.9), 0 0 9px rgba(51,255,102,.45);
+  color-scheme: dark;
+  background: var(--pv-bg);
+  /* Bootstrap paints most components from these */
+  --bs-body-bg: var(--pv-bg); --bs-body-bg-rgb: 1,8,2;
+  --bs-body-color: var(--pv-fg); --bs-body-color-rgb: 51,255,102;
+  --bs-emphasis-color: var(--pv-bright); --bs-secondary-color: var(--pv-dim);
+  --bs-tertiary-bg: var(--pv-panel); --bs-border-color: var(--pv-faint);
+  --bs-link-color: var(--pv-fg); --bs-link-hover-color: var(--pv-bright);
+  --bs-body-font-family: var(--pv-font);
+}
+html[data-ctf-preview] body { background: var(--pv-bg) !important; color: var(--pv-fg) !important;
+  font-family: var(--pv-font) !important; font-size: 1.3rem; text-shadow: var(--pv-glow); }
+html[data-ctf-preview] * { border-radius: 0 !important; }
+html[data-ctf-preview] ::selection { background: var(--pv-fg); color: #000; text-shadow: none; }
+html[data-ctf-preview] { scrollbar-color: var(--pv-dim) var(--pv-bg); }
+
+/* ---- the CRT: scanlines and a vignette over everything, clicks pass through */
+html[data-ctf-preview] body::before,
+html[data-ctf-preview] body::after { content: ""; position: fixed; inset: 0; pointer-events: none; }
+html[data-ctf-preview] body::before { z-index: 2147483400;
+  background: radial-gradient(ellipse at center, transparent 58%, rgba(0,0,0,.6) 100%); }
+html[data-ctf-preview] body::after { z-index: 2147483500;
+  background: repeating-linear-gradient(to bottom, rgba(0,0,0,.22) 0, rgba(0,0,0,.22) 1px, transparent 1px, transparent 3px);
+  animation: pv-hum 6s linear infinite; }
+
+/* ---- type, links, code ---------------------------------------------------- */
+html[data-ctf-preview] h1, html[data-ctf-preview] h2, html[data-ctf-preview] h3,
+html[data-ctf-preview] h4, html[data-ctf-preview] h5,
+html[data-ctf-preview] .btn, html[data-ctf-preview] .nav-link,
+html[data-ctf-preview] input, html[data-ctf-preview] .form-control {
+  font-family: var(--pv-font) !important; font-weight: 400 !important; letter-spacing: .02em; }
+html[data-ctf-preview] h1, html[data-ctf-preview] h2, html[data-ctf-preview] h3 {
+  color: var(--pv-bright) !important; text-shadow: var(--pv-glow); }
+html[data-ctf-preview] a { color: var(--pv-fg) !important; text-decoration: underline dotted; }
+html[data-ctf-preview] a:hover { color: #000 !important; background: var(--pv-fg); text-shadow: none; }
+html[data-ctf-preview] code, html[data-ctf-preview] pre {
+  background: transparent !important; color: var(--pv-lime) !important; font-family: var(--pv-font) !important;
+  font-size: 1em; text-shadow: 0 0 6px rgba(212,255,58,.45); }
+html[data-ctf-preview] .text-muted, html[data-ctf-preview] .footer,
+html[data-ctf-preview] .footer a { color: var(--pv-dim) !important; }
+html[data-ctf-preview] .spinner { color: var(--pv-fg); }
+
+/* ---- navbar: the event's logo, then a prompt instead of the event's name ---- */
+html[data-ctf-preview] .navbar { background: #000 !important; border-bottom: 1px solid var(--pv-dim);
+  box-shadow: 0 0 18px rgba(51,255,102,.15) !important; }
+html[data-ctf-preview] .navbar-brand { font-size: 0 !important; color: var(--pv-fg) !important;
+  background: none !important; text-decoration: none; display: inline-flex; align-items: center; }
+html[data-ctf-preview] .navbar-brand img { order: -1; height: 32px; width: auto; margin-right: .6rem;
+  filter: drop-shadow(0 0 6px rgba(51,255,102,.35)); }
+/* No "~" anywhere: VT323 draws it as a raised squiggle that reads like an N. */
+html[data-ctf-preview] .navbar-brand::before { content: "guest@ctf $"; font: 1.6rem var(--pv-font);
+  color: var(--pv-fg); text-shadow: var(--pv-glow); }
+html[data-ctf-preview] .navbar-brand::after { content: "\2588"; font: 1.6rem var(--pv-font);
+  color: var(--pv-fg); margin-left: .25rem; animation: pv-blink 1.06s steps(1) infinite; }
+html[data-ctf-preview] .navbar .nav-link { color: var(--pv-fg) !important; font-size: 1.35rem;
+  text-transform: lowercase; text-decoration: none; text-shadow: var(--pv-glow); }
+html[data-ctf-preview] .navbar .nav-link:hover,
+html[data-ctf-preview] .navbar .nav-link:focus-visible { background: var(--pv-fg); color: #000 !important; text-shadow: none; }
+/* always the terminal: no light/dark switch */
+html[data-ctf-preview] .navbar .nav-item:has(> .theme-switch) { display: none; }
+/* the language switch (i18n.js) as a dim option list, the current one bright */
+html[data-ctf-preview] .ctf-lang-switch button { font: 1.2rem var(--pv-font); color: var(--pv-dim);
+  text-transform: lowercase; text-shadow: none; text-decoration: none; }
+html[data-ctf-preview] .ctf-lang-switch button[aria-checked="true"] { color: var(--pv-fg); text-shadow: var(--pv-glow); }
+html[data-ctf-preview] .ctf-lang-switch button[aria-checked="true"]::before { content: "["; }
+html[data-ctf-preview] .ctf-lang-switch button[aria-checked="true"]::after { content: "]"; }
+html[data-ctf-preview] .ctf-lang-switch button:hover { color: #000; background: var(--pv-fg); }
+html[data-ctf-preview] .navbar-toggler { border: 1px solid var(--pv-dim) !important; }
+html[data-ctf-preview] .dropdown-menu { background: #000 !important; border: 1px solid var(--pv-dim) !important;
+  --bs-dropdown-link-color: var(--pv-fg); --bs-dropdown-link-hover-bg: var(--pv-fg);
+  --bs-dropdown-link-hover-color: #000; }
+
+/* ---- page title: $ cd challenges (the navbar prompt has the only cursor) --- */
+html[data-ctf-preview] .jumbotron { background: transparent !important; color: var(--pv-fg) !important;
+  border-bottom: 1px dashed var(--pv-faint); }
+html[data-ctf-preview] .jumbotron h1 { font-size: clamp(2.6rem, 8vw, 4.8rem); text-transform: lowercase; }
+html[data-ctf-preview] .jumbotron h1::before { content: "$ cd "; color: var(--pv-dim); }
+
+/* the countdown to the event (preview.js): a command, then the time left */
+/* the font is set here too: CTFd's ".jumbotron .container" (Raleway) would win */
+html[data-ctf-preview] #pv-countdown { box-sizing: border-box; max-width: 1000px; margin: 1rem auto .4rem; padding: .7rem 1rem .8rem;
+  text-align: left; font-family: var(--pv-font); container-type: inline-size;
+  border: 1px solid var(--pv-dim); background: #000;
+  box-shadow: 0 0 18px rgba(51,255,102,.12), inset 0 0 24px rgba(51,255,102,.06); }
+html[data-ctf-preview] #pv-countdown .pv-cd-cmd { font-size: 1.3rem; color: var(--pv-fg); overflow-wrap: anywhere; }
+html[data-ctf-preview] #pv-countdown .pv-cd-prompt { color: var(--pv-dim); }
+/* Sized to the box (cqi; the vw line is for a browser without container units):
+   "T-00d 00h 00m 00s" is 17 characters of VT323 at .4em each, so 13cqi fills
+   about 90% of it. Should VT323 not load, the wider fallback monospace wraps at
+   the spaces instead of running off the screen */
+html[data-ctf-preview] #pv-countdown .pv-cd-clock { font-size: clamp(1.4rem, 8vw, 4.6rem);
+  font-size: clamp(1.4rem, 13cqi, 4.6rem); line-height: 1.05;
+  color: var(--pv-bright); font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 3px rgba(194,255,210,.9), 0 0 16px rgba(51,255,102,.6); }
+html[data-ctf-preview] #pv-countdown .pv-cd-note { font-size: 1.2rem; color: var(--pv-dim); }
+html[data-ctf-preview] #pv-countdown.pv-cd-done .pv-cd-note { color: var(--pv-lime); }
+
+/* ---- the board as a directory listing -------------------------------------- */
+html[data-ctf-preview] .category-header h3 { font-size: 2rem; text-transform: lowercase; }
+html[data-ctf-preview] .category-header h3::before { content: "drwxr-xr-x  "; color: var(--pv-dim); }
+html[data-ctf-preview] .category-header h3::after { content: "/"; color: var(--pv-dim); }
+html[data-ctf-preview] .challenge-button { background: #000 !important; color: var(--pv-fg) !important;
+  border: 1px solid var(--pv-dim) !important; box-shadow: inset 0 0 14px rgba(51,255,102,.08) !important;
+  text-shadow: var(--pv-glow); transform: none !important; transition: none !important; }
+html[data-ctf-preview] .challenge-button:hover,
+html[data-ctf-preview] .challenge-button:focus-visible { background: var(--pv-fg) !important; color: #000 !important;
+  border-color: var(--pv-fg) !important; text-shadow: none; box-shadow: 0 0 22px rgba(51,255,102,.55) !important;
+  outline: none; }
+html[data-ctf-preview] .challenge-inner p { font-size: 1.7rem; margin-bottom: .2rem; }
+html[data-ctf-preview] .challenge-inner p::before { content: "./"; opacity: .7; }
+/* only the value span: ai-mode.js also drops .ai-heat / .ai-sib spans in here, and
+   they must not get the "[ ... pts]" wrapper */
+html[data-ctf-preview] .challenge-inner span:not(.ai-sib):not(.ai-heat) { font-size: 1.25rem; opacity: .85; }
+html[data-ctf-preview] .challenge-inner span:not(.ai-sib):not(.ai-heat)::before { content: "["; }
+html[data-ctf-preview] .challenge-inner span:not(.ai-sib):not(.ai-heat)::after { content: var(--ctf-t-pv-pts); }
+
+html[data-ctf-preview] .challenge-button.pv-solved { border-color: var(--pv-lime) !important;
+  box-shadow: inset 0 0 18px rgba(212,255,58,.14) !important; }
+html[data-ctf-preview] .challenge-button.pv-solved .challenge-inner::after { content: var(--ctf-t-pv-solved);
+  display: block; margin-top: .15rem; font-size: 1.1rem; color: var(--pv-lime); white-space: pre; }
+html[data-ctf-preview] .challenge-button.pv-solved:hover .challenge-inner::after,
+html[data-ctf-preview] .challenge-button.pv-solved:focus-visible .challenge-inner::after { color: #000; }
+
+/* ---- a challenge window: cat <name> ---------------------------------------- */
+html[data-ctf-preview] .modal-backdrop { background: #000; }
+html[data-ctf-preview] .modal-content { background: #000 !important; color: var(--pv-fg) !important;
+  border: 1px solid var(--pv-fg) !important; box-shadow: 0 0 34px rgba(51,255,102,.28), inset 0 0 40px rgba(51,255,102,.06) !important; }
+html[data-ctf-preview] .modal-content .nav-tabs { border-bottom: 1px dashed var(--pv-faint) !important; }
+html[data-ctf-preview] .modal-content .nav-tabs .nav-link { color: var(--pv-dim) !important; border: 1px solid transparent !important;
+  background: transparent !important; font-size: 1.3rem; }
+html[data-ctf-preview] .modal-content .nav-tabs .nav-link.active { color: var(--pv-fg) !important;
+  border-color: var(--pv-dim) var(--pv-dim) #000 !important; }
+html[data-ctf-preview] .btn-close { filter: invert(1) sepia(1) saturate(6) hue-rotate(70deg) brightness(1.1); opacity: .9; }
+html[data-ctf-preview] .challenge-name { font-size: 2.6rem !important; text-transform: lowercase; }
+html[data-ctf-preview] .challenge-name::before { content: "$ cat "; color: var(--pv-dim); }
+html[data-ctf-preview] .challenge-value { font-size: 1.6rem !important; color: var(--pv-lime) !important; }
+html[data-ctf-preview] .challenge-value::before { content: "["; }
+html[data-ctf-preview] .challenge-value::after { content: var(--ctf-t-pv-pts); }
+html[data-ctf-preview] .challenge-desc { font-family: var(--pv-font) !important; font-size: 1.4rem;
+  color: var(--pv-fg) !important; line-height: 1.35; }
+html[data-ctf-preview] .modal-content .form-control,
+html[data-ctf-preview] .modal-content input { background: #000 !important; color: var(--pv-bright) !important;
+  border: 1px dashed var(--pv-dim) !important; box-shadow: none !important; caret-color: var(--pv-fg);
+  font-size: 1.45rem; }
+html[data-ctf-preview] .modal-content .form-control:focus { border-style: solid !important; border-color: var(--pv-fg) !important;
+  box-shadow: 0 0 12px rgba(51,255,102,.35) !important; }
+html[data-ctf-preview] .modal-content .form-control::placeholder { color: var(--pv-dim); opacity: 1; }
+html[data-ctf-preview] .btn:not(.challenge-button):not(.btn-close) { background: #000 !important;
+  color: var(--pv-fg) !important; border: 1px solid var(--pv-fg) !important; box-shadow: none !important;
+  font-size: 1.35rem; text-transform: uppercase; text-shadow: var(--pv-glow); }
+html[data-ctf-preview] .btn:not(.challenge-button):not(.btn-close):hover,
+html[data-ctf-preview] .btn:not(.challenge-button):not(.btn-close):focus-visible {
+  background: var(--pv-fg) !important; color: #000 !important; text-shadow: none; }
+/* Correct / Incorrect, as terminal output */
+html[data-ctf-preview] .notification-row .alert { background: #000 !important; border: 1px solid currentColor !important;
+  font-family: var(--pv-font) !important;
+  font-size: 1.45rem; text-transform: uppercase; }
+html[data-ctf-preview] .notification-row .alert-success { color: var(--pv-fg) !important; }
+html[data-ctf-preview] .notification-row .alert-success strong::before { content: "[  OK  ] "; }
+html[data-ctf-preview] .notification-row .alert-danger,
+html[data-ctf-preview] .notification-row .alert-warning { color: var(--pv-amber) !important;
+  text-shadow: 0 0 8px rgba(255,176,0,.5); }
+html[data-ctf-preview] .notification-row .alert-danger strong::before { content: "[ FAIL ] "; }
+/* an answer CTFd has no colour for: an expired session, a refused request, "too fast" */
+html[data-ctf-preview] .notification-row .alert:not(.alert-success):not(.alert-info):not(.alert-danger):not(.alert-warning) {
+  color: var(--pv-amber) !important; text-shadow: 0 0 8px rgba(255,176,0,.5); text-transform: none; }
+html[data-ctf-preview] .notification-row .alert:not(.alert-success):not(.alert-info):not(.alert-danger):not(.alert-warning) strong::before {
+  content: "[ WARN ] "; }
+/* a wrong flag: the terminal's own "try again" line and glitch in place of the
+   lanes' (ai-mode.js sets data-ctf-fails and replays .ctf-refail); the words are
+   --ctf-t-* variables from i18n.strings.js */
+html[data-ctf-preview] .notification-row .alert-danger::after { content: var(--ctf-t-pv-try-again);
+  margin-top: .3rem; font-size: 1.2rem; text-transform: none; opacity: .8; }
+html[data-ctf-preview] .notification-row .alert-danger:not([data-ctf-fails="1"])[data-ctf-fails]::after {
+  content: var(--ctf-t-pv-try-again-n-a) attr(data-ctf-fails) var(--ctf-t-pv-try-again-n-b); }
+html[data-ctf-preview] .notification-row .alert-danger.ctf-refail { animation: pv-refail .55s ease-out 1; }
+html[data-ctf-preview] .notification-row .alert-info { color: var(--pv-lime) !important; }
+html[data-ctf-preview] .table { --bs-table-bg: transparent; --bs-table-color: var(--pv-fg);
+  --bs-table-striped-bg: rgba(51,255,102,.06); --bs-table-striped-color: var(--pv-fg); }
+
+/* ---- a solve (preview.js): a terminal over the page for ~3.5 s, no clicks --- */
+#pv-win { position: fixed; inset: 0; z-index: 2147483300; pointer-events: none; overflow: hidden;
+  display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.55);
+  font-family: var(--pv-font); transition: opacity .4s ease; }
+#pv-win.pv-win-out { opacity: 0; }
+#pv-win .pv-win-glyph { position: absolute; top: 0; font: 1.6rem var(--pv-font); font-style: normal;
+  color: var(--pv-fg); text-shadow: var(--pv-glow); }
+#pv-win .pv-win-term { position: relative; z-index: 1; box-sizing: border-box; width: min(640px, calc(100vw - 32px));
+  padding: 1rem 1.3rem 1.1rem; background: #000; border: 1px solid var(--pv-fg); color: var(--pv-fg);
+  font-size: 1.45rem; line-height: 1.3; text-shadow: var(--pv-glow);
+  box-shadow: 0 0 40px rgba(51,255,102,.35), inset 0 0 40px rgba(51,255,102,.08); }
+#pv-win .pv-win-term > div { white-space: pre-wrap; overflow-wrap: anywhere; animation: pv-win-line .01s steps(1) both; }
+#pv-win .pv-win-cmd { color: var(--pv-bright); }
+#pv-win .pv-win-ok { color: var(--pv-lime); }
+#pv-win .pv-win-big { margin: .35rem 0; font-size: clamp(2.6rem, 10vw, 4.4rem); line-height: 1;
+  color: var(--pv-bright); letter-spacing: .04em;
+  text-shadow: 0 0 4px rgba(194,255,210,.95), 0 0 22px rgba(51,255,102,.8); }
+#pv-win .pv-win-big { animation-name: pv-win-line, pv-win-flash; animation-duration: .01s, .6s;
+  animation-timing-function: steps(1), steps(2); }
+@keyframes pv-win-line { from { visibility: hidden; } to { visibility: visible; } }
+@keyframes pv-win-flash { 0% { opacity: .2; } 50% { opacity: 1; } 100% { opacity: 1; } }
+
+/* ---- boot screen (preview.js), first page of a browser session ----------------
+   preview.head.js sets html.pv-booting before paint, so this black cover hides the
+   page until the boot screen is up. It lifts itself after 7 s even if the script
+   never runs, so the page can't stay covered. */
+html.pv-booting::after { content: ""; position: fixed; inset: 0; z-index: 2147483000; background: #000;
+  animation: pv-uncover 0s linear 7s forwards; }
+#pv-boot { position: fixed; inset: 0; z-index: 2147483100; background: #000; color: var(--pv-fg);
+  font: 1.5rem/1.35 var(--pv-font); text-shadow: var(--pv-glow); padding: 7vh 8vw; overflow: hidden;
+  display: flex; flex-direction: column; cursor: pointer; }
+#pv-boot.pv-boot-out { opacity: 0; transition: opacity .35s ease; }
+#pv-boot .pv-boot-log { margin: 0; white-space: pre-wrap; font: inherit; color: inherit; flex: 0 1 auto; }
+#pv-boot .pv-ok { color: var(--pv-lime); }
+#pv-boot .pv-boot-bar { margin-top: 1.2rem; color: var(--pv-bright); white-space: pre; }
+#pv-boot .pv-boot-skip { margin-top: auto; color: var(--pv-dim); font-size: 1.15rem; }
+#pv-boot .pv-caret { animation: pv-blink 1.06s steps(1) infinite; }
+
+@keyframes pv-blink { 50% { opacity: 0; } }
+@keyframes pv-uncover { to { visibility: hidden; } }
+/* a wrong flag again: the line jolts sideways, tears and flares amber, then settles */
+@keyframes pv-refail {
+  0%   { transform: none; }
+  10%  { transform: translateX(-12px) skewX(-8deg); opacity: .55;
+         box-shadow: 0 0 26px rgba(255,176,0,.85), inset 0 0 30px rgba(255,176,0,.4); }
+  20%  { transform: translateX(10px) skewX(5deg); opacity: 1; }
+  32%  { transform: translateX(-8px); opacity: .7; }
+  44%  { transform: translateX(6px); opacity: 1;
+         box-shadow: 0 0 18px rgba(255,176,0,.55), inset 0 0 18px rgba(255,176,0,.25); }
+  58%  { transform: translateX(-4px); }
+  72%  { transform: translateX(2px); }
+  100% { transform: none; box-shadow: none; }
+}
+/* a faint, slow brightness wobble: no flashes */
+@keyframes pv-hum { 0%, 100% { opacity: .9; } 50% { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-ctf-preview] *, html[data-ctf-preview] *::before, html[data-ctf-preview] *::after,
+  #pv-boot, #pv-boot *, #pv-win, #pv-win * { animation: none !important; transition: none !important; }
+  html.pv-booting::after { animation: pv-uncover 0s linear 3s forwards !important; }
+}

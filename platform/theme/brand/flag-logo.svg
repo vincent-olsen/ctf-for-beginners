@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- targeting brackets -->
+  <g fill="none" stroke="#FE947C" stroke-width="3" stroke-linecap="square" opacity="0.9">
+    <path d="M6 15V6h9M49 6h9v9M58 49v9h-9M15 58H6v-9"/>
+  </g>
+  <!-- a flag on its pole; the cyan and green copies are the glitch offset -->
+  <defs>
+    <path id="flag" d="M18 13h5v39h-5z M23 14c6-3 11-3 16 0s10 3 15 0v20c-5 3-10 3-15 0s-10-3-16 0z"/>
+  </defs>
+  <use href="#flag" fill="#00F0FF" opacity="0.55" transform="translate(-1.6,0)"/>
+  <use href="#flag" fill="#39FF88" opacity="0.45" transform="translate(1.4,0.6)"/>
+  <use href="#flag" fill="#FE947C"/>
+  <!-- prompt cursor -->
+  <rect x="41" y="45" width="10" height="4" fill="#39FF88"/>
+</svg>

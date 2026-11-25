@@ -1,0 +1,26 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: flag{b0t_dont_k1ll_m7_vib3}
+category: web
+value: 60
+message: "Turns out “crawlers” found the flag. Fixed: it's now where the bots can't find it. Genius."
+message_no: "«Crawlere» fant visst flagget. Fikset: nå ligger det der robotene ikke finner det. Genialt."
+notes: robots.txt
+credits: https://github.com/sajjadium/ctf-archives/tree/main/ctfs/ALLES/2021/web/amazing-crypto-waf
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - |
+    5 | There's a file called `robots.txt` on the web server.
+
+    Finding it will tell you where to go next.
+hints_no:
+  - |
+    5 | Det finnes en fil som heter `robots.txt` på webserveren.
+
+    Når du finner den, får du vite hvor du skal videre.

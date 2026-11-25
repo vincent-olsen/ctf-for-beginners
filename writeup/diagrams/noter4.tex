@@ -1,0 +1,10 @@
+\begin{tikzpicture}[hero]
+\node[hhot, minimum width=38mm, align=left, font=\ttfamily\footnotesize] (in) {user: admin'-{}-\\pass: x};
+\node[hlab, above=0.5mm of in] {you type};
+\node[draw=ink, fill=codebg, rounded corners=3pt, inner sep=7pt, font=\ttfamily\scriptsize, text=codefg, right=14mm of in, align=left] (q)
+{...WHERE username='\textcolor{coral}{admin'}\textcolor{green}{-{}-}\textcolor{muted}{' AND pass='x'}};
+\draw[hflow] (in) -- (q);
+\node[align=left, font=\scriptsize, text=ink, below=5mm of q]
+{\textcolor{coraldk}{\textbf{admin'}} closes the text early\quad\textcolor{greendk}{\textbf{-{}-}} comments out the rest};
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{your input becomes part of the query}};
+\end{tikzpicture}

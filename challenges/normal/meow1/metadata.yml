@@ -1,0 +1,25 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: 'flag{R_u_k1tten_me}'
+category: misc
+value: 10
+message: |
+  Welcome to the first terminal challenge!
+
+  Here you learn to connect to a server and grab the flag. Use netcat (`nc`): copy the command below and paste it into your terminal.
+
+  `nc` comes with Linux and macOS. On Windows, use `ncat` (it comes with Nmap): type `ncat` where the command says `nc`.
+message_no: |
+  Velkommen til den første terminaloppgaven!
+
+  Her lærer du å koble deg til en server og hente flagget. Bruk netcat (`nc`): kopier kommandoen under og lim den inn i terminalen.
+
+  `nc` følger med på Linux og macOS. På Windows bruker du `ncat` (følger med Nmap): skriv `ncat` der kommandoen sier `nc`.
+connection: nc <host> <port>
+port: <port>
+protocol: tcp
+notes: Super simple terminal challenge to get folks started
+credits: https://github.com/BSidesSF/ctf-2023-release/tree/main/meow

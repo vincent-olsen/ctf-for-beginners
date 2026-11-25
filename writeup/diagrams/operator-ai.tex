@@ -1,0 +1,10 @@
+\begin{tikzpicture}[hero, node distance=6mm]
+\node[hhot, minimum width=20mm] (c1) {$C_1$};
+\node[hhot, minimum width=20mm, right=8mm of c1] (c2) {$C_2$};
+\node[font=\large] (x) at ($(c1)!0.5!(c2)$) [yshift=0mm] {};
+\node[hbox, minimum width=44mm, right=16mm of c2] (r) {$P_1 \oplus P_2$ \;(pad cancels)};
+\draw[hflow] (c2) -- node[hlab, above]{$C_1\oplus C_2$} (r);
+\node[hwin, below=6mm of r] (f) {crib-drag $\to$ flag};
+\draw[hflow] (r) -- (f);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{one pad used for seven messages}};
+\end{tikzpicture}

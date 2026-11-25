@@ -1,0 +1,232 @@
+# Every containerised challenge, with a unique host port each.
+# ctf.sh runs this file; platform/connections.txt maps these services to CTFd challenges.
+# Build contexts are challenges/normal/<name>/challenge and challenges/ai/<name>/challenge.
+#
+# CTF_BIND controls which interface ports are published on:
+#   127.0.0.1 (default) - only this machine can connect
+#   0.0.0.0             - other machines can connect (LAN play or a hosted server)
+
+name: ctf-challenges
+
+x-challenge: &challenge
+  restart: unless-stopped
+  pids_limit: 256
+  mem_limit: 512m
+  cpus: 1
+  networks: [challenges]
+  # No challenge needs a capability or a setuid binary at runtime (meow-ai overrides).
+  cap_drop: [ALL]
+  security_opt: ["no-new-privileges:true"]
+
+# The pwn binaries are x86-64 ELF files; viking downloads an x86_64 toolchain.
+x-challenge-amd64: &challenge-amd64
+  <<: *challenge
+  platform: linux/amd64
+
+# Terminal and pwn challenges give players a shell or code execution in one container
+# they all share, so its filesystem is read-only: nobody can change it for the others.
+# /tmp is a small tmpfs, emptied by ./ctf.sh reset <service>. Mode 1733 lets every
+# player create files there but not list them, so nobody browses another's work.
+x-shell: &shell
+  read_only: true
+  tmpfs: ["/tmp:size=16m,mode=1733"]
+
+# Challenges that are hidden in CTFd for this event: defined so they can be run
+# (./local.sh, or docker compose --profile extra up), but ./ctf.sh up starts none
+# of them and stops any left running. platform/connections.txt marks them hidden.
+x-extra: &extra
+  profiles: [extra]
+
+services:
+  # --- terminal (nc) ---
+  meow1:
+    <<: [*challenge, *shell]
+    build: ./challenges/normal/meow1/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:4441:4445"]
+  meow2:
+    <<: [*challenge, *shell]
+    build: ./challenges/normal/meow2/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:4442:4445"]
+  meow3:
+    <<: [*challenge, *shell]
+    build: ./challenges/normal/meow3/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:4443:4445"]
+  meow4:
+    <<: [*challenge, *shell]
+    build: ./challenges/normal/meow4/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:4444:4445"]
+  # AI-modus: terminal sibling of meow* (privilege escalation). Becoming root is the
+  # challenge, so it keeps setuid and Docker's default capabilities (minus NET_RAW).
+  # The rootfs is read-only with tmpfs for the paths the privesc needs to write
+  # (/tmp exec so the PATH-hijack binary runs; the helper writes /var/backups), so a
+  # player who becomes root can read the flag (the goal) but cannot overwrite it,
+  # trojan the shared /home/ctf/.bashrc, or tamper with system binaries for the next
+  # player. Docker mounts these tmpfs nosuid, kept on purpose: a SUID copy of bash
+  # in /tmp gives no root, so a solver can't leave a root shell there for everyone
+  # (the hijacked tar itself runs as root and reads the flag; see the writeup).
+  # /tmp is mode 1733, as on the other shells: the solve's /tmp/tar can be created
+  # and run, but the next player can't list /tmp to find it.
+  # Reset it with ./ctf.sh reset meow-ai if it breaks.
+  meow-ai:
+    <<: *challenge
+    build: ./challenges/ai/meow-ai/challenge
+    # One port per AI-modus effects level (the board's nc command picks it): 4446
+    # level 2 BURN (the default, in platform/connections.txt), 4447 level -1 WEB 1.0,
+    # 4448 level 3 AI HORROR, 4449 level 1 CALM. One mapping per line: azure.sh
+    # reads one port per line for the NSG, local.sh the one on the ports: line.
+    ports: ["${CTF_BIND:-127.0.0.1}:4446:4445",
+            "${CTF_BIND:-127.0.0.1}:4447:4447",
+            "${CTF_BIND:-127.0.0.1}:4448:4448",
+            "${CTF_BIND:-127.0.0.1}:4449:4449"]
+    cap_drop: [NET_RAW]
+    security_opt: []
+    read_only: true
+    tmpfs:
+      - /tmp:exec,size=16m,mode=1733
+      - /var/backups:size=4m
+      - /run:size=1m
+
+  # Retired: binary1/binary2 are superseded by overflow1-3. Kept buildable
+  # (./local.sh, profile extra) but hidden in CTFd and not started by ./ctf.sh up.
+  binary1:
+    <<: [*challenge-amd64, *shell, *extra]
+    build: ./challenges/normal/binary1/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:1231:1234"]
+  binary2:
+    <<: [*challenge-amd64, *shell, *extra]
+    build: ./challenges/normal/binary2/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:1232:1234"]
+  overflow1:
+    <<: [*challenge-amd64, *shell]
+    build: ./challenges/normal/overflow1/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:1241:1234"]
+  overflow2:
+    <<: [*challenge-amd64, *shell]
+    build: ./challenges/normal/overflow2/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:1242:1234"]
+  overflow3:
+    <<: [*challenge-amd64, *shell]
+    build: ./challenges/normal/overflow3/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:1243:1234"]
+  overflow4:
+    <<: [*challenge-amd64, *shell, *extra]
+    build: ./challenges/normal/overflow4/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:1244:1234"]
+  # Kept ready to release during the event, but hidden for now (CTFd name "binary").
+  overflow5:
+    <<: [*challenge-amd64, *shell, *extra]
+    build: ./challenges/normal/overflow5/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:1245:1234"]
+  # AI-modus: pwn-bracket sibling (ret2win with an argument -> pop rdi ROP).
+  pwn-ai:
+    <<: [*challenge-amd64, *shell]
+    build: ./challenges/ai/pwn-ai/challenge
+    # One port per effects level, as for meow-ai: 1246 level 2 BURN (the default),
+    # 1247 level -1 WEB 1.0, 1248 level 3 AI HORROR, 1249 level 1 CALM.
+    ports: ["${CTF_BIND:-127.0.0.1}:1246:1234",
+            "${CTF_BIND:-127.0.0.1}:1247:1247",
+            "${CTF_BIND:-127.0.0.1}:1248:1248",
+            "${CTF_BIND:-127.0.0.1}:1249:1249"]
+
+  # --- web ---
+  noter1:
+    <<: *challenge
+    build: ./challenges/normal/noter1/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:5001:5000"]
+  noter2:
+    <<: *challenge
+    build: ./challenges/normal/noter2/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:5002:5000"]
+  noter3:
+    <<: *challenge
+    build: ./challenges/normal/noter3/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:5003:5000"]
+  noter4:
+    <<: *challenge
+    build: ./challenges/normal/noter4/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:5004:5000"]
+  marvin:
+    <<: [*challenge, *extra]
+    build: ./challenges/normal/marvin/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:5005:5000"]
+  # AI-modus: harder sibling of marvin (JWT alg:none auth bypass).
+  robot-ai:
+    <<: *challenge
+    build: ./challenges/ai/robot-ai/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:5006:5000"]
+  # AI-modus: harder sibling of noter (UNION-based SQL injection).
+  noter-ai:
+    <<: *challenge
+    build: ./challenges/ai/noter-ai/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:5007:5000"]
+  # AI-modus: harder sibling of api1-3 (REST enumeration + mass assignment).
+  api-ai:
+    <<: *challenge
+    build: ./challenges/ai/api-ai/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:5008:5000"]
+  # AI-modus: web-bracket sibling of viking (SSRF -> loopback-only admin console).
+  viking-ai:
+    <<: *challenge
+    build: ./challenges/ai/viking-ai/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:5009:5000"]
+  # AI-modus: "attack the AI" marquee (prompt injection against Marvin's chatbot).
+  marvin-llm:
+    <<: *challenge
+    build: ./challenges/ai/marvin-llm/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:5010:5000"]
+
+  # Hidden in CTFd for this event (profile extra, see x-extra above).
+  # noter5 proxies to noter5-backend, which it finds by the hostname "app".
+  # The backend is not published: players only reach it through the proxy.
+  # The proxy seeds the flag into the backend when it starts, so it restarts
+  # whenever compose recreates the backend. NOTER5_SECRET (ctf.sh, from
+  # .ctf/noter5-secret) gives it the same AES key and admin password every time.
+  noter5:
+    <<: [*challenge, *extra]
+    build: ./challenges/normal/noter5/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:1024:1024"]
+    networks: [noter5]
+    environment: [NOTER5_SECRET]
+    depends_on:
+      noter5-backend:
+        condition: service_started
+        restart: true
+  noter5-backend:
+    <<: [*challenge, *extra]
+    build: ./challenges/normal/noter5-backend/challenge
+    networks:
+      noter5:
+        aliases: [app]
+
+  api1:
+    <<: *challenge
+    build: ./challenges/normal/api1/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:5011:5000"]
+  api2:
+    <<: *challenge
+    build: ./challenges/normal/api2/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:5012:5000"]
+  api3:
+    <<: *challenge
+    build: ./challenges/normal/api3/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:5013:5000"]
+
+  viking:
+    <<: *challenge-amd64
+    build: ./challenges/normal/viking/challenge
+    ports: ["${CTF_BIND:-127.0.0.1}:8080:8080"]
+
+networks:
+  # Inter-container traffic is blocked, so a shell in one challenge
+  # (meow, or a popped pwn binary) cannot reach the others directly.
+  # Egress to the internet, the cloud metadata service and the host is still open:
+  # the fixed bridge names let host firewall rules close it (docs/hosting.md, step 3;
+  # platform/azure/bootstrap.sh applies them on Azure to every ctf-* bridge, so a new
+  # network needs a bridge name starting with ctf-).
+  challenges:
+    driver_opts:
+      com.docker.network.bridge.enable_icc: "false"
+      com.docker.network.bridge.name: ctf-chal
+  noter5:
+    driver_opts:
+      com.docker.network.bridge.name: ctf-noter5

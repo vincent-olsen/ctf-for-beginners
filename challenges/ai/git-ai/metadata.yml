@@ -1,0 +1,40 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+#
+# AI-modus challenge: a much harder sibling of `git`. The original hides the flag
+# in plain history (git log -> checkout). Here no object holds the flag at all:
+# it is only in vault.bin, sealed by vault.py with a key split into two shares.
+# Share A has three versions: v1 in history and v2 as a dangling blob both open
+# nothing; the current v3 is only in an orphan packfile (its .idx deleted), which
+# git, fsck and grep cannot see until `git index-pack` rebuilds the index. Share
+# B is in an incremental git bundle parked in a stash whose reflog is wiped; its
+# prerequisite commit is in that same orphan pack, so it only unpacks after it. A deleted branch
+# still holds a decoy flag. (Earlier versions fell in four, five and seven
+# commands.)
+
+name: git-ai
+category: ai-forensics
+value: 50
+# difficulty: intended threat level 1-5 (drives the AI-modus threat meter, not points)
+difficulty: 5
+# builds_on: the normal-bracket challenges (CTFd names) whose technique this one
+# levels up, [] when none does. The sync keeps them in the ai_brackets siblings
+# map, and each pair's challenge windows link to each other.
+builds_on: [git]
+flag: "flag{two_shares_one_stash_zero_plaintext}"
+message: "The flag is in the vault now, and the vault's key was never committed. The branch is deleted, the reflog wiped, `git log` is clean. Git doesn't forget, but it does mislead. (Attached: repo.zip, .git included.)"
+message_no: "Flagget ligger i hvelvet nå, og nøkkelen til hvelvet ble aldri committet. Branchen er slettet, reflogen tømt, og `git log` er ren. Git glemmer ikke, men det kan villede. (Vedlagt: repo.zip, med .git-mappen.)"
+notes: "ai-forensics - the flag is only in vault.bin (XOR with SHA-256 keystream, vault.py on main), key = share A xor share B. Share A: v1 in history (ops/vault.env) and v2 as a dangling blob (.env.prod staged then reset) are stale; v3 is in .git/objects/pack/pack-*.pack with no .idx (git count-objects -v calls it garbage): git index-pack it, then git verify-pack -v / cat-file -p. Share B: handover.bundle in refs/stash (reflog wiped), an incremental bundle whose prerequisite (the ops repo's first commit, with a stale share B) is in the orphan pack: index-pack, then git fetch handover.bundle main:ops and read ops:share-b.txt. The dangling commit's flag.txt is a decoy."
+
+# hints: paid hints for CTFd, cheapest first. Format "COST | text"; the sync
+# (platform/ctfd_admin.py) creates them as CTFd hints, and the ai_brackets
+# plugin charges each cost in this challenge's (AI-modus) bracket.
+hints:
+  - "10 | No object in this repo holds the flag in plain text: it is in vault.bin, and vault.py tells you what opens it. You need two shares, and the first ones you find may not be the right ones."
+  - "25 | Share A was rotated twice: the one in history and the dangling blob (git fsck) are both stale. The current one is in .git/objects/pack, in a .pack whose .idx is gone, so git can't read it (git count-objects -v calls it garbage): run git index-pack on it, then git verify-pack -v and git cat-file -p. Share B: in a stash (refs/stash; the reflog is wiped, so git stash list is empty) there is a file that starts with '# v2 git bundle'. It needs a prerequisite commit that is in that same orphan pack: after index-pack, git show refs/stash:handover.bundle > h.bundle, then git fetch h.bundle main:ops and read ops:share-b.txt."
+# hints_no: the same hints in Norwegian, in the same order (the cost comes from hints).
+hints_no:
+  - "10 | Ingen objekter i repoet inneholder flagget i klartekst: det ligger i vault.bin, og vault.py forteller hva som åpner det. Du trenger to deler (shares), og de første du finner er kanskje ikke de riktige."
+  - "25 | Del A er byttet ut to ganger: den i historikken og den hengende bloben (git fsck) er begge utdaterte. Den gjeldende ligger i .git/objects/pack, i en .pack uten .idx, så git kan ikke lese den (git count-objects -v kaller den garbage): kjør git index-pack på den, så git verify-pack -v og git cat-file -p. Del B: i en stash (refs/stash; reflogen er tømt, så git stash list er tom) ligger en fil som starter med '# v2 git bundle'. Den trenger en forutsatt commit som ligger i den samme foreldreløse pakken: etter index-pack, git show refs/stash:handover.bundle > h.bundle, så git fetch h.bundle main:ops og les ops:share-b.txt."

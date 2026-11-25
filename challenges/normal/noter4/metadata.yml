@@ -1,0 +1,25 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: "flag{inj3ct_me_d4ddy}" 
+category: web
+value: 120
+message: "Now with a database! Users can log in and make their own notes. The flag is in a note by the `admin` user, but the login is surely good enough."
+message_no: "Nå med database! Brukere kan logge inn og lage egne notater. Flagget står i et notat fra brukeren `admin`, men innloggingen er sikkert god nok."
+notes: sql-injection
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - |
+    5 | The `login` is vulnerable to sql-injection.
+
+    Your injection should start with the username you want to login as = `admin`.
+hints_no:
+  - |
+    5 | `login` er sårbar for SQL injection.
+
+    Payloaden din bør starte med brukernavnet du vil logge inn som = `admin`.

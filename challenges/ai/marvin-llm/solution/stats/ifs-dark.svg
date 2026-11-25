@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="682" viewBox="0 0 880 682" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+<title id="t">if statements per function. 65 in all (if + elif); respond() and _chat() are the rule ladder every message climbs</title>
+<desc id="d">_chat(): 16; respond(): 8; _decode(): 6; _eval_math(): 6; _math(): 4; _payload(): 3; _encode(): 3; _give_in(): 3; _decode_base64(): 3; _classic_injection(): 2; _dress(): 2; _decode_hex(): 2; injection_style(): 1; unseal(): 1; _pick(): 1; _decode_binary(): 1; _decode_codes(): 1; requested_encodings(): 1; _compose(): 1</desc>
+<rect x="0.5" y="0.5" width="879" height="681" rx="12" fill="#1a1a19" stroke="rgba(255,255,255,0.10)"/>
+<text x="28" y="40" font-size="17" font-weight="600" fill="#f0efec">if statements per function</text>
+<text x="28" y="64" font-size="13" fill="#c3c2b7">65 in all (if + elif); respond() and _chat() are the rule ladder every message climbs</text>
+
+<text x="174.2" y="100.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">_chat()</text>
+<path d="M186.2,92.0H812.9A4,4 0 0 1 816.9,96.0V104.0A4,4 0 0 1 812.9,108.0H186.2Z" fill="#3987e5"/>
+<text x="824.9" y="100.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">16</tspan></text>
+<text x="174.2" y="130.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">respond()</text>
+<path d="M186.2,122.0H497.6A4,4 0 0 1 501.6,126.0V134.0A4,4 0 0 1 497.6,138.0H186.2Z" fill="#3987e5"/>
+<text x="509.6" y="130.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">8</tspan></text>
+<text x="174.2" y="160.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">_decode()</text>
+<path d="M186.2,152.0H418.7A4,4 0 0 1 422.7,156.0V164.0A4,4 0 0 1 418.7,168.0H186.2Z" fill="#3987e5"/>
+<text x="430.7" y="160.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">6</tspan></text>
+<text x="174.2" y="190.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">_eval_math()</text>
+<path d="M186.2,182.0H418.7A4,4 0 0 1 422.7,186.0V194.0A4,4 0 0 1 418.7,198.0H186.2Z" fill="#3987e5"/>
+<text x="430.7" y="190.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">6</tspan></text>
+<text x="174.2" y="220.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">_math()</text>
+<path d="M186.2,212.0H339.9A4,4 0 0 1 343.9,216.0V224.0A4,4 0 0 1 339.9,228.0H186.2Z" fill="#3987e5"/>
+<text x="351.9" y="220.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">4</tspan></text>
+<text x="174.2" y="250.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">_payload()</text>
+<path d="M186.2,242.0H300.5A4,4 0 0 1 304.5,246.0V254.0A4,4 0 0 1 300.5,258.0H186.2Z" fill="#3987e5"/>
+<text x="312.5" y="250.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">3</tspan></text>
+<text x="174.2" y="280.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">_encode()</text>
+<path d="M186.2,272.0H300.5A4,4 0 0 1 304.5,276.0V284.0A4,4 0 0 1 300.5,288.0H186.2Z" fill="#3987e5"/>
+<text x="312.5" y="280.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">3</tspan></text>
+<text x="174.2" y="310.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">_give_in()</text>
+<path d="M186.2,302.0H300.5A4,4 0 0 1 304.5,306.0V314.0A4,4 0 0 1 300.5,318.0H186.2Z" fill="#3987e5"/>
+<text x="312.5" y="310.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">3</tspan></text>
+<text x="174.2" y="340.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">_decode_base64()</text>
+<path d="M186.2,332.0H300.5A4,4 0 0 1 304.5,336.0V344.0A4,4 0 0 1 300.5,348.0H186.2Z" fill="#3987e5"/>
+<text x="312.5" y="340.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">3</tspan></text>
+<text x="174.2" y="370.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">_classic_injection()</text>
+<path d="M186.2,362.0H261.0A4,4 0 0 1 265.0,366.0V374.0A4,4 0 0 1 261.0,378.0H186.2Z" fill="#3987e5"/>
+<text x="273.0" y="370.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">2</tspan></text>
+<text x="174.2" y="400.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">_dress()</text>
+<path d="M186.2,392.0H261.0A4,4 0 0 1 265.0,396.0V404.0A4,4 0 0 1 261.0,408.0H186.2Z" fill="#3987e5"/>
+<text x="273.0" y="400.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">2</tspan></text>
+<text x="174.2" y="430.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">_decode_hex()</text>
+<path d="M186.2,422.0H261.0A4,4 0 0 1 265.0,426.0V434.0A4,4 0 0 1 261.0,438.0H186.2Z" fill="#3987e5"/>
+<text x="273.0" y="430.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">2</tspan></text>
+<text x="174.2" y="460.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">injection_style()</text>
+<path d="M186.2,452.0H221.6A4,4 0 0 1 225.6,456.0V464.0A4,4 0 0 1 221.6,468.0H186.2Z" fill="#3987e5"/>
+<text x="233.6" y="460.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">1</tspan></text>
+<text x="174.2" y="490.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">unseal()</text>
+<path d="M186.2,482.0H221.6A4,4 0 0 1 225.6,486.0V494.0A4,4 0 0 1 221.6,498.0H186.2Z" fill="#3987e5"/>
+<text x="233.6" y="490.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">1</tspan></text>
+<text x="174.2" y="520.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">_pick()</text>
+<path d="M186.2,512.0H221.6A4,4 0 0 1 225.6,516.0V524.0A4,4 0 0 1 221.6,528.0H186.2Z" fill="#3987e5"/>
+<text x="233.6" y="520.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">1</tspan></text>
+<text x="174.2" y="550.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">_decode_binary()</text>
+<path d="M186.2,542.0H221.6A4,4 0 0 1 225.6,546.0V554.0A4,4 0 0 1 221.6,558.0H186.2Z" fill="#3987e5"/>
+<text x="233.6" y="550.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">1</tspan></text>
+<text x="174.2" y="580.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">_decode_codes()</text>
+<path d="M186.2,572.0H221.6A4,4 0 0 1 225.6,576.0V584.0A4,4 0 0 1 221.6,588.0H186.2Z" fill="#3987e5"/>
+<text x="233.6" y="580.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">1</tspan></text>
+<text x="174.2" y="610.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">requested_encodings()</text>
+<path d="M186.2,602.0H221.6A4,4 0 0 1 225.6,606.0V614.0A4,4 0 0 1 221.6,618.0H186.2Z" fill="#3987e5"/>
+<text x="233.6" y="610.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">1</tspan></text>
+<text x="174.2" y="640.0" dy="0.35em" text-anchor="end" font-size="13" fill="#c3c2b7">_compose()</text>
+<path d="M186.2,632.0H221.6A4,4 0 0 1 225.6,636.0V644.0A4,4 0 0 1 221.6,648.0H186.2Z" fill="#3987e5"/>
+<text x="233.6" y="640.0" dy="0.35em" font-size="13"><tspan font-weight="600" fill="#f0efec">1</tspan></text>
+<line x1="186.19" y1="86" x2="186.19" y2="654" stroke="#383835"/>
+</svg>

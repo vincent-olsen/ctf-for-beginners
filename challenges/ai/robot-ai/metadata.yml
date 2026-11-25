@@ -1,0 +1,41 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+#
+# AI-modus challenge: a much harder sibling of `marvin`. The original taught
+# robots.txt (Disallow -> /secret -> flag). This one keeps the robots.txt
+# breadcrumb but the door behind it is a JWT auth bypass (alg:none). Black-box:
+# the app source is a paid hint, not a distfile.
+#
+# Hosted web challenge: connection info is written by ctf.sh from
+# platform/connections.txt (service `robot-ai`, host port 5006). No connection
+# fields belong in this file (same as noter*/marvin).
+
+name: robot-ai
+category: ai-web
+value: 35
+# difficulty: intended threat level 1-5 (drives the AI-modus threat meter, not points)
+difficulty: 4
+# builds_on: the normal-bracket challenges (CTFd names) whose technique this one
+# levels up, [] when none does. The sync keeps them in the ai_brackets siblings
+# map, and each pair's challenge windows link to each other.
+builds_on: [marvin, noter2, noter3]
+flag: "flag{alg_n0ne_lets_any_r0bot_in}"
+message: "Sirius Cybernetics uses signed session tokens now, so Marvin stays out. Bulletproof. The flag is in the engineering panel. No source this time - it's black-box."
+message_no: "Sirius Cybernetics har signerte session tokens nå, så Marvin kommer ikke inn. Skuddsikkert. Flagget er i ingeniørpanelet. Ingen kildekode denne gangen - det er black-box."
+notes: "ai-web - JWT alg:none auth bypass. Breadcrumb: /robots.txt -> /diagnostics (issues a guest JWT) -> forge {\"alg\":\"none\"} with role=admin -> /admin. Black-box: no source distfile; the full source is a paid hint, priced below the walkthrough hint. Secret is not needed (that's the point)."
+credits: harder follow-up to marvin
+
+# hints: paid hints for CTFd, cheapest first. Format "COST | text"; the sync
+# (platform/ctfd_admin.py) creates them as CTFd hints, and the ai_brackets
+# plugin charges each cost in this challenge's (AI-modus) bracket.
+hints:
+  - "5 | robots.txt points the way, as always. The page hands you a session token; study its header, not its signature."
+  - "10 | Full source for this challenge. Buying this is effectively going white-box: {{file:challenge/app.py}}"
+  - "15 | The verifier accepts alg:none. Forge a token whose header sets alg to none and payload sets role to admin, with an empty signature (keep the trailing dot), and send it as the marvin_session cookie to /admin."
+# hints_no: the same hints in Norwegian, in the same order (the cost comes from hints).
+hints_no:
+  - "5 | robots.txt viser vei, som alltid. Siden gir deg et sesjonstoken; studer headeren, ikke signaturen."
+  - "10 | Full kildekode for denne oppgaven. Å kjøpe dette er i praksis å gå white-box: {{file:challenge/app.py}}"
+  - "15 | Verifiseringen godtar alg:none. Lag et token der headeren setter alg til none og payloaden setter role til admin, med tom signatur (behold punktumet på slutten), og send det som cookien marvin_session til /admin."

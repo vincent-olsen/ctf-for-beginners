@@ -1,0 +1,14 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: 'flag{h4ving_a_sec0nd_OF_1s_bas3d}'
+category: pwn
+value: 40
+message: "The program has an overflow guard now. We're safe."
+message_no: "Nå har programmet en vakt mot overflow. Da er vi trygge."
+connection: nc <host> <port>
+port: <port>
+protocol: tcp
+notes: 64-bit ELF, no PIE, no canary. Overflow that must preserve the guard value.

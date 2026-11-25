@@ -1,0 +1,21 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: "flag{1m_th3_fl4g_u_4r3_l00k1ng_f0r}"
+category: web
+value: 180
+message: "Welcome to Viking Merch! The website isn't quite done, but our quality goods are. Have a look."
+message_no: "Velkommen til Viking Merch! Nettsiden er ikke helt ferdig, men kvalitetsvarene våre er det. Ta en titt."
+notes: Path traversal
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - "10 | Have you heard about this https://github.com/golang/go/issues/34938?"
+  - "10 | You need the db.sqlite3 database to get the admin-password. Maybe path traversal can be used in an insecure endpoint."
+hints_no:
+  - "10 | Har du hørt om denne? https://github.com/golang/go/issues/34938"
+  - "10 | Du trenger databasen db.sqlite3 for å få tak i admin-passordet. Kanskje path traversal fungerer mot et usikkert endepunkt?"

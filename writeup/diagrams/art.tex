@@ -1,0 +1,8 @@
+\begin{tikzpicture}[hero, node distance=10mm]
+\node[hgrey, minimum width=22mm, minimum height=11mm] (ph) {\footnotesize photo};
+\node[hbox, minimum width=34mm, right=14mm of ph] (rev) {reverse image search};
+\node[hwin, minimum width=52mm, right=14mm of rev, align=left] (art) {article: \\ \footnotesize artist $\cdot$ year $\cdot$ street};
+\draw[hflow] (ph) -- (rev);
+\draw[hflow] (rev) -- (art);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{one photo reveals name, year and address}};
+\end{tikzpicture}

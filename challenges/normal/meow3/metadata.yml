@@ -1,0 +1,23 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: "flag{th1s_is_fur_r3al}"
+category: misc
+value: 50
+message: "Many flags, one real. The rest are imposters."
+message_no: "Mange flagg, ett ekte. Resten er bedragere."
+connection: nc <host> <port>
+port: <port>
+protocol: tcp
+notes: lots of directories and files
+credits: https://github.com/BSidesSF/ctf-2023-release/tree/main/meow
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - "5 | Find a way to print all files, then use `grep` to search for the flag. Remember, all flags have the same format."
+hints_no:
+  - "5 | Finn en måte å skrive ut alle filene på, og bruk så `grep` for å søke etter flagget. Husk at alle flagg har samme format."

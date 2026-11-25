@@ -1,0 +1,12 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: "flag{hi_my_n4me_i5_h4ckerman}"
+category: web
+value: 150
+state: hidden
+message: "Done worrying about hacking. I bought an encryption service, so even if someone gets the notes, they can't read them. What could go wrong?"
+message_no: "Ferdig med å bekymre meg for hacking. Jeg kjøpte en krypteringstjeneste, så selv om noen får tak i notatene, kan de ikke lese dem. Hva kan vel gå galt?"
+notes: Requires noter5-backend to be deployed first. The proxy reaches the backend via BACKEND_URL and the init script reaches the proxy via PROXY_URL - set those env vars if the defaults (backend host 'app':5000, proxy 127.0.0.1:1024) don't match the deploy.

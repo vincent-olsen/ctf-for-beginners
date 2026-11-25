@@ -1,0 +1,31 @@
+# Extra override for CTFd: the public status page (ctf.sh up; --status off leaves it out).
+# Gatus checks CTFd and every running challenge once a minute and shows the result on
+# one page: at https://status.<domain> when hosting (a site in the Caddyfile, a DNS
+# record from azure.sh), and on http://localhost:8081 on this machine. ctf.sh writes its
+# config to .ctf/status/config.yaml from compose.yml and platform/connections.txt on
+# every up; Gatus reloads it when it changes. It holds results in memory only.
+#
+# The challenges are reached on their published ports through the host
+# (host.docker.internal), the way players reach them: their own network (ctf-chal)
+# allows no traffic between containers, and on Azure no ctf-* bridge reaches the host.
+
+services:
+  status:
+    image: twinproduction/gatus:v5.37.0
+    restart: unless-stopped
+    environment:
+      - GATUS_CONFIG_PATH=/config/config.yaml
+    volumes:
+      - ${CTF_STATUS_DIR:?set by ctf.sh}:/config:ro
+    ports:
+      - "127.0.0.1:${CTF_STATUS_PORT:-8081}:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    # About 20 MB in use; the caps keep a misbehaving check from costing the event.
+    mem_limit: 64m
+    cpus: 0.25
+    pids_limit: 64
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    depends_on: [ctfd]

@@ -1,0 +1,39 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+#
+# AI-modus challenge: a much harder sibling of `julius`. Same Roman theme, but
+# the single Caesar shift becomes a running-key cipher: Vigenere addition with a
+# key as long as the message, a passage from Caesar's own De Bello Gallico 1.1
+# (starting mid-chapter, at "Horum omnium fortissimi"). The ciphertext is in
+# five-letter groups, so word lengths and capitals give no cribs. (The first
+# version used a repeating 8-letter Vigenere key, which an AI broke in two
+# commands; a draft of this one that kept word lengths fell in three.)
+
+name: julius-ai
+category: ai-crypto
+value: 120
+# difficulty: intended threat level 1-5 (drives the AI-modus threat meter, not points)
+difficulty: 4
+# builds_on: the normal-bracket challenges (CTFd names) whose technique this one
+# levels up, [] when none does. The sync keeps them in the ai_brackets siblings
+# map, and each pair's challenge windows link to each other.
+builds_on: [julius]
+flag: "flag{all_gaul_is_the_key}"
+message: "Caesar's heirs have a new cipher. The intercept is attached."
+message_no: "Caesars arvinger har et nytt chiffer. Meldingen er vedlagt."
+notes: ai-crypto - running-key cipher (key = De Bello Gallico 1.1 from "Horum omnium fortissimi", letters only), ciphertext in five-letter groups. No period, so Kasiski/IoC fail; crib the end (FLAG, ...FORTHEARCHIVEIS), recognise the Latin key, slide the chapter along until English appears
+
+# hints: paid hints for CTFd, cheapest first. Format "COST | text"; the sync
+# (platform/ctfd_admin.py) creates them as CTFd hints, and the ai_brackets
+# plugin charges each cost in this challenge's (AI-modus) bracket.
+hints:
+  - "10 | Every periodic attack comes up empty: the index of coincidence is flat and no key length stands out, because the key does not repeat - it is as long as the whole message. That points at one particular classic cipher; work out what kind of long, non-random key behaves like that."
+  - "35 | Still one shift per letter, but this key never repeats: it is as long as the message, so key-length analysis finds nothing. Guess some plaintext (the flag's FLAG is certain; what might come just before it?) and work out what the key must be there. Does it look like a language?"
+  - "50 | Running-key cipher: the key is Latin, from a book Caesar wrote himself: De Bello Gallico, book I, chapter 1 (\"Gallia est omnis divisa...\"), letters only, but it does not start at the first word. Slide the chapter's letters along the ciphertext and subtract (A=0); one starting point turns it into English."
+# hints_no: the same hints in Norwegian, in the same order (the cost comes from hints).
+hints_no:
+  - "10 | Alle periodiske angrep kommer til kort: sammenfallsindeksen (IC) er flat og ingen nøkkellengde skiller seg ut, fordi nøkkelen ikke gjentar seg - den er like lang som hele meldingen. Det peker mot én bestemt klassisk chiffertype; finn ut hva slags lang, ikke-tilfeldig nøkkel som oppfører seg sånn."
+  - "35 | Fortsatt ett skift per bokstav, men denne nøkkelen gjentar seg aldri: den er like lang som meldingen, så analyse av nøkkellengden finner ingenting. Gjett litt klartekst (FLAG i flagget er sikkert; hva kan stå rett foran?) og regn ut hva nøkkelen må være der. Ligner det på et språk?"
+  - "50 | Løpende nøkkel (running key): nøkkelen er latin, fra en bok Caesar skrev selv: De Bello Gallico, bok I, kapittel 1 (\"Gallia est omnis divisa...\"), bare bokstavene, men den starter ikke ved første ord. Skyv kapitlets bokstaver langs chifferteksten og trekk fra (A=0); ett startpunkt gjør den om til engelsk."

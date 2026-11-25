@@ -1,0 +1,29 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+# Not hosted and nothing to download: the flag is printed on a card
+# (challenge/paper-flag.pdf) that the organiser hides in the venue before the
+# event. This challenge is not in the imported backup: ./ctf.sh up creates it
+# from category + value + flag below.
+name: paper
+flag: "flag{f0und_1rl_nkthnp}"
+category: misc
+value: 100
+# Only the first team to submit the flag solves it; then it locks for everyone
+# else (platform/plugins/ctf_solve_limit).
+max_solves: 1
+message: |
+  Not every flag lives on a computer. One is printed on a piece of paper, hidden somewhere in this venue.
+
+  There is only one, and only the **first team** to submit it gets the points. After that this challenge locks for everyone else.
+
+  Please leave furniture, ceilings and other people's bags alone: you don't need to move or open anything to find it.
+message_no: |
+  Ikke alle flagg ligger på en datamaskin. Ett er skrevet ut på et ark, gjemt et sted i dette lokalet.
+
+  Det finnes bare ett, og bare det **første laget** som sender det inn får poengene. Etterpå låses oppgaven for alle andre.
+
+  La møbler, tak og andres sekker være i fred: du trenger ikke å flytte eller åpne noe for å finne det.
+notes: misc - physical flag on paper hidden in the venue, one solve only (max_solves)

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Diagnostics Console{% endblock %}
+{% block content %}
+    <div class="box">
+      <h1 class="glitch" data-text="Diagnostics Console">Diagnostics Console</h1>
+      <p>Session role: <code>{{ role }}</code></p>
+      <p>Guests may view this banner. The flag lives in the
+         <a href="/admin">engineering panel (/admin)</a>, which needs role
+         <code>admin</code>.</p>
+      <p>We issue a signed session badge (a JWT) in your <code>marvin_session</code>
+         cookie. Go on, inspect it. Marvin says you'll be disappointed. Marvin is
+         usually right, but not always.</p>
+    </div>
+{% endblock %}

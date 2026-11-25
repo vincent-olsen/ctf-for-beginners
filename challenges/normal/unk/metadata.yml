@@ -1,0 +1,20 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: 'flag{old_macdonald_or_mcdonalds_supplier?}'
+category: forensics
+value: 60
+message: "Broken file. On purpose, obviously. Open it, find the flag."
+message_no: "Filen er ødelagt. Med vilje, så klart. Få den opp og finn flagget."
+notes: damaged zipped file
+credits: default
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - "6 | if extracting doesn't work, try using another tool for unzipping the file"
+hints_no:
+  - "6 | Hvis utpakkingen ikke fungerer, prøv et annet verktøy for å pakke ut filen"

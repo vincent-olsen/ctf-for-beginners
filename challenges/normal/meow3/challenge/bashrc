@@ -1,0 +1,9 @@
+#!/bin/bash -eu
+set -o pipefail
+
+cd $HOME
+
+cat << EOF
+The flag is in here somewhere. Can you purr-suade it out?
+
+EOF

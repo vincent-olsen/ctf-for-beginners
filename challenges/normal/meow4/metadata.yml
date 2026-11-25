@@ -1,0 +1,23 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: "flag{purrf3ctly_h1dden}"
+category: misc
+value: 80
+message: "The flag is in `flag.txt`. Where? Somewhere on the server. Good luck."
+message_no: "Flagget ligger i `flag.txt`. Hvor? Et sted på serveren. Lykke til."
+connection: nc <host> <port>
+port: <port>
+protocol: tcp
+notes: use find in root dir
+credits: https://github.com/BSidesSF/ctf-2023-release/tree/main/meow
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - "5 | Use the `find` command to search for the file from the root directory (`/`)."
+hints_no:
+  - "5 | Bruk kommandoen `find` for å søke etter filen fra rotkatalogen (`/`)."

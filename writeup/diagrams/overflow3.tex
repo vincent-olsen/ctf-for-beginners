@@ -1,0 +1,14 @@
+\begin{tikzpicture}[hero]
+\node[hgrey, minimum width=30mm, minimum height=9mm] (n) {\ttfamily name[16]};
+\node[draw=muted, fill=outbg, minimum width=18mm, minimum height=9mm, right=0mm of n, font=\footnotesize, align=center] (g) {guard\\\ttfamily DEAD};
+\node[hhot, minimum width=13mm, minimum height=9mm, right=0mm of g] (b0) {\ttfamily 78};
+\node[hhot, minimum width=13mm, minimum height=9mm, right=0mm of b0] (b1) {\ttfamily 0A};
+\node[hhot, minimum width=13mm, minimum height=9mm, right=0mm of b1] (b2) {\ttfamily 00};
+\node[hhot, minimum width=13mm, minimum height=9mm, right=0mm of b2] (b3) {\ttfamily 00};
+\node[hlab, below=1.5mm of b0] {send};
+\node[hlab, below=1.5mm of b1] {Enter};
+\node[hlab, below=1.5mm of b2] {NUL};
+\node[hlab, below=1.5mm of b3] {stays 0};
+\node[hlab, above=1.5mm of b1.north east] {\ttfamily points = 0x00000A78 = 2680};
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{the Enter key supplies the 0x0A byte you cannot type}};
+\end{tikzpicture}

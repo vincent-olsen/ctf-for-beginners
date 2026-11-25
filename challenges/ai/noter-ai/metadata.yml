@@ -1,0 +1,37 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+#
+# AI-modus challenge: a much harder sibling of noter. Same "read the source"
+# spirit, but the bug is a UNION-based SQL injection: the flag lives in a secrets
+# table that nothing renders, and you exfiltrate it through the search box.
+#
+# Hosted web challenge: connection info is written by ctf.sh from
+# platform/connections.txt (service `noter-ai`, host port 5007).
+
+name: noter-ai
+category: ai-web
+value: 30
+# difficulty: intended threat level 1-5 (drives the AI-modus threat meter, not points)
+difficulty: 4
+# builds_on: the normal-bracket challenges (CTFd names) whose technique this one
+# levels up, [] when none does. The sync keeps them in the ai_brackets siblings
+# map, and each pair's challenge windows link to each other.
+builds_on: [noter4]
+flag: "flag{union_select_your_way_in}"
+message: "noter has search now. The interesting rows sit in a table the app never shows. The search box was built in a hurry. Source attached."
+message_no: "noter har fått søk. De interessante radene ligger i en tabell appen aldri viser. Søkefeltet ble laget i all hast. Kildekoden er vedlagt."
+notes: "ai-web - blind boolean SQL injection in /search (SELECT title, body FROM notes WHERE title LIKE '%'+q+'%'). Flag is in the secrets(name,value) table. The results page only shows whether a row matched ('Some notes matched'/'No notes matched') and never renders the matched rows, so a UNION that selects the secret does not print it. Make the match depend on the secret and read it one char at a time: q=zzz%' UNION SELECT 1,2 WHERE substr((SELECT value FROM secrets),1,1)='f' -- . White-box: app.py is a distfile; SQL errors are swallowed (no query or parser message)."
+credits: harder follow-up to noter
+
+# hints: paid hints for CTFd, cheapest first. Format "COST | text"; the sync
+# (platform/ctfd_admin.py) creates them as CTFd hints, and the ai_brackets
+# plugin charges each cost in this challenge's (AI-modus) bracket.
+hints:
+  - "10 | The search never prints the matched note, only whether something matched. The query is still built from your raw input with no escaping, so you can make 'matched' depend on the secret and read it one character at a time."
+  - "15 | Blind boolean SQL injection. 'Some notes matched' means a row came back. Make a row appear only when a guess is right: q = zzz%' UNION SELECT 1,2 WHERE substr((SELECT value FROM secrets),1,1)='f' --  returns 'matched' iff the 1st char is 'f'. Binary-search each position to pull flag{...} out of secrets.value."
+# hints_no: the same hints in Norwegian, in the same order (the cost comes from hints).
+hints_no:
+  - "10 | Søket viser aldri selve notatet, bare om noe traff. Spørringen bygges fortsatt rett fra det du skriver uten escaping, så du kan la 'traff' avhenge av hemmeligheten og lese den ett tegn om gangen."
+  - "15 | Blind boolsk SQL injection. 'Some notes matched' betyr at en rad kom tilbake. Få en rad til å dukke opp bare når en gjetning stemmer: q = zzz%' UNION SELECT 1,2 WHERE substr((SELECT value FROM secrets),1,1)='f' --  gir 'matched' bare hvis første tegn er 'f'. Binærsøk hver posisjon for å hente flag{...} fra secrets.value."

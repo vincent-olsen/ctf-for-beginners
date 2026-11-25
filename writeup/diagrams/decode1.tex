@@ -1,0 +1,6 @@
+\begin{tikzpicture}[hero, node distance=10mm]
+\node[hgrey, minimum width=34mm] (a) {\ttfamily ZmxhZ3t\dots{}=};
+\node[hwin, minimum width=30mm, right=16mm of a] (b) {\ttfamily flag\{\dots\}};
+\draw[hflow] (a) -- node[hlab, above]{base64 -d} node[hlab, below]{no key} (b);
+\node[hlab, below=5mm of a.south west, anchor=west] {ends in \ttfamily =\;$\Rightarrow$ Base64};
+\end{tikzpicture}

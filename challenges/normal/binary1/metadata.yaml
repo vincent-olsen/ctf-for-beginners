@@ -1,0 +1,26 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: 'flag{anything_prove_represent}'
+category: pwn
+value: 20
+message: |
+  Buffer overflow, part 0: just maths
+
+  Work out the distance in bytes between two addresses (B − A, as a decimal number) and the flag is yours. No overflow yet, just some mental arithmetic.
+
+  *The attached binary is for playing around with (`chmod +x binary` first). The flag is on the server, not in the file. Sorry.*
+message_no: |
+  Buffer overflow, del 0: bare matte
+
+  Regn ut avstanden i bytes mellom to adresser (B − A, som desimaltall), så får du flagget. Ingen overflow ennå, bare litt hoderegning.
+
+  *Den vedlagte binærfilen er til å leke med (`chmod +x binary` først). Flagget ligger på serveren, ikke i filen. Beklager.*
+connection: nc <host> <port>
+port: <port>
+protocol: tcp
+notes: Address/hex arithmetic warm-up (no overflow). 64-bit ELF.
+# state: ctf.sh applies it to the CTFd challenge when it imports a backup.
+state: hidden

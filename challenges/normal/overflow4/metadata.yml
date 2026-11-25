@@ -1,0 +1,92 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+# CTFd also has a visible challenge named plain "overflow4" that no folder here matches;
+# ctf.sh hides it (platform/connections.txt).
+name: overflow4(deprecated)
+flag: 'flag{brave4_property_slept}'
+category: pwn
+value: 120
+message: |
+  Reading the disassembly
+
+  The program hides its flag behind a guard byte again — but this time there are no address prints or leaks.
+
+  You already know that each character you type = 1 byte.  
+  To solve this challenge, figure out exactly how many bytes are needed so that the string terminator (`\0`) lands on the guard.
+
+  You have two options: brute force it, or analyze the binary. Here are some free tips:
+
+  * `objdump -d -M intel ./binary`
+  * Look for a “suspicious” function, then find the vulnerable call to `scanf("%s", ...)`.
+
+  The information is all there in the disassembly — your job is to spot the buffer, find the guard, and calculate the distance yourself.
+message_no: |
+  Les disassembleringen
+
+  Programmet gjemmer flagget bak en vaktbyte igjen, men denne gangen skriver det ikke ut noen adresser, og ingenting lekker.
+
+  Du vet allerede at hvert tegn du skriver = 1 byte.  
+  For å løse oppgaven må du finne ut nøyaktig hvor mange bytes som trengs for at strengavslutningen (`\0`) havner på vakten.
+
+  Du har to muligheter: prøv deg frem (brute force), eller analyser binærfilen. Her er noen gratis tips:
+
+  * `objdump -d -M intel ./binary`
+  * Se etter en «mistenkelig» funksjon, og finn det sårbare kallet til `scanf("%s", ...)`.
+
+  All informasjonen ligger i disassembleringen. Jobben din er å finne bufferen, finne vakten og regne ut avstanden selv.
+connection: nc <host> <port>
+port: <port>
+protocol: tcp
+notes: 64-bit ELF. Hit the exact length so the string terminator clears the guard byte.
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - |
+    5 | From the `objdump -d  ./binary` you can see something like this:
+
+    * `401349:  c6 45 f7 ff`    guard byte at [rbp-0x09]
+    * `401361:  lea -0x40(%rbp), %rax`
+      `401365:  mov %rax, %rsi` buffer passed to scanf at [rbp-0x40]
+    * `401377:  call __isoc99_scanf@plt` scanf("%s", buffer)
+    * `40137c:  movzbl -0x9(%rbp), %eax` later: read guard
+    * `401380:  test   %al, %al` check if guard == 0
+
+    Does this resemble anything from the previous binary challenges?
+
+    Compute the distance:  
+    (rbp-0x??) - (rbp-0x??) = 0x?? 
+    Then convert the result to decimal to get the exact number of bytes to enter.
+  - |
+    5 | Now take that byte length you found in Hint 1 and use it to send the exact input to the remote service (host and port from this challenge's connection info):
+    ```
+    python3 -c "print('A'*<length>)" | nc <host> <port>
+    ```
+hints_no:
+  - |
+    5 | I `objdump -d  ./binary` ser du noe sånt som dette:
+
+    * `401349:  c6 45 f7 ff`    vaktbyte på [rbp-0x09]
+    * `401361:  lea -0x40(%rbp), %rax`
+      `401365:  mov %rax, %rsi` bufferen som sendes til scanf, på [rbp-0x40]
+    * `401377:  call __isoc99_scanf@plt` scanf("%s", buffer)
+    * `40137c:  movzbl -0x9(%rbp), %eax` senere: leser vakten
+    * `401380:  test   %al, %al` sjekker om vakten == 0
+
+    Minner dette om noe fra de forrige binæroppgavene?
+
+    Regn ut avstanden:  
+    (rbp-0x??) - (rbp-0x??) = 0x?? 
+    Gjør så om resultatet til desimal for å få nøyaktig antall bytes du skal skrive inn.
+  - |
+    5 | Ta byte-lengden du fant i hint 1, og bruk den til å sende nøyaktig riktig input til tjenesten (vert og port fra tilkoblingsinfoen til oppgaven):
+    ```
+    python3 -c "print('A'*<length>)" | nc <host> <port>
+    ```
+
+# Hidden in CTFd for this event; kept ready to release. State applied on import.
+state: hidden

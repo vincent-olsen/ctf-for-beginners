@@ -1,0 +1,10 @@
+\begin{tikzpicture}[hero, node distance=6mm]
+\node[hbox, minimum width=40mm, align=center] (a) {share A\\\footnotesize orphan packfile};
+\node[hbox, minimum width=40mm, below=5mm of a, align=center] (b) {share B\\\footnotesize stash bundle};
+\node[font=\large\bfseries, right=10mm of $(a)!0.5!(b)$] (x) {$\oplus$};
+\node[hwin, right=8mm of x] (f) {open vault $\to$ flag};
+\draw[hflow] (a) -| (x);
+\draw[hflow] (b) -| (x);
+\draw[hflow] (x) -- (f);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{git hides more than git log shows}};
+\end{tikzpicture}

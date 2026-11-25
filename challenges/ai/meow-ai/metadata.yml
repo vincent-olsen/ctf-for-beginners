@@ -1,0 +1,44 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+#
+# AI-modus challenge: a much harder sibling of meow1-4. The meow family teaches
+# navigating a shell (ls, hidden files, find). This one turns that into a Linux
+# privilege escalation: the flag is root-only. There is NO sudo and no banner
+# hint; the way up is a SUID-root helper that resets PATH and calls `tar` by an
+# absolute path (so a PATH hijack fails), but runs `bash -c` as root, which sources
+# $BASH_ENV first. Enumerate SUID (find -perm -4000), read the helper, then point
+# $BASH_ENV at your own script.
+#
+# Terminal challenge (nc): connection info is written by ctf.sh from
+# platform/connections.txt (service `meow-ai`, host port 4446; 4447-4449 serve the other AI Slop-o-meter levels from the same container).
+
+name: meow-ai
+category: ai-pwn
+value: 30
+# difficulty: intended threat level 1-5 (drives the AI-modus threat meter, not points)
+difficulty: 4
+# builds_on: the normal-bracket challenges (CTFd names) whose technique this one
+# levels up, [] when none does. The sync keeps them in the ai_brackets siblings
+# map, and each pair's challenge windows link to each other.
+builds_on: [meow4]
+flag: "flag{a_suid_helper_that_trusts_your_path}"
+message: "The flag is `/root/flag.txt`. You're `ctf`. Read it anyway."
+message_no: "Flagget er `/root/flag.txt`. Du er `ctf`. Les det likevel."
+connection: nc <host> <port>
+port: <port>
+protocol: tcp
+notes: ai-pwn - Linux privesc via BASH_ENV. No sudo. `find / -perm -4000` reveals /usr/local/bin/logrotate-helper (SUID root). It calls `tar` by an absolute path with a reset PATH, so a PATH-hijacked `tar` does nothing; the real bug is that it runs `bash -c` as root, and a non-interactive bash sources $BASH_ENV first, so echo 'cat /root/flag.txt' > /tmp/x.sh then BASH_ENV=/tmp/x.sh /usr/local/bin/logrotate-helper reads the flag.
+credits: harder follow-up to meow1-4
+
+# hints: paid hints for CTFd, cheapest first. Format "COST | text"; the sync
+# (platform/ctfd_admin.py) creates them as CTFd hints, and the ai_brackets
+# plugin charges each cost in this challenge's (AI-modus) bracket.
+hints:
+  - "10 | There is no sudo here. Something on the box runs with more privilege than you do; enumerate what is SUID (find / -perm -4000 2>/dev/null)."
+  - "15 | The SUID helper uses an absolute tar and a clean PATH now, so a fake tar does nothing. But it runs the backup through bash, and bash sources the file named by $BASH_ENV (as root here). Point it at your own script: echo 'cat /root/flag.txt' > /tmp/x.sh ; BASH_ENV=/tmp/x.sh /usr/local/bin/logrotate-helper."
+# hints_no: the same hints in Norwegian, in the same order (the cost comes from hints).
+hints_no:
+  - "10 | Det finnes ingen sudo her. Noe på maskinen kjører med flere rettigheter enn deg; finn ut hva som er SUID (find / -perm -4000 2>/dev/null)."
+  - "15 | SUID-hjelperen bruker nå absolutt tar og en ren PATH, så en falsk tar gjør ingenting. Men den kjører sikkerhetskopien via bash, og bash kjører fila som $BASH_ENV peker på (som root her). Pek den på ditt eget skript: echo 'cat /root/flag.txt' > /tmp/x.sh ; BASH_ENV=/tmp/x.sh /usr/local/bin/logrotate-helper."

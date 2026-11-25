@@ -1,0 +1,8 @@
+\begin{tikzpicture}[hero, node distance=12mm]
+\node[hgrey, minimum width=26mm] (p) {the web page};
+\node[hbox, minimum width=28mm, right=14mm of p] (s) {view source};
+\node[hhot, minimum width=40mm, right=14mm of s] (c) {\ttfamily <!-- flag\{\dots\} -->};
+\draw[hflow] (p) -- (s);
+\draw[hflow] (s) -- (c);
+\node[hnote] at (current bounding box.south) [below=1mm] {\hcap{the browser hides a comment it still receives}};
+\end{tikzpicture}

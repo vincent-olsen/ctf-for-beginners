@@ -1,0 +1,38 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+#
+# AI-modus challenge: the crypto bracket graduates from classical ciphers to
+# public-key. Two keys, broken in order. The old key has a small d (Wiener's
+# attack, the tell is a huge e) and decrypts to a memo with a decoy flag and the
+# low 362 bits of the new key's d (e = 3). That is a partial key exposure: derive
+# p + q mod 2^362, lift p mod 2^362 out of a quadratic, then Coppersmith's method
+# for p's top bits. (The first version was only the Wiener key, solved in under
+# a minute; drafts with a bit-mirrored q and with p's top bits leaked fell in
+# four and three tool calls.)
+
+name: rsa-ai
+category: ai-crypto
+value: 70
+# difficulty: intended threat level 1-5 (drives the AI-modus threat meter, not points)
+difficulty: 4
+# builds_on: the normal-bracket challenges (CTFd names) whose technique this one
+# levels up, [] when none does. The sync keeps them in the ai_brackets siblings
+# map, and each pair's challenge windows link to each other.
+builds_on: []
+flag: "flag{low_bits_of_d_gave_away_p}"
+message: "The cipher office has two RSA keys now: an old one and a new one. (Attached: rsa.txt.)"
+message_no: "Chifferkontoret har to RSA-nøkler nå: en gammel og en ny. (Vedlagt: rsa.txt.)"
+notes: "ai-crypto - two RSA keys in order. Old key (2048-bit, e huge) falls to Wiener's attack; c1 is a memo with a decoy flag (flag{small_d_was_only_the_first_door}) and d2 mod 2^362 of the new key (e = 3, flag padded so m^3 > n). Boneh-Durfee-Frankel: e*d0 = 1 + k(n - s + 1) mod 2^362 with k in {1,2} gives s = p+q mod 2^362 (2^361 for k=2); lift roots of x^2 - s*x + n mod 2^t; Coppersmith with known low bits (small root of y + p0*2^-t mod p, X = 2^(512-t)) for each candidate; k = 2 is the one."
+
+# hints: paid hints for CTFd, cheapest first. Format "COST | text"; the sync
+# (platform/ctfd_admin.py) creates them as CTFd hints, and the ai_brackets
+# plugin charges each cost in this challenge's (AI-modus) bracket.
+hints:
+  - "10 | Two keys, two different weaknesses, in order. Look at how large e1 is compared with n1. What c1 says is the way into the new key, but not all of it is true."
+  - "35 | Old key: Wiener's attack; the memo's round one flag is a decoy. New key: knowing the low bits of d with e = 3 is a partial key exposure (Boneh, Durfee, Frankel). From 3*d = 1 + k*(n - (p+q) + 1) with k = 1 or 2, get p+q mod 2^362; then p mod 2^362 solves x^2 - (p+q)*x + n = 0 mod 2^362 (lift bit by bit). The missing top 150 bits of p: Coppersmith with known low bits, e.g. in SageMath (sagecell.sagemath.org) small_roots on y + p0*inverse_mod(2^t, n), X = 2^(512-t), beta = 0.49."
+# hints_no: the same hints in Norwegian, in the same order (the cost comes from hints).
+hints_no:
+  - "10 | To nøkler, to forskjellige svakheter, i rekkefølge. Se hvor stor e1 er sammenlignet med n1. Det c1 sier er veien inn i den nye nøkkelen, men ikke alt der er sant."
+  - "35 | Gammel nøkkel: Wieners angrep; round one-flagget i notatet er et lokkeflagg. Ny nøkkel: å kjenne de nederste bitene i d med e = 3 er partial key exposure (Boneh, Durfee, Frankel). Fra 3*d = 1 + k*(n - (p+q) + 1) med k = 1 eller 2 får du p+q mod 2^362; så løser p mod 2^362 x^2 - (p+q)*x + n = 0 mod 2^362 (løft bit for bit). De manglende øverste 150 bitene i p: Coppersmith med kjente nederste bit, f.eks. i SageMath (sagecell.sagemath.org) small_roots på y + p0*inverse_mod(2^t, n), X = 2^(512-t), beta = 0.49."

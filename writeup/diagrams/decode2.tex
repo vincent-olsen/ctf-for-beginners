@@ -1,0 +1,8 @@
+\begin{tikzpicture}[hero, node distance=12mm]
+\node[hgrey, minimum width=24mm] (a) {\ttfamily ZmxhZ\dots};
+\node[hgrey, minimum width=30mm, right=12mm of a] (b) {\ttfamily MZWG\dots======};
+\node[hwin, minimum width=26mm, right=12mm of b] (c) {\ttfamily flag\{\dots\}};
+\draw[hflow] (a) -- node[hlab, above]{base64 -d} (b);
+\draw[hflow] (b) -- node[hlab, above]{base32 -d} (c);
+\node[hlab, below=4mm of b] {upper case, \ttfamily ======\;$\Rightarrow$ Base32};
+\end{tikzpicture}

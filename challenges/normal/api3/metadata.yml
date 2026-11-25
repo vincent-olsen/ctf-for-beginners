@@ -1,0 +1,11 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: flag{scr1pt_g0es_brrrrr}
+category: web
+value: 130
+message: "Now the flag needs real authentication. Almost annoyingly secure."
+message_no: "Nå krever flagget ekte autentisering. Nesten irriterende sikkert."
+notes: API automation / scripting (keys expire after 3s)

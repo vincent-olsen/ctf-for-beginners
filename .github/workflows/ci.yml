@@ -1,0 +1,77 @@
+name: ci
+
+# Static checks for the CTF repo: no containers are built and no CTFd runs here.
+# Every job also runs locally, with the same command, from the repo root.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Severity "error" is the level the scripts pass today; "warning" still reports
+      # a handful of findings (see the PR that added this check). Raise it once they
+      # are fixed. --shell=bash because tools/challenge.sh is sourced and has no shebang.
+      - run: shellcheck --shell=bash -S error ctf.sh azure.sh local.sh tools/*.sh platform/azure/*.sh
+
+  bicep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # --stdout keeps the compiled ARM template out of the working tree.
+      - run: az bicep build --file platform/azure/main.bicep --stdout > /dev/null
+
+  python-compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # platform/*.py and platform/plugins/**/*.py (and anything else .py under platform/).
+      - run: find platform -name '*.py' -print0 | xargs -0 python3 -m py_compile
+
+  compose-config:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: docker compose -f compose.yml config -q
+
+  check-connections:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: tools/check-connections.py
+
+  check-flags:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Prints challenge names only, never flag values.
+      - run: tools/check-flags.py

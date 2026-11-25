@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}noter — search{% endblock %}
+{% block content %}
+    <div class="box">
+      <h1 class="glitch" data-text="noter">noter</h1>
+      <p>Search our public notes. (Staff notes and secrets live in other tables — not that you can reach those.)</p>
+      <form action="/search" method="get" role="search">
+        <input name="q" placeholder="search titles..." aria-label="Search note titles" autofocus>
+        <button type="submit">Search</button>
+      </form>
+    </div>
+    <!-- v2 will use parameterised queries. v1 (this one) builds SQL by hand. TODO. -->
+{% endblock %}

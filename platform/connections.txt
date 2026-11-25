@@ -1,0 +1,47 @@
+# Connection info that ctf.sh writes into CTFd, one challenge per line.
+#
+#   CTFd challenge name | compose.yml service | container port | template
+#
+# Template placeholders:
+#   {host}  the --host value (localhost by default, or the --domain when hosting)
+#   {port}  the host port compose.yml publishes for service:container_port
+#
+# A template of "hidden" hides the challenge in CTFd: no runnable container in this repo,
+# or one that compose.yml keeps in the "extra" profile for this event (not started).
+# Service and port may be "-" when the template has no {port}, e.g. https://noter1.{host}
+# Names that don't exist in the imported backup are reported and skipped.
+
+meow1                 | meow1          | 4445 | nc {host} {port}
+meow2                 | meow2          | 4445 | nc {host} {port}
+meow3                 | meow3          | 4445 | nc {host} {port}
+meow4                 | meow4          | 4445 | nc {host} {port}
+meow-ai               | meow-ai        | 4445 | nc {host} {port}
+
+overflow1             | overflow1      | 1234 | nc {host} {port}
+overflow2             | overflow2      | 1234 | nc {host} {port}
+overflow3             | overflow3      | 1234 | nc {host} {port}
+pwn-ai                | pwn-ai         | 1234 | nc {host} {port}
+# Hidden for this event (profile extra in compose.yml, not started). overflow1-3
+# are the published pwn track; binary1/binary2 are retired and overflow4/overflow5
+# ("binary") are kept ready to release but hidden for now.
+binary                | -              | -    | hidden
+binary1               | -              | -    | hidden
+binary2               | -              | -    | hidden
+overflow4(deprecated) | -              | -    | hidden
+overflow4             | -              | -    | hidden
+
+noter1                | noter1         | 5000 | http://{host}:{port}
+noter2                | noter2         | 5000 | http://{host}:{port}
+noter3                | noter3         | 5000 | http://{host}:{port}
+noter4                | noter4         | 5000 | http://{host}:{port}
+noter5                | -              | -    | hidden
+marvin                | -              | -    | hidden
+robot-ai              | robot-ai       | 5000 | http://{host}:{port}
+noter-ai              | noter-ai       | 5000 | http://{host}:{port}
+api-ai                | api-ai         | 5000 | http://{host}:{port}
+viking-ai             | viking-ai      | 5000 | http://{host}:{port}
+marvin-llm            | marvin-llm     | 5000 | http://{host}:{port}
+api1                  | api1           | 5000 | http://{host}:{port}
+api2                  | api2           | 5000 | http://{host}:{port}
+api3                  | api3           | 5000 | http://{host}:{port}
+viking                | viking         | 8080 | http://{host}:{port}

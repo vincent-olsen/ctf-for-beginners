@@ -1,0 +1,21 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: "flag{i_can_read_th1s}"
+category: crypto
+value: 40
+extra_flags:  # other spellings accepted as the flag
+  - "flag{i_can_read_this}"
+message: Double the encoding, double the fun
+message_no: "Dobbel koding, dobbel moro"
+notes: crypto
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - "4 | Look at the endings of the encoded strings. Can there be something else than base64?"
+hints_no:
+  - "4 | Se på slutten av de kodede strengene. Kan det være noe annet enn base64?"

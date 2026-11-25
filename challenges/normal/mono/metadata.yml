@@ -1,0 +1,21 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+name: mono
+flag: 'flag{y_waste_time_say_lot_word_when_few_word_do_trick}'
+category: crypto
+value: 90
+message: "We found a scrambled message. Probably important."
+message_no: "Vi fant en rotete melding. Sikkert noe viktig."
+notes: Monoalphabetic substitution
+credits: https://github.com/BSidesSF/ctf-2023-release/tree/main/mono
+
+# hints: paid hints in CTFd, synced from here on ./ctf.sh up (they used to come
+# from the imported backup). Format "COST | text"; hints_no holds the same
+# hints in Norwegian, in the same order (the cost is taken from hints).
+hints:
+  - "5 | The letters are scrambled by a cipher which replaces each letter with a different letter from a randomly sorted alphabet. Try to find some common words by guessing, then work from there. Maybe start with the word `flag`?"
+hints_no:
+  - "5 | Bokstavene er stokket av et chiffer som bytter ut hver bokstav med en annen fra et tilfeldig sortert alfabet. Prøv å gjette noen vanlige engelske ord, og jobb deg videre derfra. Kanskje du kan begynne med ordet `flag`?"

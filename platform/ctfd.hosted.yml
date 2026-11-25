@@ -1,0 +1,34 @@
+# Extra override for CTFd when hosting (ctf.sh up --domain <name>).
+# Caddy replaces nginx and serves CTFd over HTTPS with an automatic Let's Encrypt certificate.
+
+services:
+  nginx:
+    profiles: [disabled]
+
+  caddy:
+    # A fixed release, so a rebuild on event day can't bring a new Caddy.
+    image: caddy:2.11.9
+    # unless-stopped (not always): ctf.sh stops the proxy while it imports/configures
+    # CTFd. "always" would bring Caddy back on a daemon restart (reboot, nightly VM
+    # start) in front of a half-configured CTFd — on a wiped DB that means a public
+    # /setup page. "unless-stopped" keeps a deliberately stopped proxy stopped.
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      - CTF_DOMAIN=${CTF_DOMAIN:?set by ctf.sh}
+      - CTF_STATUS_SITE=${CTF_STATUS_SITE:?set by ctf.sh}
+    volumes:
+      - ${CTF_PLATFORM_DIR:?set by ctf.sh}/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    # Lets the Caddyfile proxy to challenge ports published on the host.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on: [ctfd]
+
+volumes:
+  caddy_data:
+  caddy_config:

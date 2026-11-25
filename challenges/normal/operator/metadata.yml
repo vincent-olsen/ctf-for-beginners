@@ -1,0 +1,12 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+flag: 'flag{l3ts_u5e_4_key_n3xt_t1me}'
+category: crypto
+value: 70
+message: "Homemade encryption! So advanced it needs no key. Totally safe."
+message_no: "Egen krypteringsalgoritme! Så avansert at den ikke trenger nøkkel. Helt trygt."
+notes: reverse python operators
+credits: ctf-archives/ctfs/1337UP/2023/crypto/Keyless

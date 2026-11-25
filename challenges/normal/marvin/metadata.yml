@@ -1,0 +1,13 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+
+name: marvin
+flag: 'flag{b0t_dont_k1ll_m7_vib3}'
+category: web
+value: 100
+state: hidden
+message: Listen here, chaps, we've got a bit of a sticky wicket on our hands. We simply cannot allow old Marvin to waltz into our clandestine establishment, you see? That robotic fellow tends to throw a spanner in the works, completely ruins the whole ambiance, if you catch my drift. So, let's keep our lips sealed and ensure Marvin doesn't stumble upon our little secret, shall we?
+message_no: "Hør her, gutter, vi har havnet i en litt kinkig situasjon. Vi kan rett og slett ikke la gamle Marvin spasere inn i vårt hemmelige etablissement, skjønner dere? Den robotiske karen har en lei tendens til å stikke kjepper i hjulene og ødelegge hele stemningen, om dere forstår hva jeg mener. Så la oss holde tett og sørge for at Marvin ikke snubler over den lille hemmeligheten vår, skal vi si det slik?"
+notes: robots.txt

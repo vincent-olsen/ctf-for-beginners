@@ -1,0 +1,40 @@
+# Challenge most also include these files:
+# - challenge/ - everything needed to create the challenge assets
+# - distfiles/ - contains all files that will be attached to the challenge
+# - solution/  - a working solution to the challenge (or a README.md with an explanation)
+#
+# AI-modus challenge: the AI-bracket sibling for the pwn family (overflow*/binary*).
+# A step up from the beginner overflows: win() only prints the flag when handed
+# the right argument, so a plain ret2win isn't enough - you need a pop rdi gadget
+# and a small ROP chain.
+#
+# Hosted pwn challenge (terminal/nc): connection info is written by ctf.sh from
+# platform/connections.txt (service `pwn-ai`, host port 1246; 1247-1249 serve the other AI Slop-o-meter levels from the same container). 64-bit ELF,
+# no PIE, no canary - do not "fix" those flags (see CLAUDE.md).
+
+name: pwn-ai
+category: ai-pwn
+value: 40
+# difficulty: intended threat level 1-5 (drives the AI-modus threat meter, not points)
+difficulty: 5
+# builds_on: the normal-bracket challenges (CTFd names) whose technique this one
+# levels up, [] when none does. The sync keeps them in the ai_brackets siblings
+# map, and each pair's challenge windows link to each other.
+builds_on: [binary]
+flag: "flag{ret2win_with_the_right_key_in_rdi}"
+message: "A step up from the overflows. The flag is on the server. Binary attached - no source this time."
+message_no: "Et hakk over overflow-oppgavene. Flagget ligger på serveren. Kun binærfilen er vedlagt - ingen kildekode denne gangen."
+notes: ai-pwn - 64-bit stack overflow, ret2win WITH an argument. Offset 72; use the `pop rdi; ret` gadget (0x4012b3) to set rdi=0xc0ffee, then return to win (0x4012b8). The committed distfiles/binary is stripped (win has no symbol), so read both addresses with `objdump -d binary`. Same hardening-off gcc flags as overflow1-3.
+
+# hints: paid hints for CTFd, cheapest first. Format "COST | text"; the sync
+# (platform/ctfd_admin.py) creates them as CTFd hints, and the ai_brackets
+# plugin charges each cost in this challenge's (AI-modus) bracket.
+hints:
+  - "5 | A plain ret2win is not enough: win() only pays out with the right value in its first argument, and on x86-64 the first argument comes from the rdi register."
+  - "10 | Full C source for the binary. Buying this is effectively going white-box: {{file:challenge/binary.c}}"
+  - "20 | Chain it: 72 bytes of padding, a pop rdi; ret gadget, 0xc0ffee, then win. pwntools ROP(elf) builds this; read the addresses from objdump -d binary."
+# hints_no: the same hints in Norwegian, in the same order (the cost comes from hints).
+hints_no:
+  - "5 | En vanlig ret2win holder ikke: win() betaler bare ut med riktig verdi i første argument, og på x86-64 kommer første argument fra registeret rdi."
+  - "10 | Full C-kildekode for binæren. Å kjøpe dette er i praksis å gå white-box: {{file:challenge/binary.c}}"
+  - "20 | Bygg kjeden: 72 bytes utfylling, en pop rdi; ret-gadget, 0xc0ffee, og så win. pwntools ROP(elf) bygger dette for deg; les adressene fra objdump -d binary."

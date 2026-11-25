@@ -1,0 +1,73 @@
+# Used in hosted mode (ctf.sh up --domain <name>). CTF_DOMAIN is set by ctf.sh.
+# CTF_AUTH picks who reaches CTFd: "open" (anyone), or "sso" (signed in with
+# Microsoft first, through oauth2-proxy; ctf.sh up --sso-client-id, platform/ctfd.sso.yml).
+
+(ctfd) {
+	reverse_proxy ctfd:8000 {
+		# CTFd's cookies are host-only, and browsers don't separate cookies by port, so
+		# without Secure the login cookie is also sent in cleartext to every http
+		# challenge on this host (http://<domain>:5001 ...). CTFd has no setting for it.
+		header_down Set-Cookie "(?i)^(.*?)(;\s*secure)?$" "$1; Secure"
+	}
+}
+
+(open) {
+	import ctfd
+}
+
+(sso) {
+	# oauth2-proxy's own pages: sign-in, and Microsoft's callback.
+	handle /oauth2/* {
+		reverse_proxy oauth2-proxy:4180 {
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-Uri {uri}
+		}
+	}
+	# Everything else needs a session; without one, sign in and come back. The
+	# page to come back to goes to oauth2-proxy's /oauth2/start as a header, not
+	# as ?rd=: a placeholder in a query string is not URL-encoded (an "&" in it
+	# would cut it short), and a relative path needs no whitelisted domain.
+	handle {
+		forward_auth oauth2-proxy:4180 {
+			uri /oauth2/auth
+			header_up X-Real-IP {remote_host}
+			@error status 401
+			handle_response @error {
+				rewrite * /oauth2/start?
+				reverse_proxy oauth2-proxy:4180 {
+					header_up X-Real-IP {remote_host}
+					header_up X-Auth-Request-Redirect {http.request.orig_uri}
+				}
+			}
+		}
+		import ctfd
+	}
+}
+
+{$CTF_DOMAIN} {
+	encode gzip
+	import {$CTF_AUTH:open}
+}
+
+# The status page (platform/ctfd.status.yml), open to everyone even with Microsoft
+# sign-in: it shows only whether CTFd and each running challenge answer. ctf.sh sets
+# CTF_STATUS_SITE to status.<domain>, or with --status off to http://status.invalid,
+# a name nobody resolves, so Caddy asks for no certificate for it.
+{$CTF_STATUS_SITE} {
+	encode gzip
+	reverse_proxy status:8080
+}
+
+# Optional: HTTPS subdomains for the web challenges instead of http://<domain>:<port>.
+# Needs a DNS record for each subdomain (or a wildcard *.<domain>), then change the
+# template in platform/connections.txt, e.g.  noter1 | - | - | https://noter1.{host}
+#
+# noter1.{$CTF_DOMAIN} {
+# 	reverse_proxy host.docker.internal:5001
+# }
+# noter2.{$CTF_DOMAIN} {
+# 	reverse_proxy host.docker.internal:5002
+# }
+# viking.{$CTF_DOMAIN} {
+# 	reverse_proxy host.docker.internal:8080
+# }
